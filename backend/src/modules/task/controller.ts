@@ -1,17 +1,7 @@
-import { NextFunction, Request, Response } from "express";
-import { catchAsync } from '../common/exception-handlers';
 import taskService from "./service";
+import { BaseController } from "../base/base.controller";
+import { TaskDto } from "./dtos/task.dto";
 
-export default {
-  findById: catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    // TODO: Add validations to req data
-    const { id } = req.params;
-    const task = await taskService.findById(id);
-    res.json(task);
-  }),
-  
-  findAll: catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const tasks = await taskService.findAll({ limit: 20, nextId: '' });
-    res.json(tasks);
-  }),
-};
+class TaskController extends BaseController<TaskDto> {}
+
+export default new TaskController(TaskDto, taskService);
