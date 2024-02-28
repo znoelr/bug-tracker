@@ -1,0 +1,7 @@
+node_modules/
+migrations/
+todo.txt
+.rest
+*.db*
+# Keep environment variables out of version control
+.env
