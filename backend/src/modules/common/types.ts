@@ -13,10 +13,8 @@ export interface Pagination {
 }
 
 export interface QueryFilters {
-  where?: {
-    [key: string]: any,
-    or?: {[key: string]: any}[]
-  };
+  where?: { [key: string]: any };
+  or?: {[key: string]: any}[];
 }
 
 export interface QueryOptions {
