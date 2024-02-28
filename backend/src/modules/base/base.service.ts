@@ -1,17 +1,28 @@
 import { BaseRepo } from "./base.repo";
-import { NotFoundException } from "../common/exceptions";
 import { Pagination, QueryFilters, QueryOptions } from "../common/types";
 
-export abstract class BaseService<T> {
+export class BaseService<T> {
   constructor(protected readonly repo: BaseRepo<T>) {}
 
-  async findById(id: string) {
-    const record = await this.repo.findOne({ where: { id } });
-    if (!record) throw new NotFoundException(`Record with id ${id} was not found`);
+  async findOne(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T|null> {
+    const record = await this.repo.findOne(filters, queryOptions);
     return record;
   }
 
-  async findAll(pagination: Pagination, queryFilters?: QueryFilters, queryOptions?: QueryOptions) {
+  async findAll(pagination: Pagination, queryFilters?: QueryFilters, queryOptions?: QueryOptions): Promise<T[]> {
     return await this.repo.findAll(pagination, queryFilters, queryOptions);
   }
+
+  async create(data: any): Promise<T> {
+    return await this.repo.create(data);
+  }
+
+  async update(id: string, data: any): Promise<T> {
+    return await this.repo.update(id, data);
+  }
+
+  async delete(id: string): Promise<T> {
+    return await this.repo.delete(id);
+  }
+
 }
