@@ -11,14 +11,171 @@ datasource db {
 }
 
 model User {
-  id       String     @id
-  username String  @unique
-  name     String?
+  id        String   @id
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasks        Task[]         @relation("user-tasks")
+  userRoles    UserRoles[]    @relation("user-userroles")
+  taskLogs     TaskLogs[]     @relation("user-tasklogs")
+  taskComments TaskComments[] @relation("user-taskcomments")
+}
+
+model Role {
+  id          String   @id
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userRoles       UserRoles[]       @relation("role-userroles")
+  rolePermissions RolePermissions[] @relation("role-rolepermissions")
+}
+
+model UserRoles {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userId String
+  user   User   @relation("user-userroles", fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  roleId String
+  role   Role   @relation("role-userroles", fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model Permission {
+  id          String   @id
+  name        String
+  description String?
+  action      String
+  table       String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  rolePermissions RolePermissions[] @relation("permission-rolepermissions")
+}
+
+model RolePermissions {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  roleId String
+  role   Role   @relation("role-rolepermissions", fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  permissionId String
+  permission   Permission @relation("permission-rolepermissions", fields: [permissionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Task {
-  id       String     @id
-  title String  @unique
-  description String
-  priority     String
+  id          String   @id
+  title       String   @unique
+  description String?
+  type        String
+  status      String
+  severity    String
+  priority    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  assigneeId String
+  user       User   @relation("user-tasks", fields: [assigneeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  projectId String
+  project   Project @relation("project-tasks", fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  logs      TaskLogs[]     @relation("task-tasklogs")
+  comments  TaskComments[] @relation("task-taskcomments")
+  taskFiles TaskFiles[]    @relation("task-taskfiles")
+}
+
+model TaskLogs {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskId String
+  task   Task   @relation("task-tasklogs", fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  triggeredById String
+  triggeredBy   User   @relation("user-tasklogs", fields: [triggeredById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model TaskComments {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskId String
+  task   Task   @relation("task-taskcomments", fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  createdById String
+  createdBy   User   @relation("user-taskcomments", fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  taskCommentFiles TaskCommentFiles[] @relation("taskcomments-taskcommentfiles")
+}
+
+model Project {
+  id          String   @id
+  title       String   @unique
+  name        String
+  description String?
+  status      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tasks        Task[]         @relation("project-tasks")
+  projectFiles ProjectFiles[] @relation("project-projectfiles")
+}
+
+model File {
+  id        String   @id
+  name      String
+  mimetype  String
+  url       String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskFile        TaskFiles?        @relation("file-taskfiles")
+  projectFile     ProjectFiles?     @relation("file-projectfiles")
+  taskCommentFile TaskCommentFiles? @relation("file-taskcommentfiles")
+}
+
+model TaskFiles {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskId String
+  task   Task   @relation("task-taskfiles", fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  fileId String @unique
+  file   File   @relation("file-taskfiles", fields: [fileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model ProjectFiles {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  projectId String
+  project   Project @relation("project-projectfiles", fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  fileId String @unique
+  file   File   @relation("file-projectfiles", fields: [fileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+}
+
+model TaskCommentFiles {
+  id        String   @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  taskCommentId String
+  taskComment   TaskComments @relation("taskcomments-taskcommentfiles", fields: [taskCommentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  fileId String @unique
+  file   File   @relation("file-taskcommentfiles", fields: [fileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
