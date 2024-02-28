@@ -1,4 +1,4 @@
-import { BaseRepo } from "../../repos/base.repo";
+import { BaseRepo } from "./base.repo";
 import { NotFoundException } from "../common/exceptions";
 import { Pagination, QueryFilters, QueryOptions } from "../common/types";
 

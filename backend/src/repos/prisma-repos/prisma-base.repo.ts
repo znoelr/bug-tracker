@@ -1,4 +1,4 @@
-import { BaseRepo } from "../base.repo";
+import { BaseRepo } from "../../modules/base/base.repo";
 import { QueryFilters, QueryOptions, Pagination } from "../../modules/common/types";
 
 export class PrismaBaseRepo<T> implements BaseRepo<T> {
