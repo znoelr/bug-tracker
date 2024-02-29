@@ -17,10 +17,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tasks        Task[]         @relation("user-tasks")
-  userRoles    UserRoles[]    @relation("user-userroles")
-  taskLogs     TaskLogs[]     @relation("user-tasklogs")
-  taskComments TaskComments[] @relation("user-taskcomments")
+  tasks        Task[]        @relation("user-tasks")
+  userRoles    UserRoles[]   @relation("user-userroles")
+  taskLogs     TaskLog[]     @relation("user-tasklogs")
+  taskComments TaskComment[] @relation("user-taskcomments")
 }
 
 model Role {
@@ -87,13 +87,14 @@ model Task {
   projectId String
   project   Project @relation("project-tasks", fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  logs      TaskLogs[]     @relation("task-tasklogs")
-  comments  TaskComments[] @relation("task-taskcomments")
-  taskFiles TaskFiles[]    @relation("task-taskfiles")
+  logs      TaskLog[]     @relation("task-tasklogs")
+  comments  TaskComment[] @relation("task-taskcomments")
+  taskFiles TaskFiles[]   @relation("task-taskfiles")
 }
 
-model TaskLogs {
+model TaskLog {
   id        String   @id
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -104,8 +105,9 @@ model TaskLogs {
   triggeredBy   User   @relation("user-tasklogs", fields: [triggeredById], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
-model TaskComments {
+model TaskComment {
   id        String   @id
+  content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -174,7 +176,7 @@ model TaskCommentFiles {
   updatedAt DateTime @updatedAt
 
   taskCommentId String
-  taskComment   TaskComments @relation("taskcomments-taskcommentfiles", fields: [taskCommentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  taskComment   TaskComment @relation("taskcomments-taskcommentfiles", fields: [taskCommentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   fileId String @unique
   file   File   @relation("file-taskcommentfiles", fields: [fileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
