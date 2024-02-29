@@ -1,7 +1,7 @@
 import { BaseRepo } from "../../modules/base/base.repository";
 import { Pagination, QueryFilters, QueryOptions } from "../../modules/common/types";
 
-export class PrismaBaseRepo<T> implements BaseRepo<T> {
+export class PrismaBaseRepository<T> implements BaseRepo<T> {
   constructor(protected readonly model: any) {}
 
   async findOne(filters: QueryFilters, queryOptions: QueryOptions): Promise<T|null> {

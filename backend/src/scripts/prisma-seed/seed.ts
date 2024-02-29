@@ -1,4 +1,4 @@
-import { prismaClient } from "../../repos/prisma-repos/prisma.client";
+import { prismaClient } from "../../repository/prisma/prisma.client";
 
 async function main() {
   
