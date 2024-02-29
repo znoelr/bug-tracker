@@ -1,6 +1,6 @@
 import { Pagination, QueryFilters, QueryOptions } from "../common/types";
 
-export interface BaseRepo<T> {
+export interface BaseRepository<T> {
   parsePagination(pagination: Pagination | null): any;
   parseQueryFilters(filters?: QueryFilters | null): any;
   parseQueryOptions(queryOptions?: QueryOptions | null): any;
