@@ -1,6 +1,5 @@
-import { plainToInstance } from "class-transformer";
-import { BaseRepo } from "../../modules/base/base.repo";
-import { QueryFilters, QueryOptions, Pagination } from "../../modules/common/types";
+import { BaseRepo } from "../../modules/base/base.repository";
+import { Pagination, QueryFilters, QueryOptions } from "../../modules/common/types";
 
 export class PrismaBaseRepo<T> implements BaseRepo<T> {
   constructor(protected readonly model: any) {}

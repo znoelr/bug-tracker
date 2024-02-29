@@ -1,5 +1,5 @@
-import { tasksRoute } from './modules/task';
+import { taskRouteConfig } from "./modules/task/task.router";
 
 export default [
-  tasksRoute,
+  taskRouteConfig,
 ];

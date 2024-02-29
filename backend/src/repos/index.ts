@@ -1,4 +1,3 @@
-import repos from './prisma-repos';
-// import repos from './typeorm-models';
+export * from './prisma-repos';
+// export * from './typeorm-models';
 
-export const { repository, connect, disconnect } = repos;

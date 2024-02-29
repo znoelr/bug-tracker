@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { BaseService } from "./base.service";
-import { serialize } from "../common/serializers";
 import { NotFoundException } from "../common/exceptions";
+import { serialize } from "../common/serializers";
 
 export class BaseController<T> {
   constructor(

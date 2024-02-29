@@ -1,16 +1,14 @@
 import express from "express";
-import controller from './controller';
-import { RouteConfig } from "../common/types";
+import controller from './task.controller';
 import { catchAsync } from "../common/exception-handlers";
+import { RouteConfig } from "../common/types";
 
 const router = express.Router();
 
 router.get('/:id', catchAsync(controller.findById.bind(controller)));
 router.get('/', catchAsync(controller.findAll.bind(controller)));
 
-const routeConfig: RouteConfig = {
+export const taskRouteConfig: RouteConfig = {
   path: '/tasks',
   router,
 };
-
-export default routeConfig;

@@ -1,4 +1,4 @@
-import { BaseRepo } from "./base.repo";
+import { BaseRepo } from "./base.repository";
 import { Pagination, QueryFilters, QueryOptions } from "../common/types";
 
 export class BaseService<T> {

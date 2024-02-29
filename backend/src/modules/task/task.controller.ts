@@ -1,4 +1,4 @@
-import taskService from "./service";
+import taskService from "./task.service";
 import { BaseController } from "../base/base.controller";
 import { TaskDto } from "./dtos/task.dto";
 
