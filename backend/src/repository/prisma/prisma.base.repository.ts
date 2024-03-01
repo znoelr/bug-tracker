@@ -5,6 +5,28 @@ import { Pagination, QueryFilters, QueryOptions } from "../../modules/common/typ
 export class PrismaBaseRepository<T> implements BaseRepository<T> {
   constructor(protected readonly model: any) {}
 
+  async findOne(filters: QueryFilters, queryOptions: QueryOptions): Promise<T|null> {
+    const findArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions);
+    return await this.model.findUnique(findArgs);
+  }
+
+  async findAll(pagination: Pagination, filters: QueryFilters, queryOptions: QueryOptions): Promise<T[]> {
+    const findArgs = this.mergeIntoPrismaOptions(pagination, filters, queryOptions);
+    return await this.model.findMany(findArgs);
+  }
+
+  async create(data: any): Promise<T> {
+    return await this.model.create({ data });
+  }
+
+  async update(id: string, data: any): Promise<T> {
+    return await this.model.update({ where: { id }, data });
+  }
+
+  async delete(id: string): Promise<T> {
+    return await this.model.delete({ where: { id } });
+  }
+
   parsePagination(pagination: Pagination | null) {
     if (!pagination) return {};
     const parsed: any = {};
@@ -41,29 +63,5 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
       ...this.parseQueryFilters(filters),
       ...this.parseQueryOptions(options),
     };
-  }
-
-  async findOne(filters: QueryFilters, queryOptions: QueryOptions): Promise<T|null> {
-    const findArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions);
-    const record = await this.model.findUnique(findArgs);
-    return record;
-  }
-
-  async findAll(pagination: Pagination, filters: QueryFilters, queryOptions: QueryOptions): Promise<T[]> {
-    const findArgs = this.mergeIntoPrismaOptions(pagination, filters, queryOptions);
-    const list: any[] = await this.model.findMany(findArgs);
-    return list;
-  }
-
-  async create(data: any): Promise<T> {
-    return await this.model.create({ data });
-  }
-
-  async update(id: string, data: any): Promise<T> {
-    return await this.model.update({ where: { id }, data });
-  }
-
-  async delete(id: string): Promise<T> {
-    return await this.model.delete({ where: { id } });
   }
 }
