@@ -1,5 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 
+export type GenericFunction = (...args: any[]) => any;
+
 export type RouteConfig = {
   path: string;
   router: express.Router;
