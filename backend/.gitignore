@@ -1,5 +1,6 @@
 node_modules/
 migrations/
+build/
 todo.txt
 .rest
 *.db*
