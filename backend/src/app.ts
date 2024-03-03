@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import express, { Express } from "express";
 import appRouter from './router';
 
