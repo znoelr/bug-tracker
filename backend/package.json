@@ -7,8 +7,9 @@
     "schema": "src/repository/prisma/schema.prisma"
   },
   "scripts": {
-    "start:dev": "APP_ENV=development npx tsx --watch --trace-warnings server.ts",
+    "build": "tsc -b",
     "test": "dotenv -e .env.test -- APP_ENV=test echo \"Error: no test specified\" && exit 1",
+    "start:dev": "APP_ENV=development npx tsx --watch --trace-warnings src/server.ts",
     "db:migrate": "dotenv -e .env.development -- npx prisma migrate dev"
   },
   "keywords": [],
