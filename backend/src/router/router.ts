@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import routerList from './router-list';
-import { RouteConfig } from "./modules/common/types";
-import { NotFoundException } from "./modules/common/exceptions";
+import { RouteConfig } from "../modules/common/types";
+import { NotFoundException } from "../modules/common/exceptions";
 
 const router = express.Router();
 
