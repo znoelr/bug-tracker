@@ -35,7 +35,6 @@ model Role {
 }
 
 model UserRoles {
-  id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -44,6 +43,8 @@ model UserRoles {
 
   roleId String
   role   Role   @relation("role-userroles", fields: [roleId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([userId, roleId])
 }
 
 model Permission {
@@ -59,7 +60,6 @@ model Permission {
 }
 
 model RolePermissions {
-  id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -68,6 +68,8 @@ model RolePermissions {
 
   permissionId String
   permission   Permission @relation("permission-rolepermissions", fields: [permissionId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([roleId, permissionId])
 }
 
 model Task {
@@ -147,7 +149,6 @@ model File {
 }
 
 model TaskFiles {
-  id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -156,10 +157,11 @@ model TaskFiles {
 
   fileId String @unique
   file   File   @relation("file-taskfiles", fields: [fileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([taskId, fileId])
 }
 
 model ProjectFiles {
-  id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -168,10 +170,11 @@ model ProjectFiles {
 
   fileId String @unique
   file   File   @relation("file-projectfiles", fields: [fileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([projectId, fileId])
 }
 
 model TaskCommentFiles {
-  id        String   @id
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -180,4 +183,6 @@ model TaskCommentFiles {
 
   fileId String @unique
   file   File   @relation("file-taskcommentfiles", fields: [fileId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([taskCommentId, fileId])
 }
