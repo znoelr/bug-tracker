@@ -2,7 +2,9 @@ import express, { NextFunction, Request, Response } from "express";
 import routerList from './router-list';
 import { RouteConfig } from "../modules/common/types";
 import { NotFoundException } from "../modules/common/exceptions";
+import { fileLogger } from '../logger';
 
+const logger = fileLogger();
 const router = express.Router();
 
 const registerRoute = (routeConfig: RouteConfig) => {
@@ -24,8 +26,8 @@ router.use((err: unknown, req: Request, res: Response, next: NextFunction): void
     res.status(404).end(err.message || 'Not found');
     return;
   }
-  // TODO: Append to logging files
-  console.log('Catched error', err);
+  // Append to error log file
+  logger.error(`${err}`);
   res.status(500).end('Something went wrong');
 });
 
