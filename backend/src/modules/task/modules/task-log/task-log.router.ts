@@ -5,7 +5,7 @@ import { validateDto } from "../../../common/validators";
 import { CreateTaskLogDto } from "./dtos/create-task-log.dto";
 import { parseParamsForQueryFilter } from "../../../middleware";
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
 
 /** ROUTES DEFINED FOR '/:taskId' PREFIX */
