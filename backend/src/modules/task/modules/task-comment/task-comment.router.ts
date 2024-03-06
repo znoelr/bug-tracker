@@ -1,14 +1,17 @@
 import express from "express";
 import controller from './task-comment.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { RouteConfig } from "../../../common/types";
 import { validateDto } from "../../../common/validators";
 import { CreateTaskCommentDto } from "./dtos/create-task-comment.dto";
+import { parseParamsForQueryFilter } from "../../../middleware";
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
 
+/** ROUTES DEFINED WITH PREFIX '/:taskId' */
+
 router.route('/')
+  .all(parseParamsForQueryFilter())
   .get(createRoute(controller.findAll))
   .post(
     validateDto(CreateTaskCommentDto),
@@ -16,11 +19,9 @@ router.route('/')
   );
 
 router.route('/:id')
+  .all(parseParamsForQueryFilter())
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
 
-export const taskCommentRouteConfig: RouteConfig = {
-  path: '/task-comments',
-  router,
-};
+export default router;

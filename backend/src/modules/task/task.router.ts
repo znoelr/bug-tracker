@@ -1,11 +1,13 @@
 import express from "express";
-import controller from './task.controller';
 import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { validateDto } from "../common/validators";
+import controller from './task.controller';
+import taskCommentsRouter from './modules/task-comment/task-comment.router'
+import { parseParamsForQueryFilter } from "../middleware";
 
-const router = express.Router();
+const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
 
 router.route('/')
@@ -16,9 +18,13 @@ router.route('/')
   );
 
 router.route('/:id')
+  .all(parseParamsForQueryFilter())
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
+
+/** Nested task comments */
+router.use(`/:taskId/comments`, taskCommentsRouter);
 
 export const taskRouteConfig: RouteConfig = {
   path: '/tasks',
