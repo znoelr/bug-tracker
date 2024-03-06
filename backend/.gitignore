@@ -2,7 +2,7 @@ node_modules/
 migrations/
 build/
 todo.txt
-.rest
+*.rest
 *.db*
 # Keep environment variables out of version control
 .env*
