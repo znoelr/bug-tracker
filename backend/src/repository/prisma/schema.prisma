@@ -17,10 +17,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  tasks        Task[]        @relation("user-tasks")
-  userRoles    UserRoles[]   @relation("user-userroles")
-  taskLogs     TaskLog[]     @relation("user-tasklogs")
-  taskComments TaskComment[] @relation("user-taskcomments")
+  createdProjects Project[]     @relation("user-createdprojects")
+  tasks           Task[]        @relation("user-tasks")
+  userRoles       UserRoles[]   @relation("user-userroles")
+  taskLogs        TaskLog[]     @relation("user-tasklogs")
+  taskComments    TaskComment[] @relation("user-taskcomments")
 }
 
 model Role {
@@ -52,7 +53,7 @@ model Permission {
   name        String
   description String?
   action      String
-  table       String
+  resource    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -130,6 +131,9 @@ model Project {
   status      String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  createdById String
+  createdBy   User   @relation("user-createdprojects", fields: [createdById], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   tasks        Task[]         @relation("project-tasks")
   projectFiles ProjectFiles[] @relation("project-projectfiles")
