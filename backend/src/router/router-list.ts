@@ -3,6 +3,7 @@ import { projectRouteConfig } from "../modules/project/project.router";
 import { permissionRouteConfig } from "../modules/role/modules/permission/permission.router";
 import { roleRouteConfig } from "../modules/role/role.router";
 import { taskCommentRouteConfig } from "../modules/task/modules/task-comment/task-comment.router";
+import { taskLogRouteConfig } from "../modules/task/modules/task-logs/task-log.router";
 import { taskRouteConfig } from "../modules/task/task.router";
 import { userRouteConfig } from "../modules/user/user.router";
 
@@ -14,4 +15,5 @@ export default [
   fileRouteConfig,
   permissionRouteConfig,
   taskCommentRouteConfig,
+  taskLogRouteConfig,
 ];
