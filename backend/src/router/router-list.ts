@@ -1,3 +1,4 @@
+import { fileRouteConfig } from "../modules/file/file.router";
 import { projectRouteConfig } from "../modules/project/project.router";
 import { roleRouteConfig } from "../modules/role/role.router";
 import { taskRouteConfig } from "../modules/task/task.router";
@@ -8,4 +9,5 @@ export default [
   userRouteConfig,
   roleRouteConfig,
   projectRouteConfig,
+  fileRouteConfig,
 ];
