@@ -1,17 +1,17 @@
-
 import { v4 as uuid } from 'uuid';
 import { prismaClient } from '../../repository/prisma/prisma.client';
 import { ROLES } from '../../modules/role/role.constants';
+import { capitalize } from './helpers';
 
 export async function run() {
   const promises = Object.values(ROLES)
-    .map(r => r.toLowerCase())
-    .map(async (username) => await prismaClient.user.create({
+    .map(async (roleName) => await prismaClient.role.create({
       data: {
         id: uuid(),
-        username,
-        password: 'abcde$12345',
-      }
+        name: roleName,
+        description: `Role for ${capitalize(roleName)}s`,
+      },
     }));
+
   return await Promise.all(promises);
 }
