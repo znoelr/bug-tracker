@@ -6,8 +6,9 @@ export class CreateTaskDto {
   @IsNotEmpty()
   title: string;
 
-  @IsString()
   @IsOptional()
+  @IsString()
+  @IsNotEmpty()
   description: string;
   
   @IsString()
@@ -20,8 +21,9 @@ export class CreateTaskDto {
   @IsIn(Object.values(TASK_STATUS))
   status: string;
   
-  @IsString()
   @IsOptional()
+  @IsString()
+  @IsNotEmpty()
   @IsIn(Object.values(TASK_SEVERITY))
   severity: string;
   
