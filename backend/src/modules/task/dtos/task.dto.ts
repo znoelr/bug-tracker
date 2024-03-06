@@ -2,11 +2,35 @@ import { Expose } from "class-transformer";
 
 export class TaskDto {
   @Expose()
-  id: string = '';
+  id: string;
 
   @Expose()
-  title: string = '';
+  title: string;
 
   @Expose()
-  description: string = '';
+  description: string;
+
+  @Expose()
+  type: string;
+
+  @Expose()
+  status: string;
+
+  @Expose()
+  severity: string;
+
+  @Expose()
+  priority: string;
+
+  @Expose()
+  createdAt: string;
+
+  @Expose()
+  updatedAt: string;
+
+  @Expose()
+  assigneeId: string;
+
+  @Expose()
+  projectId: string;
 }
