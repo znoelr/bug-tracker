@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { BaseService } from "./base.service";
 import { NotFoundException } from "../common/exceptions";
 import { serialize } from "../common/serializers";
+import { Pagination, QueryFilters } from "../common/fetch-objects";
 
 export class BaseController<T> {
   constructor(
@@ -11,13 +12,15 @@ export class BaseController<T> {
 
   async findById(req: Request, res: Response, next: NextFunction) {
     const { id } = req.params;
-    const record: T | null = await this.service.findOne({ where: {id} });
+    const filters = new QueryFilters({ id });
+    const record: T | null = await this.service.findOne(filters);
     if (!record) throw new NotFoundException(`Record with id ${id} was not found`);
     res.json(serialize(this.DtoClass, record));
   }
 
   async findAll(req: Request, res: Response, next: NextFunction) {
-    const recordList = await this.service.findAll({ limit: 20, nextId: '' });
+    const pagination = new Pagination();
+    const recordList = await this.service.findAll(pagination);
     res.json(serialize(this.DtoClass, recordList));
   }
 
