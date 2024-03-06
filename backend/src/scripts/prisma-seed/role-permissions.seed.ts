@@ -1,6 +1,6 @@
 import { prismaClient } from '../../repository/prisma/prisma.client';
 import { ROLES } from '../../modules/role/role.constants';
-import { PERMISSION_ACTION, PERMISSION_RESOURCE } from '../../modules/permission/permissions.constants';
+import { PERMISSION_ACTION, PERMISSION_RESOURCE } from '../../modules/permission/permission.constants';
 
 async function createRolePermissions(role: any, permissions: any[]) {
   const promises = permissions.map(async (permission: any) => await prismaClient.rolePermissions.create({
