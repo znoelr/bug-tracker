@@ -1,14 +1,17 @@
 import express from "express";
 import controller from './task-log.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { RouteConfig } from "../../../common/types";
 import { validateDto } from "../../../common/validators";
 import { CreateTaskLogDto } from "./dtos/create-task-log.dto";
+import { parseParamsForQueryFilter } from "../../../middleware";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
 
+/** ROUTES DEFINED FOR '/:taskId' PREFIX */
+
 router.route('/')
+  .all(parseParamsForQueryFilter())
   .get(createRoute(controller.findAll))
   .post(
     validateDto(CreateTaskLogDto),
@@ -16,11 +19,9 @@ router.route('/')
   );
 
 router.route('/:id')
+  .all(parseParamsForQueryFilter())
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
 
-export const taskLogRouteConfig: RouteConfig = {
-  path: '/task-logs',
-  router,
-};
+export default router;
