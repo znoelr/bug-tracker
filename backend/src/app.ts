@@ -3,6 +3,7 @@ import express, { Express } from "express";
 import appRouter from './router/router';
 import * as config from './config';
 import { httpLogger as appLogger } from './logger';
+import './globals';
 
 config.init();
 

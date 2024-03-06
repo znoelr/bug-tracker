@@ -6,5 +6,12 @@ type WhereType = {
 };
 
 export class QueryFilters {
-  constructor(public readonly where: WhereType = {}) {}
+  private _where: WhereType = {};
+
+  get where() { return this._where; }
+  setWhere(value: any): QueryFilters {
+    if (!value || typeof value !== 'object') return this;
+    this._where = value;
+    return this;
+  }
 }
