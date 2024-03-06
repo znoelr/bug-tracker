@@ -4,6 +4,7 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDto } from "../common/validators";
 import { CreateUserDto } from "./dtos/create-user.dto";
+import { parseParamsForQueryFilter } from "../middleware";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -16,6 +17,7 @@ router.route('/')
   );
 
 router.route('/:id')
+  .all(parseParamsForQueryFilter())
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
