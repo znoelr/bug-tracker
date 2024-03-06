@@ -14,7 +14,7 @@ export class Pagination {
   get nextId() { return this._nextId };
   setNextId(value: any): Pagination {
     if (!value) return this;
-    this._nextId = String(this.nextId);
+    this._nextId = String(value);
     return this;
   }
 }
