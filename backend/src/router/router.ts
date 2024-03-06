@@ -26,9 +26,13 @@ router.use((err: unknown, req: Request, res: Response, next: NextFunction): void
     res.status(404).end(err.message || 'Not found');
     return;
   }
-  // Append to error log file
-  logger.error(`${err}`);
-  res.status(500).end('Something went wrong');
+  try {
+    // Append to error log file
+    logger.error(`${err}`);
+  }
+  finally {
+    res.status(500).end('Something went wrong');
+  }
 });
 
 export default router;

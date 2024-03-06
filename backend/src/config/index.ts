@@ -1,7 +1,4 @@
-// import dotenv from 'dotenv';
 import { envSchema } from './schema';
-
-// dotenv.config({ path: envFilePath });
 
 export const init = () => {
   const { error } = envSchema.validate(process.env, {

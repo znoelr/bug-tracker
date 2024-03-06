@@ -1,9 +1,8 @@
 import path from 'path';
 import pinoLogger from 'pino';
 
-export const fileLogger = () => pinoLogger({
-  transport: {
-    targets: [
+const targets = process.env.NODE_ENV !== 'test'
+  ? [
       {
         target: path.resolve(__dirname, './sonic-boom.ts'),
         level: 'error',
@@ -11,6 +10,11 @@ export const fileLogger = () => pinoLogger({
           singleLine: true,
         },
       },
-    ],
+    ]
+  : [];
+
+export const fileLogger = () => pinoLogger({
+  transport: {
+    targets,
   },
 });
