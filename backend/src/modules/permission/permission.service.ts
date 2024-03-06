@@ -1,4 +1,4 @@
-import { BaseService } from "../../../base/base.service";
+import { BaseService } from "../base/base.service";
 import { PermissionDto } from "./dtos/permission.dto";
 import { permissionRepository } from "./permission.repository";
 

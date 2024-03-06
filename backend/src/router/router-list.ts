@@ -1,19 +1,15 @@
-import { fileRouteConfig } from "../modules/file/file.router";
-import { projectRouteConfig } from "../modules/project/project.router";
-import { permissionRouteConfig } from "../modules/role/modules/permission/permission.router";
+import { permissionRouteConfig } from "../modules/permission/permission.router";
 import { roleRouteConfig } from "../modules/role/role.router";
-import { taskCommentRouteConfig } from "../modules/task/modules/task-comment/task-comment.router";
-import { taskLogRouteConfig } from "../modules/task/modules/task-logs/task-log.router";
-import { taskRouteConfig } from "../modules/task/task.router";
 import { userRouteConfig } from "../modules/user/user.router";
+import { taskRouteConfig } from "../modules/task/task.router";
+import { projectRouteConfig } from "../modules/project/project.router";
+import { fileRouteConfig } from "../modules/file/file.router";
 
 export default [
-  taskRouteConfig,
-  userRouteConfig,
+  permissionRouteConfig,
   roleRouteConfig,
+  userRouteConfig,
+  taskRouteConfig,
   projectRouteConfig,
   fileRouteConfig,
-  permissionRouteConfig,
-  taskCommentRouteConfig,
-  taskLogRouteConfig,
 ];

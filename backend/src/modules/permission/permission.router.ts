@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './permission.controller';
-import { routeFactory } from "../../../common/route-handlers";
-import { RouteConfig } from "../../../common/types";
+import { routeFactory } from "../common/route-handlers";
+import { RouteConfig } from "../common/types";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
