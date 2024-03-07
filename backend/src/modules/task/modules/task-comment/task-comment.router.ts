@@ -3,7 +3,9 @@ import controller from './task-comment.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto } from "../../../common/validators";
 import { CreateTaskCommentDto } from "./dtos/create-task-comment.dto";
-import { parseParamsForQueryFilter } from "../../../middleware";
+import { injectParamsForQueryFilter } from "../../../middleware";
+import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
+import { trimExistingParamsForKeys } from "../../../transformers";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -11,7 +13,11 @@ const createRoute = routeFactory(controller);
 /** ROUTES DEFINED WITH PREFIX '/:taskId' */
 
 router.route('/')
-  .all(parseParamsForQueryFilter())
+  .all(
+    injectParamsForQueryFilter(
+      trimExistingParamsForKeys(['taskId', 'id'])
+    )
+  )
   .get(createRoute(controller.findAll))
   .post(
     validateDto(CreateTaskCommentDto),
@@ -19,9 +25,16 @@ router.route('/')
   );
 
 router.route('/:id')
-  .all(parseParamsForQueryFilter())
+  .all(
+    injectParamsForQueryFilter(
+      trimExistingParamsForKeys(['taskId', 'id'])
+    )
+  )
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
+
+/** Nested task comments */
+router.use(`/:taskCommentId/files`, taskCommentFilesRouter);
 
 export default router;
