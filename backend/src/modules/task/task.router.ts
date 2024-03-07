@@ -7,6 +7,7 @@ import { parseParamsForQueryFilter } from "../middleware";
 import controller from './task.controller';
 import taskCommentsRouter from './modules/task-comment/task-comment.router';
 import taskLogsRouter from './modules/task-log/task-log.router';
+import taskFilesRouter from './modules/task-files/task-files.router';
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -29,6 +30,9 @@ router.use(`/:taskId/comments`, taskCommentsRouter);
 
 /** Nested task logs */
 router.use(`/:taskId/logs`, taskLogsRouter);
+
+/** Nested task files */
+router.use(`/:taskId/files`, taskFilesRouter);
 
 export const taskRouteConfig: RouteConfig = {
   path: '/tasks',
