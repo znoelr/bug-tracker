@@ -5,6 +5,7 @@ import { routeFactory } from "../common/route-handlers";
 import { validateDto } from "../common/validators";
 import { CreateRoleDto } from "./dtos/create-role.dto";
 import { parseParamsForQueryFilter } from "../middleware";
+import rolePermissionsRouter from './modules/role-permissions/role-permissions.router';
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -21,6 +22,9 @@ router.route('/:id')
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
+
+/** Nested task permissions */
+router.use(`/:roleId/permissions`, rolePermissionsRouter);
 
 export const roleRouteConfig: RouteConfig = {
   path: '/roles',
