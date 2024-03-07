@@ -5,6 +5,7 @@ import { routeFactory } from "../common/route-handlers";
 import { validateDto } from "../common/validators";
 import { CreateProjectDto } from "./dtos/create-project.dto";
 import { parseParamsForQueryFilter } from "../middleware";
+import projectFilesRouter from './modules/project-files/project-files.router';
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -21,6 +22,10 @@ router.route('/:id')
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
+
+
+/** Nested project files */
+router.use(`/:projectId/files`, projectFilesRouter);
 
 export const projectRouteConfig: RouteConfig = {
   path: '/projects',
