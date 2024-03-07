@@ -2,7 +2,7 @@ import express from "express";
 import controller from './user-roles.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto } from "../../../common/validators";
-import { appendQueryOptions, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../../../middleware";
+import { injectQueryOptions, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../../../middleware";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { userRoleToRole, userRolesParamsToKey, userRolesToRoles } from "./transformers";
@@ -16,7 +16,7 @@ const createRoute = routeFactory(controller);
 const defaultqueryOptions = new QueryOptions()
   .setInclude({ role: true })
 
-router.use(appendQueryOptions(defaultqueryOptions));
+router.use(injectQueryOptions(defaultqueryOptions));
 
 router.route('/')
   .all(parseParamsForQueryFilter())

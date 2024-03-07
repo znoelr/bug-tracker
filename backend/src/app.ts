@@ -4,7 +4,7 @@ import express, { Express } from "express";
 import appRouter from './router/router';
 import * as config from './config';
 import { httpLogger as appLogger } from './logger';
-import { appendQueryOptions, parseSearchForPagination } from './modules/middleware';
+import { injectQueryOptions, parseSearchForPagination } from './modules/middleware';
 
 config.init();
 
@@ -16,7 +16,7 @@ app.use(appLogger());
 // Append pagination
 app.use(parseSearchForPagination());
 // Append Query Options
-app.use(appendQueryOptions());
+app.use(injectQueryOptions());
 app.use(appRouter);
 
 export default app;
