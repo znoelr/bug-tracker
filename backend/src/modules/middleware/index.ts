@@ -1,3 +1,3 @@
-export * from './parse-search-for-pagination';
-export * from './parse-params-for-query-filter';
+export * from './pagination.middleware';
+export * from './query-filter.middleware';
 export * from './query-options.middleware';
