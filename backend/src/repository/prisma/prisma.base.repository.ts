@@ -7,6 +7,7 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
 
   async findOne(filters: QueryFilters, queryOptions: QueryOptions): Promise<T|null> {
     const findArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions);
+    delete findArgs.orderBy;
     return await this.model.findUnique(findArgs);
   }
 

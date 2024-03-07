@@ -5,7 +5,7 @@ declare global {
     interface Request {
       pagination: Pagination;
       queryFilters: QueryFilters;
-      queryOptions?: QueryOptions;
+      queryOptions: QueryOptions;
     }
   }
 }
