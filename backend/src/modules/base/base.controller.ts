@@ -12,7 +12,8 @@ export class BaseController<T> {
   async findById(req: Request, res: Response, next: NextFunction) {
     const filters = req.queryFilters;
     const { id } = filters.where;
-    const record: T | null = await this.service.findOne(filters);
+    const options = req.queryOptions;
+    const record: T | null = await this.service.findOne(filters, options);
     if (!record) throw new NotFoundException(`Record with id ${id} was not found`);
     res.json(serialize(this.DtoClass, record));
   }
@@ -20,7 +21,8 @@ export class BaseController<T> {
   async findAll(req: Request, res: Response, next: NextFunction) {
     const pagination = req.pagination;
     const filters = req.queryFilters;
-    const recordList = await this.service.findAll(pagination, filters);
+    const options = req.queryOptions;
+    const recordList = await this.service.findAll(pagination, filters, options);
     res.json(serialize(this.DtoClass, recordList));
   }
 
