@@ -51,10 +51,14 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
     if (!options) return {};
     const parsed: any = {};
     const { select, include, orderBy } = options;
-    if (select) parsed.select = select;
-    if (include) parsed.include = include;
-    if (orderBy) parsed.orderBy = orderBy;
+    if (!this.isEmptyObject(select)) parsed.select = select;
+    if (!this.isEmptyObject(include)) parsed.include = include;
+    if (!this.isEmptyObject(orderBy)) parsed.orderBy = orderBy;
     return parsed;
+  }
+
+  private isEmptyObject(obj: any): boolean {
+    return Object.keys(obj).length === 0;
   }
 
   private mergeIntoPrismaOptions(pagination: Pagination | null, filters: QueryFilters | null, options: QueryOptions | null): any {
