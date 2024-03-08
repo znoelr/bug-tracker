@@ -4,4 +4,4 @@ import { taskRepository } from './task.repository';
 
 export class TaskService extends BaseService<TaskDto> {}
 
-export default new TaskService(taskRepository);
+export const taskService = new TaskService(taskRepository);

@@ -3,11 +3,13 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { validateDto } from "../common/validators";
-import { parseParamsForQueryFilter } from "../middleware";
+import { findResourceByRequestQueryFilters, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../middleware";
 import controller from './task.controller';
 import taskCommentsRouter from './modules/task-comment/task-comment.router';
 import taskLogsRouter from './modules/task-log/task-log.router';
 import taskFilesRouter from './modules/task-files/task-files.router';
+import { trimExistingParamsForKeys } from "../transformers";
+import { taskService } from "./task.service";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -24,6 +26,15 @@ router.route('/:id')
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
+
+/** Middleware to ensure resource exists before accessing nested routes */
+router.use(
+  '/:taskId/*',
+  injectParamsForQueryFilter(
+    trimExistingParamsForKeys(['taskId:id'])
+  ),
+  findResourceByRequestQueryFilters(taskService),
+);
 
 /** Nested task comments */
 router.use(`/:taskId/comments`, taskCommentsRouter);
