@@ -4,7 +4,7 @@ import pinoLogger from 'pino';
 const targets = process.env.NODE_ENV !== 'test'
   ? [
       {
-        target: path.resolve(__dirname, './sonic-boom.ts'),
+        target: path.resolve(__dirname, './sonic-boom'),
         level: 'error',
         options: {
           singleLine: true,
