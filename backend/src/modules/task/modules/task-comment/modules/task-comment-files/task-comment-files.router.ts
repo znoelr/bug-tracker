@@ -20,7 +20,7 @@ router.use(injectQueryOptions(
 router.route('/')
   .all(
     injectParamsForQueryFilter(
-      trimExistingParamsForKeys(['taskCommentId', 'fileId'])
+      trimExistingParamsForKeys(['taskCommentId'])
     ),
     jsonInterceptor(toEntityListForKey('file'))
   )
