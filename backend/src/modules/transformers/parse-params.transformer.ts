@@ -10,8 +10,10 @@ export const injectComposedKeyIntoParams = (keys: string[]) => (params: any) => 
 
 export const trimExistingParamsForKeys = (keys: string[]) => (params: any) => {
   return keys.reduce((acc: any, key) => {
-    if (params[key]) {
-      acc[key] = params[key];
+    const [keyName, mappedKeyName] = key.split(':');
+    if (params[keyName]) {
+      key = mappedKeyName || keyName;
+      acc[key] = params[keyName];
     }
     return acc;
   }, {});
