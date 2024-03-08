@@ -11,10 +11,9 @@ export class BaseController<T> {
 
   async findById(req: Request, res: Response, next: NextFunction) {
     const filters = req.queryFilters;
-    const { id } = filters.where;
     const options = req.queryOptions;
     const record: T | null = await this.service.findOne(filters, options);
-    if (!record) throw new NotFoundException(`Record with id ${id} was not found`);
+    if (!record) throw new NotFoundException('Resource Not found');
     res.json(serialize(this.DtoClass, record));
   }
 
