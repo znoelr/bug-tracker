@@ -2,28 +2,29 @@ import express from "express";
 import controller from './task-files.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto } from "../../../common/validators";
-import { injectQueryOptions, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../../../middleware";
+import { injectQueryOptions, injectParamsForQueryFilter } from "../../../middleware";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
-import { taskFileToFile, taskFilesParamsToKey, taskFilesToFiles } from "./transformers";
 import { CreateTaskFilesDto } from "./dtos/create-task-files.dto";
+import { injectComposedKeyIntoParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
 
 /** ROUTES DEFINED WITH PREFIX '/:taskId' */
 
-const defaultqueryOptions = new QueryOptions()
-  .setInclude({ file: true })
-
-router.use(injectQueryOptions(defaultqueryOptions));
+router.use(injectQueryOptions(
+  new QueryOptions().setInclude({ file: true })
+));
 
 router.route('/')
-  .all(parseParamsForQueryFilter())
-  .get(
-    jsonInterceptor(taskFilesToFiles),
-    createRoute(controller.findAll)
+  .all(
+    injectParamsForQueryFilter(
+      trimExistingParamsForKeys(['taskId'])
+    ),
+    jsonInterceptor(toEntityListForKey('file'))
   )
+  .get(createRoute(controller.findAll))
   .post(
     validateDto(CreateTaskFilesDto),
     createRoute(controller.create)
@@ -31,8 +32,10 @@ router.route('/')
 
 router.route('/:fileId')
   .all(
-    jsonInterceptor(taskFileToFile),
-    injectParamsForQueryFilter(taskFilesParamsToKey)
+    injectParamsForQueryFilter(
+      injectComposedKeyIntoParams(['taskId', 'fileId'])
+    ),
+    jsonInterceptor(toEntityForKey('file'))
   )
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
