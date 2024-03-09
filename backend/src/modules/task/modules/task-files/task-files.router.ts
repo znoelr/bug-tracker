@@ -21,10 +21,12 @@ router.route('/')
   .all(
     injectParamsForQueryFilter(
       trimExistingParamsForKeys(['taskId'])
-    ),
-    jsonInterceptor(toEntityListForKey('file'))
+    )
   )
-  .get(createRoute(controller.findAll))
+  .get(
+    jsonInterceptor(toEntityListForKey('file')),
+    createRoute(controller.findAll)
+  )
   .post(
     validateDto(CreateTaskFilesDto),
     createRoute(controller.create)

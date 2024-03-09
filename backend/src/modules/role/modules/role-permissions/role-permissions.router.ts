@@ -21,10 +21,12 @@ router.route('/')
   .all(
     injectParamsForQueryFilter(
       trimExistingParamsForKeys(['roleId'])
-    ),
-    jsonInterceptor(toEntityListForKey('permission'))
+    )
   )
-  .get(createRoute(controller.findAll))
+  .get(
+    jsonInterceptor(toEntityListForKey('permission')),
+    createRoute(controller.findAll)
+  )
   .post(
     validateDto(CreateRolePermissionDto),
     createRoute(controller.create)

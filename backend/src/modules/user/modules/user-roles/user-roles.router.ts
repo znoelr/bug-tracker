@@ -24,10 +24,12 @@ router.route('/')
   .all(
     injectParamsForQueryFilter(
       trimExistingParamsForKeys(['userId'])
-    ),
-    jsonInterceptor(toEntityListForKey('role'))
+    )
   )
-  .get(createRoute(controller.findAll))
+  .get(
+    jsonInterceptor(toEntityListForKey('role')),
+    createRoute(controller.findAll)
+  )
   .post(
     validateDto(CrateUserRolesDto),
     createRoute(controller.create)

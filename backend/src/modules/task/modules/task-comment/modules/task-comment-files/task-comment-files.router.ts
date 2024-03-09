@@ -21,10 +21,12 @@ router.route('/')
   .all(
     injectParamsForQueryFilter(
       trimExistingParamsForKeys(['taskCommentId'])
-    ),
-    jsonInterceptor(toEntityListForKey('file'))
+    )
   )
-  .get(createRoute(controller.findAll))
+  .get(
+    jsonInterceptor(toEntityListForKey('file')),
+    createRoute(controller.findAll)
+  )
   .post(
     validateDto(CreateTaskCommentFilesDto),
     createRoute(controller.create)
