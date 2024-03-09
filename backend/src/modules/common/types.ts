@@ -10,3 +10,8 @@ export type RouteConfig = {
 };
 
 export type RequestHandlerFn = (req: Request, res: Response, next: NextFunction) => void;
+
+export type FindResourceError = {
+  error: Error,
+  throwWhenFound: boolean;
+};
