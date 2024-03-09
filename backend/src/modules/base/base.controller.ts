@@ -29,7 +29,15 @@ export class BaseController<T> {
     const data = req.body;
     const options = req.queryOptions;
     const record = await this.service.create(data, options);
-    res.json(serialize(this.DtoClass, record));
+    res.status(201).json(serialize(this.DtoClass, record));
+  }
+
+  async createForLinking(req: Request, res: Response, next: NextFunction) {
+    const data = req.body;
+    const options = req.queryOptions;
+    const record = await this.service.create(data, options);
+    req.body = serialize(this.DtoClass, record);
+    next();
   }
 
   async update(req: Request, res: Response, next: NextFunction) {
@@ -43,7 +51,14 @@ export class BaseController<T> {
   async delete(req: Request, res: Response, next: NextFunction) {
     const filters = req.queryFilters;
     const options = req.queryOptions;
-    const record = await this.service.delete(filters, options);
-    res.json(serialize(this.DtoClass, record));
+    await this.service.delete(filters, options);
+    res.sendStatus(204);
+  }
+
+  async deleteLinked(req: Request, res: Response, next: NextFunction) {
+    const filters = req.queryFilters;
+    const options = req.queryOptions;
+    await this.service.delete(filters, options);
+    next();
   }
 }
