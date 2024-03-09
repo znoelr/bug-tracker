@@ -16,16 +16,24 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
     return await this.model.findMany(findArgs);
   }
 
-  async create(data: any): Promise<T> {
-    return await this.model.create({ data });
+  async create(data: any, queryOptions?: QueryOptions): Promise<T> {
+    const createArgs = this.mergeIntoPrismaOptions(null, null, queryOptions || null);
+    delete createArgs.orderBy;
+    createArgs.data = data;
+    return await this.model.create(createArgs);
   }
 
-  async update(id: string, data: any): Promise<T> {
-    return await this.model.update({ where: { id }, data });
+  async update(data: any, filters: QueryFilters, queryOptions?: QueryOptions): Promise<T> {
+    const updateArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions || null);
+    delete updateArgs.orderBy;
+    updateArgs.data = data;
+    return await this.model.update(updateArgs);
   }
 
-  async delete(id: string): Promise<T> {
-    return await this.model.delete({ where: { id } });
+  async delete(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T> {
+    const deleteArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions || null);
+    delete deleteArgs.orderBy;
+    return await this.model.delete(deleteArgs);
   }
 
   parsePagination(pagination: Pagination | null) {
