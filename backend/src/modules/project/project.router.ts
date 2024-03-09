@@ -2,7 +2,7 @@ import express from "express";
 import controller from './project.controller';
 import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
-import { validateDto } from "../common/validators";
+import { validateDtoAndInjectId } from "../common/validators";
 import { CreateProjectDto } from "./dtos/create-project.dto";
 import { findResourceByRequestQueryFilters, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../middleware";
 import projectFilesRouter from './modules/project-files/project-files.router';
@@ -16,7 +16,7 @@ const createRoute = routeFactory(controller);
 router.route('/')
   .get(createRoute(controller.findAll))
   .post(
-    validateDto(CreateProjectDto),
+    validateDtoAndInjectId(CreateProjectDto),
     createRoute(controller.create)
   );
 

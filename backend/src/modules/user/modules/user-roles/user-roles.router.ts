@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './user-roles.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { validateDto } from "../../../common/validators";
+import { validateDtoAndInjectId } from "../../../common/validators";
 import { injectQueryOptions, injectParamsForQueryFilter, findResourceByRequestQueryFilters } from "../../../middleware";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
@@ -31,7 +31,7 @@ router.route('/')
     createRoute(controller.findAll)
   )
   .post(
-    validateDto(CrateUserRolesDto),
+    validateDtoAndInjectId(CrateUserRolesDto),
     createRoute(controller.create)
   );
 

@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './task-comment.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { validateDto } from "../../../common/validators";
+import { validateDtoAndInjectId } from "../../../common/validators";
 import { CreateTaskCommentDto } from "./dtos/create-task-comment.dto";
 import { findResourceByRequestQueryFilters, injectParamsForQueryFilter } from "../../../middleware";
 import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
@@ -22,7 +22,7 @@ router.route('/')
   )
   .get(createRoute(controller.findAll))
   .post(
-    validateDto(CreateTaskCommentDto),
+    validateDtoAndInjectId(CreateTaskCommentDto),
     createRoute(controller.create)
   );
 

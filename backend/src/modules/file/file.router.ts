@@ -2,7 +2,7 @@ import express from "express";
 import controller from './file.controller';
 import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
-import { validateDto } from "../common/validators";
+import { validateDtoAndInjectId } from "../common/validators";
 import { CreateFileDto } from "./dtos/create-file.dto";
 import { parseParamsForQueryFilter } from "../middleware";
 
@@ -12,7 +12,7 @@ const createRoute = routeFactory(controller);
 router.route('/')
   .get(createRoute(controller.findAll))
   .post(
-    validateDto(CreateFileDto),
+    validateDtoAndInjectId(CreateFileDto),
     createRoute(controller.create)
   );
 

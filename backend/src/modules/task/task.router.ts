@@ -2,7 +2,7 @@ import express from "express";
 import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { CreateTaskDto } from "./dtos/create-task.dto";
-import { validateDto } from "../common/validators";
+import { validateDtoAndInjectId } from "../common/validators";
 import { findResourceByRequestQueryFilters, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../middleware";
 import controller from './task.controller';
 import taskCommentsRouter from './modules/task-comment/task-comment.router';
@@ -18,7 +18,7 @@ const createRoute = routeFactory(controller);
 router.route('/')
   .get(createRoute(controller.findAll))
   .post(
-    validateDto(CreateTaskDto),
+    validateDtoAndInjectId(CreateTaskDto),
     createRoute(controller.create)
   );
 

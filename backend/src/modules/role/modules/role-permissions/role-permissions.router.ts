@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './role-permissions.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { validateDto } from "../../../common/validators";
+import { validateDtoAndInjectId } from "../../../common/validators";
 import { injectQueryOptions, injectParamsForQueryFilter } from "../../../middleware";
 import { CreateRolePermissionDto } from "./dtos/create-role-permissions.dto";
 import { QueryOptions } from "../../../common/fetch-objects";
@@ -28,7 +28,7 @@ router.route('/')
     createRoute(controller.findAll)
   )
   .post(
-    validateDto(CreateRolePermissionDto),
+    validateDtoAndInjectId(CreateRolePermissionDto),
     createRoute(controller.create)
   );
 

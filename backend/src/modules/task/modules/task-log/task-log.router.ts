@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './task-log.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { validateDto } from "../../../common/validators";
+import { validateDtoAndInjectId } from "../../../common/validators";
 import { CreateTaskLogDto } from "./dtos/create-task-log.dto";
 import { injectParamsForQueryFilter } from "../../../middleware";
 import { trimExistingParamsForKeys } from "../../../transformers";
@@ -19,7 +19,7 @@ router.route('/')
   )
   .get(createRoute(controller.findAll))
   .post(
-    validateDto(CreateTaskLogDto),
+    validateDtoAndInjectId(CreateTaskLogDto),
     createRoute(controller.create)
   );
 

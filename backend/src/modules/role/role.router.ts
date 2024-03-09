@@ -2,7 +2,7 @@ import express from "express";
 import controller from './role.controller';
 import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
-import { validateDto } from "../common/validators";
+import { validateDtoAndInjectId } from "../common/validators";
 import { CreateRoleDto } from "./dtos/create-role.dto";
 import { findResourceByRequestQueryFilters, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../middleware";
 import rolePermissionsRouter from './modules/role-permissions/role-permissions.router';
@@ -16,7 +16,7 @@ const createRoute = routeFactory(controller);
 router.route('/')
   .get(createRoute(controller.findAll))
   .post(
-    validateDto(CreateRoleDto),
+    validateDtoAndInjectId(CreateRoleDto),
     createRoute(controller.create)
   );
 

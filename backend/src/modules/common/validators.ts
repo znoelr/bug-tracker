@@ -2,6 +2,8 @@ import { plainToInstance } from "class-transformer";
 import { validateOrReject } from "class-validator";
 import { NextFunction, Request, Response } from "express";
 import { HTTP_BAD_REQUEST } from "../common/http-status-codes";
+import { v4 as uuid } from 'uuid';
+import { ClassConstructor } from "./types";
 
 const parseValidationErrorMesages = (errors: any[]): any => {
   return errors.reduce((acc: {[key: string]: any}, error: {[key: string]: any}) => {
@@ -10,7 +12,7 @@ const parseValidationErrorMesages = (errors: any[]): any => {
   }, {});
 }
 
-export const validateDto = (classDto: {new(): any}) =>
+const validateDtoFor = (classDto: ClassConstructor, {appendId = true} = {}) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const data: {[key: string]: any} = req.body;
     const instance = plainToInstance(classDto, data);
@@ -19,6 +21,9 @@ export const validateDto = (classDto: {new(): any}) =>
         whitelist: true,
         validationError: { target: false },
       });
+      if (appendId) {
+        instance.id = uuid();
+      }
       req.body = JSON.parse(JSON.stringify(instance));
       next();
     }
@@ -26,4 +31,8 @@ export const validateDto = (classDto: {new(): any}) =>
       res.status(HTTP_BAD_REQUEST)
         .json(parseValidationErrorMesages(errors));
     }
-  };
+  }
+;
+
+export const validateDto = (classDto: ClassConstructor) => validateDtoFor(classDto, { appendId: false });
+export const validateDtoAndInjectId = (classDto: ClassConstructor) => validateDtoFor(classDto, { appendId: true });

@@ -15,3 +15,5 @@ export type FindResourceError = {
   error: Error,
   throwWhenFound: boolean;
 };
+
+export type ClassConstructor = { new(): any };

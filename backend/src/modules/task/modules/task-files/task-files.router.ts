@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './task-files.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { validateDto } from "../../../common/validators";
+import { validateDtoAndInjectId } from "../../../common/validators";
 import { injectQueryOptions, injectParamsForQueryFilter } from "../../../middleware";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
@@ -28,7 +28,7 @@ router.route('/')
     createRoute(controller.findAll)
   )
   .post(
-    validateDto(CreateTaskFilesDto),
+    validateDtoAndInjectId(CreateTaskFilesDto),
     createRoute(controller.create)
   );
 
