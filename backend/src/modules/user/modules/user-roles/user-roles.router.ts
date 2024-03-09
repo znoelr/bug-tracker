@@ -1,15 +1,17 @@
 import express from "express";
 import controller from './user-roles.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { validateDtoAndInjectId } from "../../../common/validators";
-import { injectQueryOptions, injectParamsForQueryFilter, findResourceByRequestQueryFilters } from "../../../middleware";
+import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
+import { injectQueryOptions, injectParamsForQueryFilter, findResourceByRequestQueryFilters, throwBadRequestIfResourceExistByQueryFilters, createRequestBodyFromParams } from "../../../middleware";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
-import { CrateUserRolesDto } from "./dtos/create-user-roles.dto";
+import { CreateUserRolesDto } from "./dtos/create-user-roles.dto";
 import { createComposedKeyFromParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
 import rolePermissionsRouter from '../../../role/modules/role-permissions/role-permissions.router';
 import { userRolesService } from "./user-roles.service";
 import { UserRolesDto } from "./dtos/user-roles.dto";
+import { RoleDto } from "../../../role/dtos/role.dto";
+import { roleService } from "../../../role/role.service";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -21,19 +23,14 @@ router.use(injectQueryOptions(
 ));
 
 router.route('/')
-  .all(
+  .get(
     injectParamsForQueryFilter(
       trimExistingParamsForKeys(['userId'])
-    )
-  )
-  .get(
+    ),
     jsonInterceptor(toEntityListForKey('role')),
     createRoute(controller.findAll)
   )
-  .post(
-    validateDtoAndInjectId(CrateUserRolesDto),
-    createRoute(controller.create)
-  );
+;
 
 router.route('/:roleId')
   .all(
@@ -43,8 +40,22 @@ router.route('/:roleId')
     jsonInterceptor(toEntityForKey('role'))
   )
   .get(createRoute(controller.findById))
-  .patch(createRoute(controller.update))
-  .delete(createRoute(controller.delete));
+  .put(
+    throwBadRequestIfResourceExistByQueryFilters<UserRolesDto>(userRolesService),
+    /** userId already exists, so check for roleId */
+    injectParamsForQueryFilter(
+      trimExistingParamsForKeys(['roleId:id'])
+    ),
+    findResourceByRequestQueryFilters<RoleDto>(roleService),
+    createRequestBodyFromParams(['userId', 'roleId']),
+    validateDto(CreateUserRolesDto),
+    createRoute(controller.create)
+  )
+  .delete(
+    findResourceByRequestQueryFilters<UserRolesDto>(userRolesService),
+    createRoute(controller.delete)
+  )
+;
 
 /** Middleware to ensure resource exists before accessing nested routes */
 router.use(
