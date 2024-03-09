@@ -1,12 +1,16 @@
 import express from "express";
 import controller from './role-permissions.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { validateDtoAndInjectId } from "../../../common/validators";
-import { injectQueryOptions, injectParamsForQueryFilter } from "../../../middleware";
+import { validateDto } from "../../../common/validators";
+import { injectQueryOptions, injectParamsForQueryFilter, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters, createRequestBodyFromParams } from "../../../middleware";
 import { CreateRolePermissionDto } from "./dtos/create-role-permissions.dto";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { createComposedKeyFromParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
+import { RolePermissionsDto } from "./dtos/role-permissions.dto";
+import { rolePermissionsService } from "./role-permissions.service";
+import { PermissionDto } from "../../../permission/dtos/permission.dto";
+import { permissionService } from "../../../permission/permission.service";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -18,19 +22,14 @@ router.use(injectQueryOptions(
 ));
 
 router.route('/')
-  .all(
+  .get(
     injectParamsForQueryFilter(
       trimExistingParamsForKeys(['roleId'])
-    )
-  )
-  .get(
+    ),
     jsonInterceptor(toEntityListForKey('permission')),
     createRoute(controller.findAll)
   )
-  .post(
-    validateDtoAndInjectId(CreateRolePermissionDto),
-    createRoute(controller.create)
-  );
+;
 
 router.route('/:permissionId')
   .all(
@@ -40,7 +39,21 @@ router.route('/:permissionId')
     jsonInterceptor(toEntityForKey('permission'))
   )
   .get(createRoute(controller.findById))
-  .patch(createRoute(controller.update))
-  .delete(createRoute(controller.delete));
+  .put(
+    throwBadRequestIfResourceExistByQueryFilters<RolePermissionsDto>(rolePermissionsService),
+    /** roleId already exists, so check for permissionId */
+    injectParamsForQueryFilter(
+      trimExistingParamsForKeys(['permissionId:id']),
+    ),
+    findResourceByRequestQueryFilters<PermissionDto>(permissionService),
+    createRequestBodyFromParams(['roleId', 'permissionId']),
+    validateDto(CreateRolePermissionDto),
+    createRoute(controller.create)
+  )
+  .delete(
+    findResourceByRequestQueryFilters<RolePermissionsDto>(rolePermissionsService),
+    createRoute(controller.delete)
+  )
+;
 
 export default router;
