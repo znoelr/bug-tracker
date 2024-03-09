@@ -27,22 +27,23 @@ export class BaseController<T> {
 
   async create(req: Request, res: Response, next: NextFunction) {
     const data = req.body;
-    const record = await this.service.create(data);
+    const options = req.queryOptions;
+    const record = await this.service.create(data, options);
     res.json(serialize(this.DtoClass, record));
   }
 
   async update(req: Request, res: Response, next: NextFunction) {
-    const filters = req.queryFilters;
-    const { id } = filters.where;
     const data = req.body;
-    const record = await this.service.update(id, data);
+    const filters = req.queryFilters;
+    const options = req.queryOptions;
+    const record = await this.service.update(data, filters, options);
     res.json(serialize(this.DtoClass, record));
   }
 
   async delete(req: Request, res: Response, next: NextFunction) {
     const filters = req.queryFilters;
-    const { id } = filters.where;
-    const record = await this.service.delete(id);
+    const options = req.queryOptions;
+    const record = await this.service.delete(filters, options);
     res.json(serialize(this.DtoClass, record));
   }
 }

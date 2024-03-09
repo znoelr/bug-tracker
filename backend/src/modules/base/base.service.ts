@@ -12,15 +12,15 @@ export class BaseService<T> {
     return await this.repo.findAll(pagination, queryFilters, queryOptions);
   }
 
-  async create(data: any): Promise<T> {
-    return await this.repo.create(data);
+  async create(data: any, queryOptions?: QueryOptions): Promise<T> {
+    return await this.repo.create(data, queryOptions);
   }
 
-  async update(id: string, data: any): Promise<T> {
-    return await this.repo.update(id, data);
+  async update(data: any, queryFilters: QueryFilters, queryOptions?: QueryOptions): Promise<T> {
+    return await this.repo.update(data, queryFilters, queryOptions);
   }
 
-  async delete(id: string): Promise<T> {
-    return await this.repo.delete(id);
+  async delete(queryFilters: QueryFilters, queryOptions?: QueryOptions): Promise<T> {
+    return await this.repo.delete(queryFilters, queryOptions);
   }
 }
