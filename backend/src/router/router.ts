@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import routerList from './router-list';
 import { RouteConfig } from "../modules/common/types";
-import { NotFoundException } from "../modules/common/exceptions";
+import { BaseHttpException, NotFoundException } from "../modules/common/exceptions";
 import { fileLogger } from '../logger';
 
 const logger = fileLogger();
@@ -22,8 +22,8 @@ router.use('*', (req: Request, res: Response, next: NextFunction): void => {
 
 // Error 500
 router.use((err: unknown, req: Request, res: Response, next: NextFunction): void => {
-  if (err instanceof NotFoundException) {
-    res.status(404).end(err.message || 'Not found');
+  if (err instanceof BaseHttpException) {
+    res.status(err.http_code).end(err.message || 'Not found');
     return;
   }
   try {
