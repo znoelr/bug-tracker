@@ -1,13 +1,11 @@
 import { BaseRepository } from "./base.repository";
 import { Pagination, QueryFilters, QueryOptions } from "../common/types";
-import { v4 as uuid } from 'uuid';
 
 export class BaseService<T> {
   constructor(protected readonly repo: BaseRepository<T>) {}
 
   async findOne(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T|null> {
-    const record = await this.repo.findOne(filters, queryOptions);
-    return record;
+    return await this.repo.findOne(filters, queryOptions);
   }
 
   async findAll(pagination: Pagination, queryFilters?: QueryFilters, queryOptions?: QueryOptions): Promise<T[]> {
@@ -15,10 +13,7 @@ export class BaseService<T> {
   }
 
   async create(data: any): Promise<T> {
-    return await this.repo.create({
-      ...data,
-      id: uuid(),
-    });
+    return await this.repo.create(data);
   }
 
   async update(id: string, data: any): Promise<T> {
