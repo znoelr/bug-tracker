@@ -17,3 +17,8 @@ export type FindResourceError = {
 };
 
 export type ClassConstructor = { new(): any };
+
+export type CreateMergedKeys = {
+  paramKeys: string[];
+  bodyKeys: string[];
+};
