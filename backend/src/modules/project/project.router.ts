@@ -4,8 +4,11 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDto } from "../common/validators";
 import { CreateProjectDto } from "./dtos/create-project.dto";
-import { parseParamsForQueryFilter } from "../middleware";
+import { findResourceByRequestQueryFilters, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../middleware";
 import projectFilesRouter from './modules/project-files/project-files.router';
+import { ProjectDto } from "./dtos/project.dto";
+import { projectService } from "./project.service";
+import { trimExistingParamsForKeys } from "../transformers";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -23,6 +26,15 @@ router.route('/:id')
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
 
+
+/** Middleware to ensure resource exists before accessing nested routes */
+router.use(
+  '/:projectId/*',
+  injectParamsForQueryFilter(
+    trimExistingParamsForKeys(['projectId:id'])
+  ),
+  findResourceByRequestQueryFilters<ProjectDto>(projectService),
+);
 
 /** Nested project files */
 router.use(`/:projectId/files`, projectFilesRouter);

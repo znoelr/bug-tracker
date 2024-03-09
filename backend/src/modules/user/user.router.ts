@@ -4,8 +4,11 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDto } from "../common/validators";
 import { CreateUserDto } from "./dtos/create-user.dto";
-import { parseParamsForQueryFilter } from "../middleware";
+import { findResourceByRequestQueryFilters, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../middleware";
 import userRolesRouter from './modules/user-roles/user-roles.router';
+import { trimExistingParamsForKeys } from "../transformers";
+import { userService } from "./user.service";
+import { UserDto } from "./dtos/user.dto";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -22,6 +25,15 @@ router.route('/:id')
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));
+
+/** Middleware to ensure resource exists before accessing nested routes */
+router.use(
+  '/:userId/*',
+  injectParamsForQueryFilter(
+    trimExistingParamsForKeys(['userId:id'])
+  ),
+  findResourceByRequestQueryFilters<UserDto>(userService),
+);
 
 /** Nested user roles */
 router.use(`/:userId/roles`, userRolesRouter);

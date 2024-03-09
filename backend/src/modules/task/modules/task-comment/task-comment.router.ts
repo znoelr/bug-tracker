@@ -7,6 +7,7 @@ import { findResourceByRequestQueryFilters, injectParamsForQueryFilter } from ".
 import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
 import { trimExistingParamsForKeys } from "../../../transformers";
 import { taskCommentService } from "./task-comment.service";
+import { TaskCommentDto } from "./dtos/task-comment.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -41,7 +42,7 @@ router.use(
   injectParamsForQueryFilter(
     trimExistingParamsForKeys(['taskCommentId:id'])
   ),
-  findResourceByRequestQueryFilters(taskCommentService),
+  findResourceByRequestQueryFilters<TaskCommentDto>(taskCommentService),
 );
 
 /** Nested task comments */

@@ -10,6 +10,7 @@ import taskLogsRouter from './modules/task-log/task-log.router';
 import taskFilesRouter from './modules/task-files/task-files.router';
 import { trimExistingParamsForKeys } from "../transformers";
 import { taskService } from "./task.service";
+import { TaskDto } from "./dtos/task.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -33,7 +34,7 @@ router.use(
   injectParamsForQueryFilter(
     trimExistingParamsForKeys(['taskId:id'])
   ),
-  findResourceByRequestQueryFilters(taskService),
+  findResourceByRequestQueryFilters<TaskDto>(taskService),
 );
 
 /** Nested task comments */

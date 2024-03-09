@@ -3,7 +3,8 @@ import controller from './task-log.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto } from "../../../common/validators";
 import { CreateTaskLogDto } from "./dtos/create-task-log.dto";
-import { parseParamsForQueryFilter } from "../../../middleware";
+import { injectParamsForQueryFilter } from "../../../middleware";
+import { trimExistingParamsForKeys } from "../../../transformers";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -11,7 +12,11 @@ const createRoute = routeFactory(controller);
 /** ROUTES DEFINED FOR '/:taskId' PREFIX */
 
 router.route('/')
-  .all(parseParamsForQueryFilter())
+  .all(
+    injectParamsForQueryFilter(
+      trimExistingParamsForKeys(['taskId'])
+    )
+  )
   .get(createRoute(controller.findAll))
   .post(
     validateDto(CreateTaskLogDto),
@@ -19,7 +24,11 @@ router.route('/')
   );
 
 router.route('/:id')
-  .all(parseParamsForQueryFilter())
+  .all(
+    injectParamsForQueryFilter(
+      trimExistingParamsForKeys(['taskId', 'id'])
+    )
+  )
   .get(createRoute(controller.findById))
   .patch(createRoute(controller.update))
   .delete(createRoute(controller.delete));

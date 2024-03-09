@@ -18,7 +18,8 @@ router.use(injectQueryOptions(
 ));
 
 router.route('/')
-  .all(injectParamsForQueryFilter(
+  .all(
+    injectParamsForQueryFilter(
       trimExistingParamsForKeys(['roleId'])
     ),
     jsonInterceptor(toEntityListForKey('permission'))

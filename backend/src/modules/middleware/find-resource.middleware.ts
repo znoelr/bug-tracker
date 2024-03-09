@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { BaseService } from "../base/base.service";
 import { NotFoundException } from "../common/exceptions";
 
-export const findResourceByRequestQueryFilters = (service: BaseService<any>) =>
+export const findResourceByRequestQueryFilters = <T>(service: BaseService<T>) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const { queryFilters } = req;
     const record = await service.findOne(queryFilters);
