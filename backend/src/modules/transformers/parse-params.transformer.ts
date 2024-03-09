@@ -1,4 +1,4 @@
-export const injectComposedKeyIntoParams = (keys: string[]) => (params: any) => {
+export const createComposedKeyFromParams = (keys: string[]) => (params: any) => {
   const composedKeyName = keys.join('_');
   return {
     [composedKeyName]: keys.reduce((acc: any, key: string) => {

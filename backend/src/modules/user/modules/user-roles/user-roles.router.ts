@@ -6,7 +6,7 @@ import { injectQueryOptions, injectParamsForQueryFilter, findResourceByRequestQu
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { CrateUserRolesDto } from "./dtos/create-user-roles.dto";
-import { injectComposedKeyIntoParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
+import { createComposedKeyFromParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
 import rolePermissionsRouter from '../../../role/modules/role-permissions/role-permissions.router';
 import { userRolesService } from "./user-roles.service";
 import { UserRolesDto } from "./dtos/user-roles.dto";
@@ -38,7 +38,7 @@ router.route('/')
 router.route('/:roleId')
   .all(
     injectParamsForQueryFilter(
-      injectComposedKeyIntoParams(['userId', 'roleId'])
+      createComposedKeyFromParams(['userId', 'roleId'])
     ),
     jsonInterceptor(toEntityForKey('role'))
   )
@@ -50,7 +50,7 @@ router.route('/:roleId')
 router.use(
   '/:roleId/*',
   injectParamsForQueryFilter(
-    injectComposedKeyIntoParams(['userId', 'roleId'])
+    createComposedKeyFromParams(['userId', 'roleId'])
   ),
   findResourceByRequestQueryFilters<UserRolesDto>(userRolesService),
 );

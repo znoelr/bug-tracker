@@ -6,7 +6,7 @@ import { injectQueryOptions, injectParamsForQueryFilter } from "../../../middlew
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateProjectFilesDto } from "./dtos/create-project-files.dto";
-import { injectComposedKeyIntoParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
+import { createComposedKeyFromParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -35,7 +35,7 @@ router.route('/')
 router.route('/:fileId')
   .all(
     injectParamsForQueryFilter(
-      injectComposedKeyIntoParams(['projectId', 'fileId'])
+      createComposedKeyFromParams(['projectId', 'fileId'])
     ),
     jsonInterceptor(toEntityForKey('file'))
   )

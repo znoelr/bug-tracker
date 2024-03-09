@@ -6,7 +6,7 @@ import { injectQueryOptions, injectParamsForQueryFilter } from "../../../middlew
 import { CreateRolePermissionDto } from "./dtos/create-role-permissions.dto";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
-import { injectComposedKeyIntoParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
+import { createComposedKeyFromParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -35,7 +35,7 @@ router.route('/')
 router.route('/:permissionId')
   .all(
     injectParamsForQueryFilter(
-      injectComposedKeyIntoParams(['roleId', 'permissionId'])
+      createComposedKeyFromParams(['roleId', 'permissionId'])
     ),
     jsonInterceptor(toEntityForKey('permission'))
   )
