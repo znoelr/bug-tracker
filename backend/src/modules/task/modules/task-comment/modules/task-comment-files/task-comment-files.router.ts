@@ -51,16 +51,16 @@ router.route('/:fileId')
   .all(
     injectParamsForQueryFilter(
       createComposedKeyFromParams(['taskCommentId', 'fileId'])
-    ),
-    jsonInterceptor(toEntityForKey('file'))
+    )
   )
-  .get(createRoute(controller.findById))
+  .get(
+    jsonInterceptor(toEntityForKey('file')),
+    createRoute(controller.findById)
+  )
   .delete(
-    injectQueryOptions(new QueryOptions()),
     findResourceByRequestQueryFilters<TaskCommentFilesDto>(taskCommentFilesService),
-    // Delete taskCommentFile record
+    injectQueryOptions(new QueryOptions()),
     createRoute(controller.deleteLinked),
-    // Delete File record
     injectParamsForQueryFilter(
       trimExistingParamsForKeys(['fileId:id'])
     ),
