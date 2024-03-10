@@ -2,7 +2,7 @@ import express from "express";
 import controller from './task-comment-files.controller';
 import { routeFactory } from "../../../../../common/route-handlers";
 import { QueryOptions } from "../../../../../common/fetch-objects";
-import { createRequestBodyForKeys, findResourceByRequestQueryFilters, injectParamsForQueryFilter, injectQueryOptions } from "../../../../../middleware";
+import { createRequestBodyForKeys, findResourceByRequestQueryFilters, injectQueryFiltersfromParams, injectQueryOptions } from "../../../../../middleware";
 import { jsonInterceptor } from "../../../../../interceptors";
 import { validateDto, validateDtoAndInjectId } from "../../../../../common/validators";
 import { createComposedKeyFromParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../../../transformers";
@@ -24,7 +24,7 @@ router.use(injectQueryOptions(
 
 router.route('/')
   .get(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['taskCommentId'])
     ),
     jsonInterceptor(toEntityListForKey('file')),
@@ -49,7 +49,7 @@ router.route('/')
 
 router.route('/:fileId')
   .all(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       createComposedKeyFromParams(['taskCommentId', 'fileId'])
     )
   )
@@ -61,7 +61,7 @@ router.route('/:fileId')
     findResourceByRequestQueryFilters<TaskCommentFilesDto>(taskCommentFilesService),
     injectQueryOptions(new QueryOptions()),
     createRoute(controller.deleteLinked),
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['fileId:id'])
     ),
     createFileRoute(fileController.delete)

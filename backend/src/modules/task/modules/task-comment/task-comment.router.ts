@@ -3,7 +3,7 @@ import controller from './task-comment.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDtoAndInjectId } from "../../../common/validators";
 import { CreateTaskCommentDto } from "./dtos/create-task-comment.dto";
-import { findResourceByRequestQueryFilters, injectParamsForQueryFilter } from "../../../middleware";
+import { findResourceByRequestQueryFilters, injectQueryFiltersfromParams } from "../../../middleware";
 import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
 import { trimExistingParamsForKeys } from "../../../transformers";
 import { taskCommentService } from "./task-comment.service";
@@ -16,7 +16,7 @@ const createRoute = routeFactory(controller);
 
 router.route('/')
   .all(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['taskId'])
     )
   )
@@ -28,7 +28,7 @@ router.route('/')
 
 router.route('/:id')
   .all(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['taskId', 'id'])
     )
   )
@@ -39,7 +39,7 @@ router.route('/:id')
 /** Middleware to ensure resource exists before accessing nested routes */
 router.use(
   '/:taskCommentId/*',
-  injectParamsForQueryFilter(
+  injectQueryFiltersfromParams(
     trimExistingParamsForKeys(['taskCommentId:id'])
   ),
   findResourceByRequestQueryFilters<TaskCommentDto>(taskCommentService),

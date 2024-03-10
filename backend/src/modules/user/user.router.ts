@@ -4,7 +4,7 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDtoAndInjectId } from "../common/validators";
 import { CreateUserDto } from "./dtos/create-user.dto";
-import { findResourceByRequestQueryFilters, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../middleware";
+import { findResourceByRequestQueryFilters, injectQueryFiltersfromParams, parseParamsForQueryFilter } from "../middleware";
 import userRolesRouter from './modules/user-roles/user-roles.router';
 import { trimExistingParamsForKeys } from "../transformers";
 import { userService } from "./user.service";
@@ -29,7 +29,7 @@ router.route('/:id')
 /** Middleware to ensure resource exists before accessing nested routes */
 router.use(
   '/:userId/*',
-  injectParamsForQueryFilter(
+  injectQueryFiltersfromParams(
     trimExistingParamsForKeys(['userId:id'])
   ),
   findResourceByRequestQueryFilters<UserDto>(userService),

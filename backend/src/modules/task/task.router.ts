@@ -3,7 +3,7 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { validateDtoAndInjectId } from "../common/validators";
-import { findResourceByRequestQueryFilters, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../middleware";
+import { findResourceByRequestQueryFilters, injectQueryFiltersfromParams, parseParamsForQueryFilter } from "../middleware";
 import controller from './task.controller';
 import taskCommentsRouter from './modules/task-comment/task-comment.router';
 import taskLogsRouter from './modules/task-log/task-log.router';
@@ -31,7 +31,7 @@ router.route('/:id')
 /** Middleware to ensure resource exists before accessing nested routes */
 router.use(
   '/:taskId/*',
-  injectParamsForQueryFilter(
+  injectQueryFiltersfromParams(
     trimExistingParamsForKeys(['taskId:id'])
   ),
   findResourceByRequestQueryFilters<TaskDto>(taskService),

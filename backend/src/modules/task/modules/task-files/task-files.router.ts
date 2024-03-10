@@ -3,7 +3,7 @@ import controller from './task-files.controller';
 import fileController from '../../../file/file.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
-import { injectQueryOptions, injectParamsForQueryFilter, createRequestBodyForKeys, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters } from "../../../middleware";
+import { injectQueryOptions, injectQueryFiltersfromParams, createRequestBodyForKeys, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters } from "../../../middleware";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateTaskFilesDto } from "./dtos/create-task-files.dto";
@@ -24,7 +24,7 @@ router.use(injectQueryOptions(
 
 router.route('/')
   .get(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['taskId'])
     ),
     jsonInterceptor(toEntityListForKey('file')),
@@ -49,7 +49,7 @@ router.route('/')
 
 router.route('/:fileId')
   .all(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       createComposedKeyFromParams(['taskId', 'fileId'])
     )
   )
@@ -61,7 +61,7 @@ router.route('/:fileId')
     findResourceByRequestQueryFilters<TaskFilesDto>(taskFilesService),
     injectQueryOptions(new QueryOptions()),
     createRoute(controller.deleteLinked),
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['fileId:id'])
     ),
     createFileRoute(fileController.delete),

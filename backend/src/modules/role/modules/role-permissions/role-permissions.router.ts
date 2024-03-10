@@ -2,7 +2,7 @@ import express from "express";
 import controller from './role-permissions.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto } from "../../../common/validators";
-import { injectQueryOptions, injectParamsForQueryFilter, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters, createRequestBodyFromParams } from "../../../middleware";
+import { injectQueryOptions, injectQueryFiltersfromParams, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters, createRequestBodyFromParams } from "../../../middleware";
 import { CreateRolePermissionDto } from "./dtos/create-role-permissions.dto";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
@@ -23,7 +23,7 @@ router.use(injectQueryOptions(
 
 router.route('/')
   .get(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['roleId'])
     ),
     jsonInterceptor(toEntityListForKey('permission')),
@@ -33,7 +33,7 @@ router.route('/')
 
 router.route('/:permissionId')
   .all(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       createComposedKeyFromParams(['roleId', 'permissionId'])
     ),
     jsonInterceptor(toEntityForKey('permission'))
@@ -42,7 +42,7 @@ router.route('/:permissionId')
   .put(
     throwBadRequestIfResourceExistByQueryFilters<RolePermissionsDto>(rolePermissionsService),
     /** roleId already exists, so check for permissionId */
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['permissionId:id']),
     ),
     findResourceByRequestQueryFilters<PermissionDto>(permissionService),

@@ -2,7 +2,7 @@ import express from "express";
 import controller from './user-roles.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
-import { injectQueryOptions, injectParamsForQueryFilter, findResourceByRequestQueryFilters, throwBadRequestIfResourceExistByQueryFilters, createRequestBodyFromParams } from "../../../middleware";
+import { injectQueryOptions, injectQueryFiltersfromParams, findResourceByRequestQueryFilters, throwBadRequestIfResourceExistByQueryFilters, createRequestBodyFromParams } from "../../../middleware";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateUserRolesDto } from "./dtos/create-user-roles.dto";
@@ -24,7 +24,7 @@ router.use(injectQueryOptions(
 
 router.route('/')
   .get(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['userId'])
     ),
     jsonInterceptor(toEntityListForKey('role')),
@@ -34,7 +34,7 @@ router.route('/')
 
 router.route('/:roleId')
   .all(
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       createComposedKeyFromParams(['userId', 'roleId'])
     ),
     jsonInterceptor(toEntityForKey('role'))
@@ -43,7 +43,7 @@ router.route('/:roleId')
   .put(
     throwBadRequestIfResourceExistByQueryFilters<UserRolesDto>(userRolesService),
     /** userId already exists, so check for roleId */
-    injectParamsForQueryFilter(
+    injectQueryFiltersfromParams(
       trimExistingParamsForKeys(['roleId:id'])
     ),
     findResourceByRequestQueryFilters<RoleDto>(roleService),
@@ -60,7 +60,7 @@ router.route('/:roleId')
 /** Middleware to ensure resource exists before accessing nested routes */
 router.use(
   '/:roleId/*',
-  injectParamsForQueryFilter(
+  injectQueryFiltersfromParams(
     createComposedKeyFromParams(['userId', 'roleId'])
   ),
   findResourceByRequestQueryFilters<UserRolesDto>(userRolesService),

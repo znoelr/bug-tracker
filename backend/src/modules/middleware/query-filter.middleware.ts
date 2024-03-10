@@ -11,7 +11,7 @@ export const parseParamsForQueryFilter = () =>
   }
 ;
 
-export const injectParamsForQueryFilter = (cb: GenericFunction) =>
+export const injectQueryFiltersfromParams = (cb: GenericFunction) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const params = cb(req.params);
     req.queryFilters = (req.queryFilters || new QueryFilters())

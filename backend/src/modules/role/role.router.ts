@@ -4,7 +4,7 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDtoAndInjectId } from "../common/validators";
 import { CreateRoleDto } from "./dtos/create-role.dto";
-import { findResourceByRequestQueryFilters, injectParamsForQueryFilter, parseParamsForQueryFilter } from "../middleware";
+import { findResourceByRequestQueryFilters, injectQueryFiltersfromParams, parseParamsForQueryFilter } from "../middleware";
 import rolePermissionsRouter from './modules/role-permissions/role-permissions.router';
 import { trimExistingParamsForKeys } from "../transformers";
 import { roleService } from "./role.service";
@@ -29,7 +29,7 @@ router.route('/:id')
 /** Middleware to ensure resource exists before accessing nested routes */
 router.use(
   '/:roleId/*',
-  injectParamsForQueryFilter(
+  injectQueryFiltersfromParams(
     trimExistingParamsForKeys(['roleId:id'])
   ),
   findResourceByRequestQueryFilters<RoleDto>(roleService),
