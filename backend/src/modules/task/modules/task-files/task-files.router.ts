@@ -7,7 +7,7 @@ import { injectQueryOptions, injectQueryFiltersfromParams, createRequestBodyForK
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateTaskFilesDto } from "./dtos/create-task-files.dto";
-import { createComposedKeyFromParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
+import { createComposedKeyFromObjectKeys, toEntityForKey, toEntityListForKey, trimObjectForKeys } from "../../../transformers";
 import { CreateFileDto } from "../../../file/dtos/create-file.dto";
 import { TaskFilesDto } from "./dtos/task-files.dto";
 import { taskFilesService } from "./task-files.service";
@@ -25,7 +25,7 @@ router.use(injectQueryOptions(
 router.route('/')
   .get(
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['taskId'])
+      trimObjectForKeys(['taskId'])
     ),
     jsonInterceptor(toEntityListForKey('file')),
     createRoute(controller.findAll)
@@ -50,7 +50,7 @@ router.route('/')
 router.route('/:fileId')
   .all(
     injectQueryFiltersfromParams(
-      createComposedKeyFromParams(['taskId', 'fileId'])
+      createComposedKeyFromObjectKeys(['taskId', 'fileId'])
     )
   )
   .get(
@@ -62,7 +62,7 @@ router.route('/:fileId')
     injectQueryOptions(new QueryOptions()),
     createRoute(controller.deleteLinked),
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['fileId:id'])
+      trimObjectForKeys(['fileId:id'])
     ),
     createFileRoute(fileController.delete),
   )

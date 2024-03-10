@@ -6,7 +6,7 @@ import { validateDtoAndInjectId } from "../common/validators";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import { findResourceByRequestQueryFilters, injectQueryFiltersfromParams, parseParamsForQueryFilter } from "../middleware";
 import userRolesRouter from './modules/user-roles/user-roles.router';
-import { trimExistingParamsForKeys } from "../transformers";
+import { trimObjectForKeys } from "../transformers";
 import { userService } from "./user.service";
 import { UserDto } from "./dtos/user.dto";
 
@@ -30,7 +30,7 @@ router.route('/:id')
 router.use(
   '/:userId/*',
   injectQueryFiltersfromParams(
-    trimExistingParamsForKeys(['userId:id'])
+    trimObjectForKeys(['userId:id'])
   ),
   findResourceByRequestQueryFilters<UserDto>(userService),
 );

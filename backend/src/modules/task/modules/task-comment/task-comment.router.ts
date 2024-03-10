@@ -5,7 +5,7 @@ import { validateDtoAndInjectId } from "../../../common/validators";
 import { CreateTaskCommentDto } from "./dtos/create-task-comment.dto";
 import { findResourceByRequestQueryFilters, injectQueryFiltersfromParams } from "../../../middleware";
 import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
-import { trimExistingParamsForKeys } from "../../../transformers";
+import { trimObjectForKeys } from "../../../transformers";
 import { taskCommentService } from "./task-comment.service";
 import { TaskCommentDto } from "./dtos/task-comment.dto";
 
@@ -17,7 +17,7 @@ const createRoute = routeFactory(controller);
 router.route('/')
   .all(
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['taskId'])
+      trimObjectForKeys(['taskId'])
     )
   )
   .get(createRoute(controller.findAll))
@@ -29,7 +29,7 @@ router.route('/')
 router.route('/:id')
   .all(
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['taskId', 'id'])
+      trimObjectForKeys(['taskId', 'id'])
     )
   )
   .get(createRoute(controller.findById))
@@ -40,7 +40,7 @@ router.route('/:id')
 router.use(
   '/:taskCommentId/*',
   injectQueryFiltersfromParams(
-    trimExistingParamsForKeys(['taskCommentId:id'])
+    trimObjectForKeys(['taskCommentId:id'])
   ),
   findResourceByRequestQueryFilters<TaskCommentDto>(taskCommentService),
 );

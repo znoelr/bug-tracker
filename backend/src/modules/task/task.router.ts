@@ -8,7 +8,7 @@ import controller from './task.controller';
 import taskCommentsRouter from './modules/task-comment/task-comment.router';
 import taskLogsRouter from './modules/task-log/task-log.router';
 import taskFilesRouter from './modules/task-files/task-files.router';
-import { trimExistingParamsForKeys } from "../transformers";
+import { trimObjectForKeys } from "../transformers";
 import { taskService } from "./task.service";
 import { TaskDto } from "./dtos/task.dto";
 
@@ -32,7 +32,7 @@ router.route('/:id')
 router.use(
   '/:taskId/*',
   injectQueryFiltersfromParams(
-    trimExistingParamsForKeys(['taskId:id'])
+    trimObjectForKeys(['taskId:id'])
   ),
   findResourceByRequestQueryFilters<TaskDto>(taskService),
 );

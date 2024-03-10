@@ -8,7 +8,7 @@ import { findResourceByRequestQueryFilters, injectQueryFiltersfromParams, parseP
 import projectFilesRouter from './modules/project-files/project-files.router';
 import { ProjectDto } from "./dtos/project.dto";
 import { projectService } from "./project.service";
-import { trimExistingParamsForKeys } from "../transformers";
+import { trimObjectForKeys } from "../transformers";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -31,7 +31,7 @@ router.route('/:id')
 router.use(
   '/:projectId/*',
   injectQueryFiltersfromParams(
-    trimExistingParamsForKeys(['projectId:id'])
+    trimObjectForKeys(['projectId:id'])
   ),
   findResourceByRequestQueryFilters<ProjectDto>(projectService),
 );

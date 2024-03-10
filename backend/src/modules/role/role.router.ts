@@ -6,7 +6,7 @@ import { validateDtoAndInjectId } from "../common/validators";
 import { CreateRoleDto } from "./dtos/create-role.dto";
 import { findResourceByRequestQueryFilters, injectQueryFiltersfromParams, parseParamsForQueryFilter } from "../middleware";
 import rolePermissionsRouter from './modules/role-permissions/role-permissions.router';
-import { trimExistingParamsForKeys } from "../transformers";
+import { trimObjectForKeys } from "../transformers";
 import { roleService } from "./role.service";
 import { RoleDto } from "./dtos/role.dto";
 
@@ -30,7 +30,7 @@ router.route('/:id')
 router.use(
   '/:roleId/*',
   injectQueryFiltersfromParams(
-    trimExistingParamsForKeys(['roleId:id'])
+    trimObjectForKeys(['roleId:id'])
   ),
   findResourceByRequestQueryFilters<RoleDto>(roleService),
 );

@@ -4,7 +4,7 @@ import { routeFactory } from "../../../common/route-handlers";
 import { validateDtoAndInjectId } from "../../../common/validators";
 import { CreateTaskLogDto } from "./dtos/create-task-log.dto";
 import { injectQueryFiltersfromParams } from "../../../middleware";
-import { trimExistingParamsForKeys } from "../../../transformers";
+import { trimObjectForKeys } from "../../../transformers";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -14,7 +14,7 @@ const createRoute = routeFactory(controller);
 router.route('/')
   .all(
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['taskId'])
+      trimObjectForKeys(['taskId'])
     )
   )
   .get(createRoute(controller.findAll))
@@ -26,7 +26,7 @@ router.route('/')
 router.route('/:id')
   .all(
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['taskId', 'id'])
+      trimObjectForKeys(['taskId', 'id'])
     )
   )
   .get(createRoute(controller.findById))

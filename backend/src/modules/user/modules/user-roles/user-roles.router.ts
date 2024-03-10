@@ -6,7 +6,7 @@ import { injectQueryOptions, injectQueryFiltersfromParams, findResourceByRequest
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateUserRolesDto } from "./dtos/create-user-roles.dto";
-import { createComposedKeyFromParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../transformers";
+import { createComposedKeyFromObjectKeys, toEntityForKey, toEntityListForKey, trimObjectForKeys } from "../../../transformers";
 import rolePermissionsRouter from '../../../role/modules/role-permissions/role-permissions.router';
 import { userRolesService } from "./user-roles.service";
 import { UserRolesDto } from "./dtos/user-roles.dto";
@@ -25,7 +25,7 @@ router.use(injectQueryOptions(
 router.route('/')
   .get(
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['userId'])
+      trimObjectForKeys(['userId'])
     ),
     jsonInterceptor(toEntityListForKey('role')),
     createRoute(controller.findAll)
@@ -35,7 +35,7 @@ router.route('/')
 router.route('/:roleId')
   .all(
     injectQueryFiltersfromParams(
-      createComposedKeyFromParams(['userId', 'roleId'])
+      createComposedKeyFromObjectKeys(['userId', 'roleId'])
     ),
     jsonInterceptor(toEntityForKey('role'))
   )
@@ -44,7 +44,7 @@ router.route('/:roleId')
     throwBadRequestIfResourceExistByQueryFilters<UserRolesDto>(userRolesService),
     /** userId already exists, so check for roleId */
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['roleId:id'])
+      trimObjectForKeys(['roleId:id'])
     ),
     findResourceByRequestQueryFilters<RoleDto>(roleService),
     createRequestBodyFromParams(['userId', 'roleId']),
@@ -61,7 +61,7 @@ router.route('/:roleId')
 router.use(
   '/:roleId/*',
   injectQueryFiltersfromParams(
-    createComposedKeyFromParams(['userId', 'roleId'])
+    createComposedKeyFromObjectKeys(['userId', 'roleId'])
   ),
   findResourceByRequestQueryFilters<UserRolesDto>(userRolesService),
 );

@@ -5,7 +5,7 @@ import { QueryOptions } from "../../../../../common/fetch-objects";
 import { createRequestBodyForKeys, findResourceByRequestQueryFilters, injectQueryFiltersfromParams, injectQueryOptions } from "../../../../../middleware";
 import { jsonInterceptor } from "../../../../../interceptors";
 import { validateDto, validateDtoAndInjectId } from "../../../../../common/validators";
-import { createComposedKeyFromParams, toEntityForKey, toEntityListForKey, trimExistingParamsForKeys } from "../../../../../transformers";
+import { createComposedKeyFromObjectKeys, toEntityForKey, toEntityListForKey, trimObjectForKeys } from "../../../../../transformers";
 import { TaskCommentFilesDto } from "./dtos/task-comment-files.dto";
 import { taskCommentFilesService } from "./task-comment-files.service";
 import fileController from '../../../../../file/file.controller';
@@ -25,7 +25,7 @@ router.use(injectQueryOptions(
 router.route('/')
   .get(
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['taskCommentId'])
+      trimObjectForKeys(['taskCommentId'])
     ),
     jsonInterceptor(toEntityListForKey('file')),
     createRoute(controller.findAll)
@@ -50,7 +50,7 @@ router.route('/')
 router.route('/:fileId')
   .all(
     injectQueryFiltersfromParams(
-      createComposedKeyFromParams(['taskCommentId', 'fileId'])
+      createComposedKeyFromObjectKeys(['taskCommentId', 'fileId'])
     )
   )
   .get(
@@ -62,7 +62,7 @@ router.route('/:fileId')
     injectQueryOptions(new QueryOptions()),
     createRoute(controller.deleteLinked),
     injectQueryFiltersfromParams(
-      trimExistingParamsForKeys(['fileId:id'])
+      trimObjectForKeys(['fileId:id'])
     ),
     createFileRoute(fileController.delete)
   )
