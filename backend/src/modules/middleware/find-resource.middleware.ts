@@ -25,9 +25,9 @@ export const findResourceByRequestQueryFilters = <T>(service: BaseService<T>) =>
   })
 ;
 
-export const throwBadRequestIfResourceExistByQueryFilters = <T>(service: BaseService<T>) =>
+export const throwBadRequestIfResourceExistByQueryFilters = <T>(service: BaseService<T>, msg?: string) =>
   returnResponseError<T>(service, {
     throwWhenFound: true,
-    error: new BadRequestException('Resource already exists'),
+    error: new BadRequestException(msg || 'Resource already exists'),
   })
 ;

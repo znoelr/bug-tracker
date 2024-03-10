@@ -11,11 +11,15 @@ export const parseParamsForQueryFilter = () =>
   }
 ;
 
-export const injectQueryFiltersfromParams = (cb: GenericFunction) =>
+export const injectQueryFiltersfromRequestKey = (key: keyof Request) => (cb: GenericFunction) =>
   async (req: Request, res: Response, next: NextFunction) => {
-    const params = cb(req.params);
+    const where = cb(req[key]);
     req.queryFilters = (req.queryFilters || new QueryFilters())
-      .setWhere(params);
+      .setWhere(where);
     next();
   }
 ;
+
+export const injectQueryFiltersfromParams = injectQueryFiltersfromRequestKey('params');
+
+export const injectQueryFiltersfromBody = injectQueryFiltersfromRequestKey('body');
