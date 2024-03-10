@@ -3,7 +3,7 @@ import controller from './project-files.controller';
 import fileController from '../../../file/file.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
-import { injectQueryOptions, injectQueryFiltersfromParams, createRequestBodyForKeys, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters } from "../../../middleware";
+import { injectQueryOptions, injectQueryFiltersfromRequest, createRequestBodyForKeys, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters } from "../../../middleware";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateProjectFilesDto } from "./dtos/create-project-files.dto";
@@ -24,7 +24,7 @@ router.use(injectQueryOptions(
 
 router.route('/')
   .get(
-    injectQueryFiltersfromParams(
+    injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['projectId'])
     ),
     jsonInterceptor(toEntityListForKey('file')),
@@ -48,7 +48,7 @@ router.route('/')
 
 router.route('/:fileId')
   .all(
-    injectQueryFiltersfromParams(
+    injectQueryFiltersfromRequest('params')(
       createComposedKeyFromObjectKeys(['projectId', 'fileId'])
     )
   )
@@ -60,7 +60,7 @@ router.route('/:fileId')
     findResourceByRequestQueryFilters<ProjectFilesDto>(projectFilesService),
     injectQueryOptions(new QueryOptions()),
     createRoute(controller.deleteLinked),
-    injectQueryFiltersfromParams(
+    injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['fileId:id'])
     ),
     createFileRoute(fileController.delete)

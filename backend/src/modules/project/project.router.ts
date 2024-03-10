@@ -4,7 +4,7 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDtoAndInjectId } from "../common/validators";
 import { CreateProjectDto } from "./dtos/create-project.dto";
-import { findResourceByRequestQueryFilters, injectQueryFiltersfromParams, parseParamsForQueryFilter } from "../middleware";
+import { findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, parseParamsForQueryFilter } from "../middleware";
 import projectFilesRouter from './modules/project-files/project-files.router';
 import { ProjectDto } from "./dtos/project.dto";
 import { projectService } from "./project.service";
@@ -30,7 +30,7 @@ router.route('/:id')
 /** Middleware to ensure resource exists before accessing nested routes */
 router.use(
   '/:projectId/*',
-  injectQueryFiltersfromParams(
+  injectQueryFiltersfromRequest('params')(
     trimObjectForKeys(['projectId:id'])
   ),
   findResourceByRequestQueryFilters<ProjectDto>(projectService),

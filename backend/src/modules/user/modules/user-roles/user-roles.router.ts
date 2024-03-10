@@ -2,7 +2,7 @@ import express from "express";
 import controller from './user-roles.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
-import { injectQueryOptions, injectQueryFiltersfromParams, findResourceByRequestQueryFilters, throwBadRequestIfResourceExistByQueryFilters, createRequestBodyFromParams } from "../../../middleware";
+import { injectQueryOptions, injectQueryFiltersfromRequest, findResourceByRequestQueryFilters, throwBadRequestIfResourceExistByQueryFilters, createRequestBodyFromParams } from "../../../middleware";
 import { QueryOptions } from "../../../common/fetch-objects";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateUserRolesDto } from "./dtos/create-user-roles.dto";
@@ -24,7 +24,7 @@ router.use(injectQueryOptions(
 
 router.route('/')
   .get(
-    injectQueryFiltersfromParams(
+    injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['userId'])
     ),
     jsonInterceptor(toEntityListForKey('role')),
@@ -34,7 +34,7 @@ router.route('/')
 
 router.route('/:roleId')
   .all(
-    injectQueryFiltersfromParams(
+    injectQueryFiltersfromRequest('params')(
       createComposedKeyFromObjectKeys(['userId', 'roleId'])
     ),
     jsonInterceptor(toEntityForKey('role'))
@@ -43,7 +43,7 @@ router.route('/:roleId')
   .put(
     throwBadRequestIfResourceExistByQueryFilters<UserRolesDto>(userRolesService),
     /** userId already exists, so check for roleId */
-    injectQueryFiltersfromParams(
+    injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['roleId:id'])
     ),
     findResourceByRequestQueryFilters<RoleDto>(roleService),
@@ -60,7 +60,7 @@ router.route('/:roleId')
 /** Middleware to ensure resource exists before accessing nested routes */
 router.use(
   '/:roleId/*',
-  injectQueryFiltersfromParams(
+  injectQueryFiltersfromRequest('params')(
     createComposedKeyFromObjectKeys(['userId', 'roleId'])
   ),
   findResourceByRequestQueryFilters<UserRolesDto>(userRolesService),

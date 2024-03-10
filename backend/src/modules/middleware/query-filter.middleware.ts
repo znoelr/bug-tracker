@@ -11,7 +11,7 @@ export const parseParamsForQueryFilter = () =>
   }
 ;
 
-export const injectQueryFiltersfromRequestKey = (key: keyof Request) => (cb: GenericFunction) =>
+export const injectQueryFiltersfromRequest = (key: keyof Request) => (cb: GenericFunction) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const where = cb(req[key]);
     req.queryFilters = (req.queryFilters || new QueryFilters())
@@ -19,7 +19,3 @@ export const injectQueryFiltersfromRequestKey = (key: keyof Request) => (cb: Gen
     next();
   }
 ;
-
-export const injectQueryFiltersfromParams = injectQueryFiltersfromRequestKey('params');
-
-export const injectQueryFiltersfromBody = injectQueryFiltersfromRequestKey('body');
