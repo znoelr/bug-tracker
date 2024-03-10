@@ -6,15 +6,20 @@ import { FindResourceError } from "../common/types";
 export const returnResponseError = <T>(service: BaseService<T>, {throwWhenFound, error}: FindResourceError) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const { queryFilters } = req;
-    const record = await service.findOne(queryFilters);
-    if (
-      (throwWhenFound && record) ||
-      (!throwWhenFound && !record)
-    ) {
-      next(error);
-      return;
+    try {
+      const record = await service.findOne(queryFilters);
+      if (
+        (throwWhenFound && record) ||
+        (!throwWhenFound && !record)
+      ) {
+        next(error);
+        return;
+      }
+      next();
     }
-    next();
+    catch (error) {
+      next(error);
+    }
   }
 ;
 
