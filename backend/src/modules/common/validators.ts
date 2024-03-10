@@ -14,6 +14,10 @@ const parseValidationErrorMesages = (errors: any[]): any => {
 
 const validateDtoFor = (classDto: ClassConstructor, {appendId = true} = {}) =>
   async (req: Request, res: Response, next: NextFunction) => {
+    if (Object.keys(req.body).length === 0) {
+      res.status(HTTP_BAD_REQUEST).end('Must provide some data');
+      return;
+    }
     const data: {[key: string]: any} = req.body;
     const instance = plainToInstance(classDto, data);
     try {
