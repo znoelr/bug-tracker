@@ -19,7 +19,7 @@ router.route('/')
   .get(createRoute(controller.findAll))
   .post(
     validateDtoAndInjectId(CreateUserDto),
-    validateUniqueKeysFromRequest<UserDto>('body')(['username'], userService),
+    validateUniqueKeysFromRequest<UserDto>('body')(userService, ['username']),
     createRoute(controller.create)
   );
 
@@ -28,7 +28,7 @@ router.route('/:id')
   .get(createRoute(controller.findById))
   .patch(
     validateDto(UpdateUserDto),
-    validateUniqueKeysFromRequest<UserDto>('body')(['username'], userService),
+    validateUniqueKeysFromRequest<UserDto>('body')(userService, ['username']),
     validateRequest('body')(confirmPasswordValidator),
     createRequestBodyForKeys({
       paramKeys: [],

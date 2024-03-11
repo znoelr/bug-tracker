@@ -19,7 +19,7 @@ router.route('/')
   .get(createRoute(controller.findAll))
   .post(
     validateDtoAndInjectId(CreateRoleDto),
-    validateUniqueKeysFromRequest<RoleDto>('body')(['name'], roleService),
+    validateUniqueKeysFromRequest<RoleDto>('body')(roleService, ['name']),
     createRoute(controller.create)
   );
 
@@ -28,7 +28,7 @@ router.route('/:id')
   .get(createRoute(controller.findById))
   .patch(
     validateDto(UpdateRoleDto),
-    validateUniqueKeysFromRequest<RoleDto>('body')(['name'], roleService),
+    validateUniqueKeysFromRequest<RoleDto>('body')(roleService, ['name']),
     createRoute(controller.update)
   )
   .delete(createRoute(controller.delete));

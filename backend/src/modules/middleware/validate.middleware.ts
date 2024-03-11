@@ -4,7 +4,7 @@ import { QueryFilters } from "../common/fetch-objects";
 import { BadRequestException } from "../common/exceptions";
 import { GenericFunction } from "../common/types";
 
-export const validateUniqueKeysFromRequest = <T>(requestKey: keyof Request) => (keys: string[], service: BaseService<T>) =>
+export const validateUniqueKeysFromRequest = <T>(requestKey: keyof Request) => (service: BaseService<T>, keys: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
     const objectToSearchFrom = req[requestKey];
     const uniqueKeysToValidate = keys.filter((key) => {
