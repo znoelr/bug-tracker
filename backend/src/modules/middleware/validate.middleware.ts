@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { BaseService } from "../base/base.service";
 import { QueryFilters } from "../common/fetch-objects";
 import { BadRequestException } from "../common/exceptions";
+import { GenericFunction } from "../common/types";
 
 export const validateUniqueKeysFromRequest = <T>(requestKey: keyof Request) => (keys: string[], service: BaseService<T>) =>
   async (req: Request, res: Response, next: NextFunction) => {
@@ -28,6 +29,17 @@ export const validateUniqueKeysFromRequest = <T>(requestKey: keyof Request) => (
       next();      
     }
     catch (error) {
+      next(error);
+    }
+  }
+;
+
+export const validateRequest = (requestKey: keyof Request) => (cb: GenericFunction) =>
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      cb(req[requestKey]);
+      next();
+    } catch (error) {
       next(error);
     }
   }
