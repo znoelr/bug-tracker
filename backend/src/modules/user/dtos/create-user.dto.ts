@@ -8,8 +8,4 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   password: string;
-
-  @IsString()
-  @IsNotEmpty()
-  roleId: string;
 }
