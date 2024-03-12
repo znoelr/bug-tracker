@@ -1,6 +1,6 @@
 
 import { BaseRepository } from "../../modules/base/base.repository";
-import { Pagination, QueryFilters, QueryOptions } from "../../modules/common/types";
+import { Pagination, QueryFilters, QueryOptions, SortDirection, SortObject } from "../../modules/common/types";
 
 export class PrismaBaseRepository<T> implements BaseRepository<T> {
   constructor(protected readonly model: any) {}
@@ -62,8 +62,16 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
     const { select, include, orderBy } = options;
     if (!this.isEmptyObject(select)) parsed.select = select;
     if (!this.isEmptyObject(include)) parsed.include = include;
-    if (!this.isEmptyObject(orderBy)) parsed.orderBy = orderBy;
+    if (!this.isEmptyObject(orderBy)) parsed.orderBy = this.parseOrderBy(orderBy);
     return parsed;
+  }
+
+  private parseOrderBy(orderBy: SortObject) {
+    const hasOnlyOneEntry = Object.keys(orderBy).length === 1;
+    if (hasOnlyOneEntry) return orderBy;
+    return Object.entries(orderBy).map(([field, sortDirection]: [string, SortDirection]) => ({
+      [field]: sortDirection,
+    }));
   }
 
   private isEmptyObject(obj: any): boolean {
