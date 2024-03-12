@@ -7,7 +7,7 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
 
   async findOne(filters: QueryFilters, queryOptions: QueryOptions): Promise<T|null> {
     const findArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions);
-    delete findArgs.sortBy;
+    delete findArgs.orderBy;
     return await this.model.findUnique(findArgs);
   }
 
@@ -18,21 +18,21 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
 
   async create(data: any, queryOptions?: QueryOptions): Promise<T> {
     const createArgs = this.mergeIntoPrismaOptions(null, null, queryOptions || null);
-    delete createArgs.sortBy;
+    delete createArgs.orderBy;
     createArgs.data = data;
     return await this.model.create(createArgs);
   }
 
   async update(data: any, filters: QueryFilters, queryOptions?: QueryOptions): Promise<T> {
     const updateArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions || null);
-    delete updateArgs.sortBy;
+    delete updateArgs.orderBy;
     updateArgs.data = data;
     return await this.model.update(updateArgs);
   }
 
   async delete(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T> {
     const deleteArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions || null);
-    delete deleteArgs.sortBy;
+    delete deleteArgs.orderBy;
     return await this.model.delete(deleteArgs);
   }
 
