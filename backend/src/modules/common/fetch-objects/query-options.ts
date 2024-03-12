@@ -1,7 +1,9 @@
+import { GenericObject, SortObject } from "../types";
+
 export class QueryOptions {
-  private _select: { [key: string]: any; } = {};
-  private _include: { [key: string]: any; } = {};
-  private _orderBy: { [key: string]: 'asc'|'desc' } = { createdAt: 'desc' };
+  private _select: GenericObject<any> = {};
+  private _include: GenericObject<any> = {};
+  private _orderBy: SortObject = { createdAt: 'desc' };
 
   get select() {return this._select; }
   setSelect(value: any): QueryOptions {

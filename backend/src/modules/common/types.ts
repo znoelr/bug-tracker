@@ -22,3 +22,7 @@ export type CreateMergedKeys = {
   paramKeys: string[];
   bodyKeys: string[];
 };
+
+export type GenericObject<T> = { [key: string]: T };
+export type SortDirection = 'asc' | 'desc';
+export type SortObject = GenericObject<SortDirection>;
