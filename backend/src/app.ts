@@ -15,8 +15,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(appLogger());
 // Append pagination
 app.use(parseSearchForPagination());
-// Append Query Options
-app.use(injectQueryOptions());
 app.use(appRouter);
 
 export default app;
