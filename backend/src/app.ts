@@ -4,7 +4,7 @@ import express, { Express } from "express";
 import appRouter from './router/router';
 import * as config from './config';
 import { httpLogger as appLogger } from './logger';
-import { injectQueryOptions, parseSearchForPagination } from './modules/middleware';
+import { parseSearchForPagination } from './modules/middleware';
 
 config.init();
 

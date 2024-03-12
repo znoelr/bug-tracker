@@ -1,16 +1,20 @@
 
 import { Request, Response, NextFunction } from "express";
-import { QueryOptions } from "../common/types";
+import { QueryOptions, QueryOptionsTransformerCb } from "../common/types";
 import { catchAsync } from "../common/exception-handlers";
 import { ClassConstructor, GenericObject, SortObject } from "../common/types";
 import { createSortByObject, getValidSortKeys } from "../common/helpers";
 
-export const injectQueryOptions = (queryOptions?: QueryOptions) =>
+export const injectQueryOptions = (queryOptions: QueryOptions) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    if (!queryOptions) {
-      queryOptions = new QueryOptions();
-    }
     req.queryOptions = queryOptions;
+    next();
+  })
+;
+
+export const injectTransformedQueryOptions = (cb: QueryOptionsTransformerCb) =>
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    req.queryOptions = cb(req.queryOptions || new QueryOptions());
     next();
   })
 ;

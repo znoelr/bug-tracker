@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
+import { QueryOptions } from "./fetch-objects";
 
 export type RequesOptions = {
   endRequest: boolean;
@@ -28,3 +29,5 @@ export type CreateMergedKeys = {
 export type GenericObject<T> = { [key: string]: T };
 export type SortDirection = 'asc' | 'desc';
 export type SortObject = GenericObject<SortDirection>;
+
+export type QueryOptionsTransformerCb = (_: QueryOptions) => QueryOptions;
