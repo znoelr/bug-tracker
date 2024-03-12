@@ -1,14 +1,17 @@
 import { Expose } from "class-transformer";
 
-export class UserDto {
+export class ProjectSortDto {
   @Expose()
-  id: string;
+  title: string;
 
   @Expose()
-  username: string;
+  name: string;
 
   @Expose()
-  password: string;
+  description: string;
+
+  @Expose()
+  status: string;
 
   @Expose()
   createdAt: string;

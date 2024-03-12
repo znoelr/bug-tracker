@@ -1,14 +1,17 @@
 import { Expose } from "class-transformer";
 
-export class UserDto {
+export class PermissionSortDto {
   @Expose()
-  id: string;
+  name: string;
 
   @Expose()
-  username: string;
+  description: string;
 
   @Expose()
-  password: string;
+  action: string;
+
+  @Expose()
+  resource: string;
 
   @Expose()
   createdAt: string;

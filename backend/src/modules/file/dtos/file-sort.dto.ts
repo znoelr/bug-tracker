@@ -1,14 +1,14 @@
 import { Expose } from "class-transformer";
 
-export class UserDto {
+export class FileSortDto {
   @Expose()
-  id: string;
+  name: string;
 
   @Expose()
-  username: string;
+  mimetype: string;
 
   @Expose()
-  password: string;
+  url: string;
 
   @Expose()
   createdAt: string;

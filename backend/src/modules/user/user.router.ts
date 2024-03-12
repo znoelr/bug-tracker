@@ -4,19 +4,23 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../common/validators";
 import { CreateUserDto } from "./dtos/create-user.dto";
-import { createRequestBodyForKeys, findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, parseParamsForQueryFilter, validateRequest, validateUniqueKeysFromRequest } from "../middleware";
+import { createRequestBodyForKeys, findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, parseParamsForQueryFilter, parseUrlQueryForQueryOptionsSortBy, validateRequest, validateUniqueKeysFromRequest } from "../middleware";
 import userRolesRouter from './modules/user-roles/user-roles.router';
 import { trimObjectForKeys } from "../transformers";
 import { userService } from "./user.service";
 import { UserDto } from "./dtos/user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
 import { confirmPasswordValidator } from "./user.validators";
+import { UserSortDto } from "./dtos/user-sort.dto";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
 
 router.route('/')
-  .get(createRoute(controller.findAll))
+  .get(
+    parseUrlQueryForQueryOptionsSortBy(UserSortDto),
+    createRoute(controller.findAll)
+  )
   .post(
     validateDtoAndInjectId(CreateUserDto),
     validateUniqueKeysFromRequest<UserDto>('body')(userService, ['username']),

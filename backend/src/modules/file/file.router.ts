@@ -4,13 +4,17 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDtoAndInjectId } from "../common/validators";
 import { CreateFileDto } from "./dtos/create-file.dto";
-import { parseParamsForQueryFilter } from "../middleware";
+import { parseParamsForQueryFilter, parseUrlQueryForQueryOptionsSortBy } from "../middleware";
+import { FileSortDto } from "./dtos/file-sort.dto";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
 
 router.route('/')
-  .get(createRoute(controller.findAll))
+  .get(
+    parseUrlQueryForQueryOptionsSortBy(FileSortDto),
+    createRoute(controller.findAll)
+  )
   .post(
     validateDtoAndInjectId(CreateFileDto),
     createRoute(controller.create)

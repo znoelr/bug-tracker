@@ -3,7 +3,7 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { validateDto, validateDtoAndInjectId } from "../common/validators";
-import { findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, parseParamsForQueryFilter, validateUniqueKeysFromRequest } from "../middleware";
+import { findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, parseParamsForQueryFilter, parseUrlQueryForQueryOptionsSortBy, validateUniqueKeysFromRequest } from "../middleware";
 import controller from './task.controller';
 import taskCommentsRouter from './modules/task-comment/task-comment.router';
 import taskLogsRouter from './modules/task-log/task-log.router';
@@ -12,12 +12,16 @@ import { trimObjectForKeys } from "../transformers";
 import { taskService } from "./task.service";
 import { TaskDto } from "./dtos/task.dto";
 import { UpdateTaskDto } from "./dtos/update-task.dto";
+import { TaskSortDto } from "./dtos/task-sort.dto";
 
-const router = express.Router({ mergeParams: true });
+const router = express.Router();
 const createRoute = routeFactory(controller);
 
 router.route('/')
-  .get(createRoute(controller.findAll))
+  .get(
+    parseUrlQueryForQueryOptionsSortBy(TaskSortDto),
+    createRoute(controller.findAll)
+  )
   .post(
     validateDtoAndInjectId(CreateTaskDto),
     validateUniqueKeysFromRequest<TaskDto>('body')(taskService, ['title']),
