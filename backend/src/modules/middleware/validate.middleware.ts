@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { BaseService } from "../base/base.service";
-import { QueryFilters } from "../common/fetch-objects";
+import { QueryFilters } from "../common/types";
 import { BadRequestException } from "../common/exceptions";
 import { GenericFunction } from "../common/types";
 import { catchAsync } from "../common/exception-handlers";

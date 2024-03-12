@@ -4,7 +4,7 @@ import { routeFactory } from "../../../common/route-handlers";
 import { validateDto } from "../../../common/validators";
 import { injectQueryOptions, injectQueryFiltersfromRequest, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters, createRequestBodyFromParams } from "../../../middleware";
 import { CreateRolePermissionDto } from "./dtos/create-role-permissions.dto";
-import { QueryOptions } from "../../../common/fetch-objects";
+import { QueryOptions } from "../../../common/types";
 import { jsonInterceptor } from "../../../interceptors";
 import { createComposedKeyFromObjectKeys, toEntityForKey, toEntityListForKey, trimObjectForKeys } from "../../../transformers";
 import { RolePermissionsDto } from "./dtos/role-permissions.dto";

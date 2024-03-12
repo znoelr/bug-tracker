@@ -1,7 +1,5 @@
 import express, { NextFunction, Request, Response } from "express";
 
-export * from './fetch-objects';
-
 export type RequesOptions = {
   endRequest: boolean;
 };

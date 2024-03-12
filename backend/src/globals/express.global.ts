@@ -1,4 +1,4 @@
-import { Pagination, QueryFilters, QueryOptions } from "../modules/common/fetch-objects";
+import { Pagination, QueryFilters, QueryOptions } from "../modules/common/types";
 
 declare global {
   namespace Express {

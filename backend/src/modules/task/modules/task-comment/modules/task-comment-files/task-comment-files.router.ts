@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './task-comment-files.controller';
 import { routeFactory } from "../../../../../common/route-handlers";
-import { QueryOptions } from "../../../../../common/fetch-objects";
+import { QueryOptions } from "../../../../../common/types";
 import { createRequestBodyForKeys, findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, injectQueryOptions } from "../../../../../middleware";
 import { jsonInterceptor } from "../../../../../interceptors";
 import { validateDto, validateDtoAndInjectId } from "../../../../../common/validators";

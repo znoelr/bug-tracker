@@ -1,6 +1,6 @@
 
 import { Request, Response, NextFunction } from "express";
-import { QueryOptions } from "../common/fetch-objects";
+import { QueryOptions } from "../common/types";
 import { catchAsync } from "../common/exception-handlers";
 import { ClassConstructor, GenericObject, SortObject } from "../common/types";
 import { createSortByObject, getValidSortKeys } from "../common/helpers";

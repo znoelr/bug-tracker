@@ -4,7 +4,7 @@ import fileController from '../../../file/file.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
 import { injectQueryOptions, injectQueryFiltersfromRequest, createRequestBodyForKeys, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters } from "../../../middleware";
-import { QueryOptions } from "../../../common/fetch-objects";
+import { QueryOptions } from "../../../common/types";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateProjectFilesDto } from "./dtos/create-project-files.dto";
 import { createComposedKeyFromObjectKeys, toEntityForKey, toEntityListForKey, trimObjectForKeys } from "../../../transformers";

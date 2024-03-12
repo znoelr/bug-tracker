@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Pagination } from "../common/fetch-objects";
+import { Pagination } from "../common/types";
 import { catchAsync } from "../common/exception-handlers";
 
 export const parseSearchForPagination = () =>

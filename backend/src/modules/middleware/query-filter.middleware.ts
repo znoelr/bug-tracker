@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { QueryFilters } from "../common/fetch-objects";
+import { QueryFilters } from "../common/types";
 import { GenericFunction } from "../common/types";
 import { catchAsync } from "../common/exception-handlers";
 

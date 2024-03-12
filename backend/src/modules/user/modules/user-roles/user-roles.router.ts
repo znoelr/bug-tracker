@@ -3,7 +3,7 @@ import controller from './user-roles.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
 import { injectQueryOptions, injectQueryFiltersfromRequest, findResourceByRequestQueryFilters, throwBadRequestIfResourceExistByQueryFilters, createRequestBodyFromParams } from "../../../middleware";
-import { QueryOptions } from "../../../common/fetch-objects";
+import { QueryOptions } from "../../../common/types";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateUserRolesDto } from "./dtos/create-user-roles.dto";
 import { createComposedKeyFromObjectKeys, toEntityForKey, toEntityListForKey, trimObjectForKeys } from "../../../transformers";
