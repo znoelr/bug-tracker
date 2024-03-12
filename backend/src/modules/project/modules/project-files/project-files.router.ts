@@ -33,7 +33,7 @@ router.route('/')
   .post(
     injectQueryOptions(new QueryOptions()),
     validateDtoAndInjectId(CreateFileDto),
-    createFileRoute(fileController.createForLinking),
+    createFileRoute(fileController.create, { endRequest: false }),
     createRequestBodyForKeys({
       paramKeys: ['projectId'],
       bodyKeys: ['id:fileId'],
@@ -59,7 +59,7 @@ router.route('/:fileId')
   .delete(
     findResourceByRequestQueryFilters<ProjectFilesDto>(projectFilesService),
     injectQueryOptions(new QueryOptions()),
-    createRoute(controller.deleteLinked),
+    createRoute(controller.delete, { endRequest: false }),
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['fileId:id'])
     ),
