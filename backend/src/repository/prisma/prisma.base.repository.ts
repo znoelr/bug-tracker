@@ -7,7 +7,7 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
 
   async findOne(filters: QueryFilters, queryOptions: QueryOptions): Promise<T|null> {
     const findArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions);
-    delete findArgs.orderBy;
+    delete findArgs.sortBy;
     return await this.model.findUnique(findArgs);
   }
 
@@ -18,21 +18,21 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
 
   async create(data: any, queryOptions?: QueryOptions): Promise<T> {
     const createArgs = this.mergeIntoPrismaOptions(null, null, queryOptions || null);
-    delete createArgs.orderBy;
+    delete createArgs.sortBy;
     createArgs.data = data;
     return await this.model.create(createArgs);
   }
 
   async update(data: any, filters: QueryFilters, queryOptions?: QueryOptions): Promise<T> {
     const updateArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions || null);
-    delete updateArgs.orderBy;
+    delete updateArgs.sortBy;
     updateArgs.data = data;
     return await this.model.update(updateArgs);
   }
 
   async delete(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T> {
     const deleteArgs = this.mergeIntoPrismaOptions(null, filters, queryOptions || null);
-    delete deleteArgs.orderBy;
+    delete deleteArgs.sortBy;
     return await this.model.delete(deleteArgs);
   }
 
@@ -59,17 +59,17 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
   parseQueryOptions(options: QueryOptions | null) {
     if (!options) return {};
     const parsed: any = {};
-    const { select, include, orderBy } = options;
+    const { select, include, sortBy } = options;
     if (!this.isEmptyObject(select)) parsed.select = select;
     if (!this.isEmptyObject(include)) parsed.include = include;
-    if (!this.isEmptyObject(orderBy)) parsed.orderBy = this.parseOrderBy(orderBy);
+    if (!this.isEmptyObject(sortBy)) parsed.orderBy = this.parseSortBy(sortBy);
     return parsed;
   }
 
-  private parseOrderBy(orderBy: SortObject) {
-    const hasOnlyOneEntry = Object.keys(orderBy).length === 1;
-    if (hasOnlyOneEntry) return orderBy;
-    return Object.entries(orderBy).map(([field, sortDirection]: [string, SortDirection]) => ({
+  private parseSortBy(sortBy: SortObject) {
+    const hasOnlyOneEntry = Object.keys(sortBy).length === 1;
+    if (hasOnlyOneEntry) return sortBy;
+    return Object.entries(sortBy).map(([field, sortDirection]: [string, SortDirection]) => ({
       [field]: sortDirection,
     }));
   }

@@ -23,7 +23,7 @@ const getValidKeysSort = (classDto: ClassConstructor) => {
   }, {});
 };
 
-const createOrderByObject = (sortQuery: string, validSortKeys: GenericObject<boolean>) => {
+const createsortByObject = (sortQuery: string, validSortKeys: GenericObject<boolean>) => {
   return sortQuery.split(',').reduce((acc: any, key: string) => {
     let sortDirection: SortDirection = 'asc';
     const sortDesc = key.startsWith('-');
@@ -42,9 +42,9 @@ export const parseUrlQueryForQueryOptionsSortBy = (classDto: ClassConstructor) =
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const sortQuery = (req.query?.sort || '-createdAt').toString();
     const validSortKeys: GenericObject<boolean> = getValidKeysSort(classDto);
-    const orderBy: SortObject = createOrderByObject(sortQuery, validSortKeys);
+    const sortBy: SortObject = createsortByObject(sortQuery, validSortKeys);
     req.queryOptions = req.queryOptions || new QueryOptions();
-    req.queryOptions.setOrderBy(orderBy);
+    req.queryOptions.setSortBy(sortBy);
     next();
   })
 ;

@@ -3,7 +3,7 @@ import { GenericObject, SortObject } from "../types";
 export class QueryOptions {
   private _select: GenericObject<any> = {};
   private _include: GenericObject<any> = {};
-  private _orderBy: SortObject = { createdAt: 'desc' };
+  private _sortBy: SortObject = { createdAt: 'desc' };
 
   get select() {return this._select; }
   setSelect(value: any): QueryOptions {
@@ -19,10 +19,10 @@ export class QueryOptions {
     return this;
   }
 
-  get orderBy() { return this._orderBy; }
-  setOrderBy(value: any): QueryOptions {
+  get sortBy() { return this._sortBy; }
+  setSortBy(value: any): QueryOptions {
     if (!value || typeof value !== 'object') return this;
-    this._orderBy = value;
+    this._sortBy = value;
     return this;
   }
 }
