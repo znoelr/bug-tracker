@@ -2,9 +2,10 @@ import { NextFunction, Request, Response } from "express";
 import { BaseService } from "../base/base.service";
 import { BadRequestException, NotFoundException } from "../common/exceptions";
 import { FindResourceError } from "../common/types";
+import { catchAsync } from "../common/exception-handlers";
 
 export const returnResponseError = <T>(service: BaseService<T>, {throwWhenFound, error}: FindResourceError) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const { queryFilters } = req;
     try {
       const record = await service.findOne(queryFilters);
@@ -20,7 +21,7 @@ export const returnResponseError = <T>(service: BaseService<T>, {throwWhenFound,
     catch (error) {
       next(error);
     }
-  }
+  })
 ;
 
 export const findResourceByRequestQueryFilters = <T>(service: BaseService<T>) =>

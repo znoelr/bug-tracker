@@ -3,9 +3,10 @@ import { BaseService } from "../base/base.service";
 import { QueryFilters } from "../common/fetch-objects";
 import { BadRequestException } from "../common/exceptions";
 import { GenericFunction } from "../common/types";
+import { catchAsync } from "../common/exception-handlers";
 
 export const validateUniqueKeysFromRequest = <T>(requestKey: keyof Request) => (service: BaseService<T>, keys: string[]) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const objectToSearchFrom = req[requestKey];
     const uniqueKeysToValidate = keys.filter((key) => {
       const [keyName] = key.split(':');
@@ -31,16 +32,16 @@ export const validateUniqueKeysFromRequest = <T>(requestKey: keyof Request) => (
     catch (error) {
       next(error);
     }
-  }
+  })
 ;
 
 export const validateRequest = (requestKey: keyof Request) => (cb: GenericFunction) =>
-  async (req: Request, res: Response, next: NextFunction) => {
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     try {
       cb(req[requestKey]);
       next();
     } catch (error) {
       next(error);
     }
-  }
+  })
 ;
