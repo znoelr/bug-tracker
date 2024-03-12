@@ -2,6 +2,10 @@ import express, { NextFunction, Request, Response } from "express";
 
 export * from './fetch-objects';
 
+export type RequesOptions = {
+  endRequest: boolean;
+};
+
 export type GenericFunction = (...args: any[]) => any;
 
 export type RouteConfig = {

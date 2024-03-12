@@ -1,6 +1,12 @@
 import { BaseController } from "../base/base.controller";
 import { catchAsync } from "./exception-handlers";
-import { GenericFunction } from "./types";
+import { GenericFunction, RequesOptions } from "./types";
+
+const defaultRequestOptions: RequesOptions = {
+  endRequest: true,
+};
 
 export const routeFactory = (controller: BaseController<any>) =>
-  (fn: GenericFunction) => catchAsync(fn.bind(controller));
+  (fn: GenericFunction, reqOptions: RequesOptions = defaultRequestOptions) =>
+    catchAsync(fn.bind(controller, reqOptions))
+;
