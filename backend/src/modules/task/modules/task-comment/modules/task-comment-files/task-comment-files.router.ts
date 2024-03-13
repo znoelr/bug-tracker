@@ -2,15 +2,32 @@ import express from "express";
 import controller from './task-comment-files.controller';
 import { routeFactory } from "../../../../../common/route-handlers";
 import { QueryOptions } from "../../../../../common/types";
-import { createRequestBodyForKeys, findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, injectQueryOptions } from "../../../../../middleware";
+import {
+  createRequestBodyForKeys,
+  findResourceByRequestQueryFilters,
+  injectQueryFiltersfromRequest,
+  injectQueryOptions,
+  injectTransformedQueryOptions,
+  parseUrlQueryForQueryOptionsSortBy,
+} from "../../../../../middleware";
 import { jsonInterceptor } from "../../../../../interceptors";
-import { validateDto, validateDtoAndInjectId } from "../../../../../common/validators";
-import { createComposedKeyFromObjectKeys, toEntityForKey, toEntityListForKey, trimObjectForKeys } from "../../../../../transformers";
+import {
+  validateDto,
+  validateDtoAndInjectId,
+} from "../../../../../common/validators";
+import {
+  createComposedKeyFromObjectKeys,
+  toEntityForKey,
+  toEntityListForKey,
+  trimObjectForKeys,
+  trimOnlyFirstEntryOfSortByForField,
+} from "../../../../../transformers";
 import { TaskCommentFilesDto } from "./dtos/task-comment-files.dto";
 import { taskCommentFilesService } from "./task-comment-files.service";
 import fileController from '../../../../../file/file.controller';
 import { CreateFileDto } from "../../../../../file/dtos/create-file.dto";
 import { CreateTaskCommentFilesDto } from "./dtos/create-task-comment-files.dto";
+import { FileSortDto } from "../../../../../file/dtos/file-sort.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -27,6 +44,8 @@ router.route('/')
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['taskCommentId'])
     ),
+    parseUrlQueryForQueryOptionsSortBy(FileSortDto),
+    injectTransformedQueryOptions(trimOnlyFirstEntryOfSortByForField('file')),
     jsonInterceptor(toEntityListForKey('file')),
     createRoute(controller.findAll)
   )

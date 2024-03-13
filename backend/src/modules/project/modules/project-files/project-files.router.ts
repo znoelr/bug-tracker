@@ -3,14 +3,28 @@ import controller from './project-files.controller';
 import fileController from '../../../file/file.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
-import { injectQueryOptions, injectQueryFiltersfromRequest, createRequestBodyForKeys, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters } from "../../../middleware";
+import {
+  injectQueryOptions,
+  injectQueryFiltersfromRequest,
+  createRequestBodyForKeys,
+  findResourceByRequestQueryFilters,
+  parseUrlQueryForQueryOptionsSortBy,
+  injectTransformedQueryOptions,
+} from "../../../middleware";
 import { QueryOptions } from "../../../common/types";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateProjectFilesDto } from "./dtos/create-project-files.dto";
-import { createComposedKeyFromObjectKeys, toEntityForKey, toEntityListForKey, trimObjectForKeys } from "../../../transformers";
+import {
+  createComposedKeyFromObjectKeys,
+  toEntityForKey,
+  toEntityListForKey,
+  trimObjectForKeys,
+  trimOnlyFirstEntryOfSortByForField,
+} from "../../../transformers";
 import { CreateFileDto } from "../../../file/dtos/create-file.dto";
 import { ProjectFilesDto } from "./dtos/project-files.dto";
 import { projectFilesService } from "./project-files.service";
+import { FileSortDto } from "../../../file/dtos/file-sort.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -27,6 +41,8 @@ router.route('/')
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['projectId'])
     ),
+    parseUrlQueryForQueryOptionsSortBy(FileSortDto),
+    injectTransformedQueryOptions(trimOnlyFirstEntryOfSortByForField('file')),
     jsonInterceptor(toEntityListForKey('file')),
     createRoute(controller.findAll)
   )

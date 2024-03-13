@@ -3,14 +3,28 @@ import controller from './task-files.controller';
 import fileController from '../../../file/file.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
-import { injectQueryOptions, injectQueryFiltersfromRequest, createRequestBodyForKeys, throwBadRequestIfResourceExistByQueryFilters, findResourceByRequestQueryFilters } from "../../../middleware";
+import {
+  injectQueryOptions,
+  injectQueryFiltersfromRequest,
+  createRequestBodyForKeys,
+  findResourceByRequestQueryFilters,
+  parseUrlQueryForQueryOptionsSortBy,
+  injectTransformedQueryOptions,
+} from "../../../middleware";
 import { QueryOptions } from "../../../common/types";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateTaskFilesDto } from "./dtos/create-task-files.dto";
-import { createComposedKeyFromObjectKeys, toEntityForKey, toEntityListForKey, trimObjectForKeys } from "../../../transformers";
+import {
+  createComposedKeyFromObjectKeys,
+  toEntityForKey,
+  toEntityListForKey,
+  trimObjectForKeys,
+  trimOnlyFirstEntryOfSortByForField,
+} from "../../../transformers";
 import { CreateFileDto } from "../../../file/dtos/create-file.dto";
 import { TaskFilesDto } from "./dtos/task-files.dto";
 import { taskFilesService } from "./task-files.service";
+import { FileSortDto } from "../../../file/dtos/file-sort.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -27,6 +41,8 @@ router.route('/')
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['taskId'])
     ),
+    parseUrlQueryForQueryOptionsSortBy(FileSortDto),
+    injectTransformedQueryOptions(trimOnlyFirstEntryOfSortByForField('file')),
     jsonInterceptor(toEntityListForKey('file')),
     createRoute(controller.findAll)
   )
