@@ -7,11 +7,13 @@ import {
   findResourceByRequestQueryFilters,
   injectQueryFiltersfromRequest,
   parseUrlQueryForQueryOptionsSelect,
+  parseUrlQueryForQueryOptionsSortBy,
 } from "../../../middleware";
 import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
 import { trimObjectForKeys } from "../../../transformers";
 import { taskCommentService } from "./task-comment.service";
 import { TaskCommentDto } from "./dtos/task-comment.dto";
+import { TaskCommentSortDto } from "./dtos/task-comment-sort.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -28,7 +30,10 @@ router.route('/')
       trimObjectForKeys(['taskId'])
     )
   )
-  .get(createRoute(controller.findAll))
+  .get(
+    parseUrlQueryForQueryOptionsSortBy(TaskCommentSortDto),
+    createRoute(controller.findAll)
+  )
   .post(
     validateDtoAndInjectId(CreateTaskCommentDto),
     createRoute(controller.create)

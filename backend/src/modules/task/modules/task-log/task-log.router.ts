@@ -3,9 +3,10 @@ import controller from './task-log.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDtoAndInjectId } from "../../../common/validators";
 import { CreateTaskLogDto } from "./dtos/create-task-log.dto";
-import { injectQueryFiltersfromRequest, parseUrlQueryForQueryOptionsSelect } from "../../../middleware";
+import { injectQueryFiltersfromRequest, parseUrlQueryForQueryOptionsSelect, parseUrlQueryForQueryOptionsSortBy } from "../../../middleware";
 import { trimObjectForKeys } from "../../../transformers";
 import { TaskLogDto } from "./dtos/task-log.dto";
+import { TaskLogSortDto } from "./dtos/task-log-sort.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -22,7 +23,10 @@ router.route('/')
       trimObjectForKeys(['taskId'])
     )
   )
-  .get(createRoute(controller.findAll))
+  .get(
+    parseUrlQueryForQueryOptionsSortBy(TaskLogSortDto),
+    createRoute(controller.findAll)
+  )
   .post(
     validateDtoAndInjectId(CreateTaskLogDto),
     createRoute(controller.create)
