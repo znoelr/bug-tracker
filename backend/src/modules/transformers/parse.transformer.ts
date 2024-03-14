@@ -1,5 +1,5 @@
 import { objectReducerForKeys } from "../common/reducers";
-import { QueryOptions } from "../common/types";
+import { QueryOptions, QueryOptionsTransformerCb } from "../common/types";
 
 export const createComposedKeyFromObjectKeys = (keys: string[]) => (obj: any) => {
   const composedKeyName = keys.join('_');
@@ -21,3 +21,16 @@ export const trimOnlyFirstEntryOfSortByForField = (fieldName: string) => (queryO
     [fieldName]: { [field]: sortDirection },
   });
 };
+
+export const injectSelectOrIncludeQueryOptionsForKey = (key: string): QueryOptionsTransformerCb =>
+  (queryOptions: QueryOptions): QueryOptions => {
+    const { select } = queryOptions;
+    const hasSelectKeys = Object.keys(select).length > 0;
+    if (!hasSelectKeys) {
+      return queryOptions.setInclude({ [key]: true });
+    }
+    return queryOptions
+      .setSelect({ [key]: { select } })
+      .setInclude({});
+  }
+;
