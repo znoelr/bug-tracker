@@ -5,9 +5,6 @@ export class UserSortDto {
   username: string;
 
   @Expose()
-  password: string;
-
-  @Expose()
   createdAt: string;
 
   @Expose()
