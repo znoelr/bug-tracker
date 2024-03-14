@@ -1,4 +1,4 @@
-import { GenericObject, SortObject } from "../types/types";
+import { GenericObject, SortObject } from "../common";
 
 export class QueryOptions {
   private _select: GenericObject<any> = {};

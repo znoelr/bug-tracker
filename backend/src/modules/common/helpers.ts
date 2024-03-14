@@ -23,3 +23,12 @@ export const createSortByObject = (sortQuery: string, validSortKeys: GenericObje
     return acc;
   }, {});
 };
+
+export const createSelectObject = (selectQuery: string, validSortKeys: GenericObject<boolean>) => {
+  return selectQuery.split(',').reduce((acc: any, key: string) => {
+    if (validSortKeys[key]) {
+      acc[key] = true;
+    }
+    return acc;
+  }, {});
+};
