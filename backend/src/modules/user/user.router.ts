@@ -4,7 +4,16 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../common/validators";
 import { CreateUserDto } from "./dtos/create-user.dto";
-import { createRequestBodyForKeys, findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, parseParamsForQueryFilter, parseUrlQueryForQueryOptionsSortBy, validateRequest, validateUniqueKeysFromRequest } from "../middleware";
+import {
+  createRequestBodyForKeys,
+  findResourceByRequestQueryFilters,
+  injectQueryFiltersfromRequest,
+  parseParamsForQueryFilter,
+  parseUrlQueryForQueryOptionsSelect,
+  parseUrlQueryForQueryOptionsSortBy,
+  validateRequest,
+  validateUniqueKeysFromRequest,
+} from "../middleware";
 import userRolesRouter from './modules/user-roles/user-roles.router';
 import { trimObjectForKeys } from "../transformers";
 import { userService } from "./user.service";
@@ -15,6 +24,10 @@ import { UserSortDto } from "./dtos/user-sort.dto";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
+
+router.use(
+  parseUrlQueryForQueryOptionsSelect(UserDto)
+);
 
 router.route('/')
   .get(

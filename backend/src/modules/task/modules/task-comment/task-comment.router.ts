@@ -3,7 +3,11 @@ import controller from './task-comment.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDtoAndInjectId } from "../../../common/validators";
 import { CreateTaskCommentDto } from "./dtos/create-task-comment.dto";
-import { findResourceByRequestQueryFilters, injectQueryFiltersfromRequest } from "../../../middleware";
+import {
+  findResourceByRequestQueryFilters,
+  injectQueryFiltersfromRequest,
+  parseUrlQueryForQueryOptionsSelect,
+} from "../../../middleware";
 import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
 import { trimObjectForKeys } from "../../../transformers";
 import { taskCommentService } from "./task-comment.service";
@@ -13,6 +17,10 @@ const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
 
 /** ROUTES DEFINED WITH PREFIX '/:taskId' */
+
+router.use(
+  parseUrlQueryForQueryOptionsSelect(TaskCommentDto)
+);
 
 router.route('/')
   .all(

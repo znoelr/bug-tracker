@@ -3,7 +3,14 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { CreateTaskDto } from "./dtos/create-task.dto";
 import { validateDto, validateDtoAndInjectId } from "../common/validators";
-import { findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, parseParamsForQueryFilter, parseUrlQueryForQueryOptionsSortBy, validateUniqueKeysFromRequest } from "../middleware";
+import {
+  findResourceByRequestQueryFilters,
+  injectQueryFiltersfromRequest,
+  parseParamsForQueryFilter,
+  parseUrlQueryForQueryOptionsSelect,
+  parseUrlQueryForQueryOptionsSortBy,
+  validateUniqueKeysFromRequest,
+} from "../middleware";
 import controller from './task.controller';
 import taskCommentsRouter from './modules/task-comment/task-comment.router';
 import taskLogsRouter from './modules/task-log/task-log.router';
@@ -16,6 +23,10 @@ import { TaskSortDto } from "./dtos/task-sort.dto";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
+
+router.use(
+  parseUrlQueryForQueryOptionsSelect(TaskDto)
+);
 
 router.route('/')
   .get(

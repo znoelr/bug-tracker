@@ -4,7 +4,13 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../common/validators";
 import { CreateRoleDto } from "./dtos/create-role.dto";
-import { findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, parseParamsForQueryFilter, parseUrlQueryForQueryOptionsSortBy } from "../middleware";
+import {
+  findResourceByRequestQueryFilters,
+  injectQueryFiltersfromRequest,
+  parseParamsForQueryFilter,
+  parseUrlQueryForQueryOptionsSelect,
+  parseUrlQueryForQueryOptionsSortBy,
+} from "../middleware";
 import rolePermissionsRouter from './modules/role-permissions/role-permissions.router';
 import { trimObjectForKeys } from "../transformers";
 import { roleService } from "./role.service";
@@ -15,6 +21,10 @@ import { RoleSortDto } from "./dtos/role-sort.dto";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
+
+router.use(
+  parseUrlQueryForQueryOptionsSelect(RoleDto)
+);
 
 router.route('/')
   .get(

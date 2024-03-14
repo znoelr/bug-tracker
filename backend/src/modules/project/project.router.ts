@@ -4,7 +4,14 @@ import { RouteConfig } from "../common/types";
 import { routeFactory } from "../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../common/validators";
 import { CreateProjectDto } from "./dtos/create-project.dto";
-import { findResourceByRequestQueryFilters, injectQueryFiltersfromRequest, parseParamsForQueryFilter, parseUrlQueryForQueryOptionsSortBy, validateUniqueKeysFromRequest } from "../middleware";
+import {
+  findResourceByRequestQueryFilters,
+  injectQueryFiltersfromRequest,
+  parseParamsForQueryFilter,
+  parseUrlQueryForQueryOptionsSelect,
+  parseUrlQueryForQueryOptionsSortBy,
+  validateUniqueKeysFromRequest,
+} from "../middleware";
 import projectFilesRouter from './modules/project-files/project-files.router';
 import { ProjectDto } from "./dtos/project.dto";
 import { projectService } from "./project.service";
@@ -14,6 +21,10 @@ import { ProjectSortDto } from "./dtos/project-sort.dto";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
+
+router.use(
+  parseUrlQueryForQueryOptionsSelect(ProjectDto)
+);
 
 router.route('/')
   .get(

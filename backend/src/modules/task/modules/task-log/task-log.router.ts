@@ -3,13 +3,18 @@ import controller from './task-log.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDtoAndInjectId } from "../../../common/validators";
 import { CreateTaskLogDto } from "./dtos/create-task-log.dto";
-import { injectQueryFiltersfromRequest } from "../../../middleware";
+import { injectQueryFiltersfromRequest, parseUrlQueryForQueryOptionsSelect } from "../../../middleware";
 import { trimObjectForKeys } from "../../../transformers";
+import { TaskLogDto } from "./dtos/task-log.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
 
 /** ROUTES DEFINED FOR '/:taskId' PREFIX */
+
+router.use(
+  parseUrlQueryForQueryOptionsSelect(TaskLogDto)
+);
 
 router.route('/')
   .all(
