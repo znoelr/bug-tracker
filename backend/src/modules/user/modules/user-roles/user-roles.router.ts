@@ -3,18 +3,18 @@ import controller from './user-roles.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto } from "../../../common/validators";
 import {
-  injectQueryOptions,
   injectQueryFiltersfromRequest,
   findResourceByRequestQueryFilters,
   throwBadRequestIfResourceExistByQueryFilters,
   createRequestBodyFromParams,
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
+  parseUrlQueryForQueryOptionsSelect,
 } from "../../../middleware";
-import { QueryOptions } from "../../../common/types";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateUserRolesDto } from "./dtos/create-user-roles.dto";
 import { createComposedKeyFromObjectKeys,
+  injectSelectOrIncludeQueryOptionsForKey,
   toEntityForKey,
   toEntityListForKey,
   trimObjectForKeys,
@@ -32,9 +32,10 @@ const createRoute = routeFactory(controller);
 
 /** ROUTES DEFINED WITH PREFIX '/:userId' */
 
-router.use(injectQueryOptions(
-  new QueryOptions().setInclude({ role: true })
-));
+router.use(
+  parseUrlQueryForQueryOptionsSelect(RoleDto),
+  injectTransformedQueryOptions(injectSelectOrIncludeQueryOptionsForKey('role')),
+);
 
 router.route('/')
   .get(

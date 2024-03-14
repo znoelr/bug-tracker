@@ -8,6 +8,7 @@ import {
   injectQueryFiltersfromRequest,
   injectQueryOptions,
   injectTransformedQueryOptions,
+  parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
 } from "../../../../../middleware";
 import { jsonInterceptor } from "../../../../../interceptors";
@@ -17,6 +18,7 @@ import {
 } from "../../../../../common/validators";
 import {
   createComposedKeyFromObjectKeys,
+  injectSelectOrIncludeQueryOptionsForKey,
   toEntityForKey,
   toEntityListForKey,
   trimObjectForKeys,
@@ -28,6 +30,7 @@ import fileController from '../../../../../file/file.controller';
 import { CreateFileDto } from "../../../../../file/dtos/create-file.dto";
 import { CreateTaskCommentFilesDto } from "./dtos/create-task-comment-files.dto";
 import { FileSortDto } from "../../../../../file/dtos/file-sort.dto";
+import { FileDto } from "../../../../../file/dtos/file.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -35,9 +38,10 @@ const createFileRoute = routeFactory(fileController);
 
 /** ROUTES DEFINED WITH PREFIX '/:taskCommentId' */
 
-router.use(injectQueryOptions(
-  new QueryOptions().setInclude({ file: true })
-));
+router.use(
+  parseUrlQueryForQueryOptionsSelect(FileDto),
+  injectTransformedQueryOptions(injectSelectOrIncludeQueryOptionsForKey('file')),
+);
 
 router.route('/')
   .get(
@@ -57,9 +61,8 @@ router.route('/')
       paramKeys: ['taskCommentId'],
       bodyKeys: ['id:fileId'],
     }),
-    injectQueryOptions(
-      new QueryOptions().setInclude({ file: true })
-    ),
+    parseUrlQueryForQueryOptionsSelect(FileDto),
+    injectTransformedQueryOptions(injectSelectOrIncludeQueryOptionsForKey('file')),
     jsonInterceptor(toEntityForKey('file')),
     validateDto(CreateTaskCommentFilesDto),
     createRoute(controller.create),

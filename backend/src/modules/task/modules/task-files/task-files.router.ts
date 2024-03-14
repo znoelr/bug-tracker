@@ -10,12 +10,14 @@ import {
   findResourceByRequestQueryFilters,
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
+  parseUrlQueryForQueryOptionsSelect,
 } from "../../../middleware";
 import { QueryOptions } from "../../../common/types";
 import { jsonInterceptor } from "../../../interceptors";
 import { CreateTaskFilesDto } from "./dtos/create-task-files.dto";
 import {
   createComposedKeyFromObjectKeys,
+  injectSelectOrIncludeQueryOptionsForKey,
   toEntityForKey,
   toEntityListForKey,
   trimObjectForKeys,
@@ -25,6 +27,7 @@ import { CreateFileDto } from "../../../file/dtos/create-file.dto";
 import { TaskFilesDto } from "./dtos/task-files.dto";
 import { taskFilesService } from "./task-files.service";
 import { FileSortDto } from "../../../file/dtos/file-sort.dto";
+import { FileDto } from "../../../file/dtos/file.dto";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -32,9 +35,10 @@ const createFileRoute = routeFactory(fileController);
 
 /** ROUTES DEFINED WITH PREFIX '/:taskId' */
 
-router.use(injectQueryOptions(
-  new QueryOptions().setInclude({ file: true })
-));
+router.use(
+  parseUrlQueryForQueryOptionsSelect(FileDto),
+  injectTransformedQueryOptions(injectSelectOrIncludeQueryOptionsForKey('file')),
+);
 
 router.route('/')
   .get(
@@ -54,9 +58,8 @@ router.route('/')
       paramKeys: ['taskId'],
       bodyKeys: ['id:fileId'],
     }),
-    injectQueryOptions(
-      new QueryOptions().setInclude({ file: true })
-    ),
+    parseUrlQueryForQueryOptionsSelect(FileDto),
+    injectTransformedQueryOptions(injectSelectOrIncludeQueryOptionsForKey('file')),
     jsonInterceptor(toEntityForKey('file')),
     validateDto(CreateTaskFilesDto),
     createRoute(controller.create)

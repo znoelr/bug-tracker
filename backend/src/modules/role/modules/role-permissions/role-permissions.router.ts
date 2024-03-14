@@ -3,18 +3,18 @@ import controller from './role-permissions.controller';
 import { routeFactory } from "../../../common/route-handlers";
 import { validateDto } from "../../../common/validators";
 import {
-  injectQueryOptions,
   injectQueryFiltersfromRequest,
   throwBadRequestIfResourceExistByQueryFilters,
   findResourceByRequestQueryFilters,
   createRequestBodyFromParams,
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
+  parseUrlQueryForQueryOptionsSelect,
 } from "../../../middleware";
 import { CreateRolePermissionDto } from "./dtos/create-role-permissions.dto";
-import { QueryOptions } from "../../../common/types";
 import { jsonInterceptor } from "../../../interceptors";
 import { createComposedKeyFromObjectKeys,
+  injectSelectOrIncludeQueryOptionsForKey,
   toEntityForKey,
   toEntityListForKey,
   trimObjectForKeys,
@@ -31,9 +31,10 @@ const createRoute = routeFactory(controller);
 
 /** ROUTES DEFINED WITH PREFIX '/:roleId' */
 
-router.use(injectQueryOptions(
-  new QueryOptions().setInclude({ permission: true })
-));
+router.use(
+  parseUrlQueryForQueryOptionsSelect(PermissionDto),
+  injectTransformedQueryOptions(injectSelectOrIncludeQueryOptionsForKey('permission')),
+);
 
 router.route('/')
   .get(
