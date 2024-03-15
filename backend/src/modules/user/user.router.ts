@@ -11,6 +11,7 @@ import {
   parseParamsForQueryFilter,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
+  transformRequestBody,
   validateRequest,
   validateUniqueKeysFromRequest,
 } from "../middleware";
@@ -21,6 +22,7 @@ import { UserDto } from "./dtos/user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
 import { confirmPasswordValidator } from "./user.validators";
 import { UserSortDto } from "./dtos/user-sort.dto";
+import { hashUserPassword } from "./transformers";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -37,6 +39,7 @@ router.route('/')
   .post(
     validateDtoAndInjectId(CreateUserDto),
     validateUniqueKeysFromRequest<UserDto>('body')(userService, ['username']),
+    transformRequestBody(hashUserPassword),
     createRoute(controller.create)
   );
 
