@@ -1,11 +1,15 @@
 import express, { NextFunction, Request, Response } from "express";
 import routerList from './router-list';
 import { RouteConfig } from "../modules/common/types";
-import { BaseHttpException, NotFoundException } from "../modules/common/exceptions";
+import { BaseHttpException } from "../modules/common/exceptions";
 import { fileLogger } from '../logger';
+import { authRouteConfig } from '../modules/auth/auth.router';
 
 const logger = fileLogger();
 const router = express.Router();
+
+// Auth Route
+router.use(authRouteConfig.path, authRouteConfig.router);
 
 const registerRoute = (routeConfig: RouteConfig) => {
   const {path, router: _router} = routeConfig;

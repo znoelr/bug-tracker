@@ -10,3 +10,7 @@ export const routeFactory = (controller: BaseController<any>) =>
   (fn: GenericFunction, reqOptions: RequesOptions = defaultRequestOptions) =>
     catchAsync(fn.bind(controller, reqOptions))
 ;
+
+export const simpleRouteFactory = (controller: any) =>
+  (fn: GenericFunction) => catchAsync(fn.bind(controller))
+;
