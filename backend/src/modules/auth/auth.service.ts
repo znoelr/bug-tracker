@@ -23,8 +23,6 @@ export class AuthService {
       expiresIn: Number(ConfigService.get<number>('JWT_EXPIRES_IN_SECONDS')),
     });
   }
-
-  async logout() {}
 }
 
 export const authService = new AuthService(userService);

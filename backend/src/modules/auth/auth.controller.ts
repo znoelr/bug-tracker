@@ -21,6 +21,10 @@ class AuthController {
 
   async logout(req: Request, res: Response, next: NextFunction) {
     // Revoke JWT, and clear cookies
+    res.clearCookie('auth_token', {
+      secure: true,
+    });
+    res.status(204).end();
   }
 }
 
