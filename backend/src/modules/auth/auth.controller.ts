@@ -1,15 +1,17 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService, authService } from "./auth.service";
+import { ConfigService } from "../../config/config.service";
 
 class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   async login(req: Request, res: Response, next: NextFunction) {
     const { username, password } = req.body;
-    const jwt = await authService.login(username, password);
+    const jwt = await this.authService.login(username, password);
     const expDate = new Date();
-    const oneHourInMillis = 1000 * 60 * 60;
-    expDate.setTime(expDate.getTime() + oneHourInMillis);
+    const expInSeconds = Number(ConfigService.get<number>('JWT_EXPIRES_IN_SECONDS'));
+    const expInMillis = expInSeconds * 1000;
+    expDate.setTime(expDate.getTime() + expInMillis);
     res.cookie('auth_token', jwt, {
       expires: expDate,
       secure: true,

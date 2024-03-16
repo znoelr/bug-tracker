@@ -1,6 +1,9 @@
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import { BadRequestException } from "../common/exceptions";
 import { QueryFilters } from "../common/types";
 import { UserService, userService } from "../user/user.service";
+import { ConfigService } from '../../config/config.service';
 
 export class AuthService {
   constructor(private readonly userService: UserService) {}
@@ -11,12 +14,14 @@ export class AuthService {
     if (!foundUser) {
       throw new BadRequestException('Invalid credentials');
     }
-    // TODO check bcrypt passwrod
-    if (password !== foundUser.password) {
+    const isValidPassword = await bcrypt.compare(password, foundUser.password);
+    if (!isValidPassword) {
       throw new BadRequestException('Invalid credentials');
     }
     const jwtPayload = { sub: foundUser.id };
-    return `${jwtPayload}`;
+    return jwt.sign(jwtPayload, ConfigService.get<string>('JWT_SECRET'), {
+      expiresIn: Number(ConfigService.get<number>('JWT_EXPIRES_IN_SECONDS')),
+    });
   }
 
   async logout() {}
