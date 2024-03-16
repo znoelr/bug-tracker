@@ -54,6 +54,7 @@ router.route('/:id')
       paramKeys: [],
       bodyKeys: ['username', 'password'],
     }),
+    transformRequestBody(hashUserPassword),
     createRoute(controller.update)
   )
   .delete(createRoute(controller.delete));
