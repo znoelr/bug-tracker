@@ -9,7 +9,7 @@ export class AuthService {
   constructor(private readonly userService: UserService) {}
 
   async login(username: string, password: string): Promise<string> {
-    const filters = new QueryFilters().setWhere({ username });
+    const filters = new QueryFilters().setWhere({ username: username.toLowerCase() });
     const  foundUser = await this.userService.findOne(filters);
     if (!foundUser) {
       throw new BadRequestException('Invalid credentials');

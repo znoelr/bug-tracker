@@ -22,7 +22,7 @@ import { UserDto } from "./dtos/user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";
 import { confirmPasswordValidator } from "./user.validators";
 import { UserSortDto } from "./dtos/user-sort.dto";
-import { hashUserPassword } from "./transformers";
+import { hashUserPassword, setUsernameToLowerCase } from "./transformers";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -38,8 +38,11 @@ router.route('/')
   )
   .post(
     validateDtoAndInjectId(CreateUserDto),
+    transformRequestBody(
+      setUsernameToLowerCase,
+      hashUserPassword
+    ),
     validateUniqueKeysFromRequest<UserDto>('body')(userService, ['username']),
-    transformRequestBody(hashUserPassword),
     createRoute(controller.create)
   );
 
@@ -48,13 +51,16 @@ router.route('/:id')
   .get(createRoute(controller.findById))
   .patch(
     validateDto(UpdateUserDto),
+    transformRequestBody(
+      setUsernameToLowerCase,
+      hashUserPassword
+    ),
     validateUniqueKeysFromRequest<UserDto>('body')(userService, ['username']),
     validateRequest('body')(confirmPasswordValidator),
     createRequestBodyForKeys({
       paramKeys: [],
       bodyKeys: ['username', 'password'],
     }),
-    transformRequestBody(hashUserPassword),
     createRoute(controller.update)
   )
   .delete(createRoute(controller.delete));
