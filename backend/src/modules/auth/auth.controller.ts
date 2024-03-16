@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService, authService } from "./auth.service";
 import { ConfigService } from "../../config/config.service";
+import { JWT_COOKIE_NAME } from "../common/constants";
 
 class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -12,17 +13,17 @@ class AuthController {
     const expInSeconds = Number(ConfigService.get<number>('JWT_EXPIRES_IN_SECONDS'));
     const expInMillis = expInSeconds * 1000;
     expDate.setTime(expDate.getTime() + expInMillis);
-    res.cookie('auth_token', jwt, {
+    res.cookie(JWT_COOKIE_NAME, jwt, {
       expires: expDate,
-      secure: true,
+      secure: !['test', 'development'].includes(ConfigService.get('NODE_ENV')),
     });
     res.json({ auth_token: jwt });
   }
 
   async logout(req: Request, res: Response, next: NextFunction) {
     // Revoke JWT, and clear cookies
-    res.clearCookie('auth_token', {
-      secure: true,
+    res.clearCookie(JWT_COOKIE_NAME, {
+      secure: !['test', 'development'].includes(ConfigService.get('NODE_ENV')),
     });
     res.status(204).end();
   }

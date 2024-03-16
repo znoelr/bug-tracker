@@ -4,12 +4,16 @@ import { RouteConfig } from "../modules/common/types";
 import { BaseHttpException } from "../modules/common/exceptions";
 import { fileLogger } from '../logger';
 import { authRouteConfig } from '../modules/auth/auth.router';
+import { authMiddleware } from "../modules/auth/middlewares/auth.middleware";
 
 const logger = fileLogger();
 const router = express.Router();
 
 // Auth Route
 router.use(authRouteConfig.path, authRouteConfig.router);
+
+// Protect routes
+router.use(authMiddleware);
 
 const registerRoute = (routeConfig: RouteConfig) => {
   const {path, router: _router} = routeConfig;
