@@ -1,4 +1,4 @@
-import { HTTP_BAD_REQUEST, HTTP_NOT_FOUND } from "./http-status-codes";
+import { HTTP_BAD_REQUEST, HTTP_FORBIDDEN, HTTP_NOT_FOUND, HTTP_UNAUTHORIZED } from "./http-status-codes";
 
 export class BaseHttpException extends Error {
   public http_code: number = 500;
@@ -24,5 +24,23 @@ export class BadRequestException extends BaseHttpException {
   constructor(message?: string) {
     super();
     this.message = message || 'Bad Request';
+  }
+}
+
+export class UnauthorizedExeption extends BaseHttpException {
+  public http_code: number = HTTP_UNAUTHORIZED;
+
+  constructor(message?: string) {
+    super();
+    this.message = message || 'Unauthorized';
+  }
+}
+
+export class ForbiddenExeption extends BaseHttpException {
+  public http_code: number = HTTP_FORBIDDEN;
+
+  constructor(message?: string) {
+    super();
+    this.message = message || 'Forbiden resource';
   }
 }

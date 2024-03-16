@@ -1,4 +1,5 @@
 import { Pagination, QueryFilters, QueryOptions } from "../modules/common/types";
+import { UserDto } from "../modules/user/dtos/user.dto";
 
 declare global {
   namespace Express {
@@ -6,6 +7,7 @@ declare global {
       pagination: Pagination;
       queryFilters: QueryFilters;
       queryOptions: QueryOptions;
+      user: UserDto;
     }
   }
 }
