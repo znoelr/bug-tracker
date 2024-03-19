@@ -12,3 +12,8 @@ services:
       - "3000:3000"
     volumes:
       - .:/usr/app/bug-tracker
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"

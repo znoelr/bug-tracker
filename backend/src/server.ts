@@ -1,6 +1,7 @@
 import http from 'http';
 import app from './app';
 import { disconnect } from './repository/prisma';
+import { disconnectRedis } from './modules/redis';
 
 const httpServer = http.createServer(app);
 
@@ -15,6 +16,8 @@ const closeConnections = (signal: string) => () => {
     httpServer.close(async () => {
       await disconnect();
       console.log('DB disconnected');
+      await disconnectRedis();
+      console.log('Redis disconnected');
       console.log('Server closed');
       process.exit(0);
     });
