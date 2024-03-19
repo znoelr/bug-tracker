@@ -1,0 +1,14 @@
+version: "3.1"
+
+services:
+  bug-tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build  # name of the Dockerfile build step
+    command: npm run start:dev
+    env_file: .env.development
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/app/bug-tracker
