@@ -1,5 +1,5 @@
 import { plainToInstance } from "class-transformer";
-import { ClassConstructor, GenericObject, SortDirection } from "./types";
+import { ClassConstructor, GenericObject, SortDirection } from "../types";
 
 export const getValidSortKeys = (classDto: ClassConstructor) => {
   const instance = plainToInstance(classDto, {});
