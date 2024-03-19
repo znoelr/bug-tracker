@@ -1,9 +1,9 @@
-import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { BadRequestException } from "../common/exceptions";
 import { QueryFilters } from "../common/types";
 import { UserService, userService } from "../user/user.service";
 import { ConfigService } from '../../config/config.service';
+import { compareHash } from '../common/helpers';
 
 export class AuthService {
   constructor(private readonly userService: UserService) {}
@@ -14,7 +14,7 @@ export class AuthService {
     if (!foundUser) {
       throw new BadRequestException('Invalid credentials');
     }
-    const isValidPassword = await bcrypt.compare(password, foundUser.password);
+    const isValidPassword = await compareHash(password, foundUser.password);
     if (!isValidPassword) {
       throw new BadRequestException('Invalid credentials');
     }

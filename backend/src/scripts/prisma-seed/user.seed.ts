@@ -1,7 +1,7 @@
-
 import { v4 as uuid } from 'uuid';
 import { prismaClient } from '../../repository/prisma/prisma.client';
 import { ROLES } from '../../modules/role/role.constants';
+import { hashStr } from '../../modules/common/helpers';
 
 export async function run() {
   const promises = Object.values(ROLES)
@@ -10,7 +10,7 @@ export async function run() {
       data: {
         id: uuid(),
         username,
-        password: 'abcde$12345',
+        password: hashStr('abcde$12345'),
       }
     }));
   return await Promise.all(promises);
