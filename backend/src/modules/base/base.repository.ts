@@ -2,7 +2,7 @@ import { Pagination, QueryFilters, QueryOptions } from "../common/types";
 
 export interface BaseRepository<T> {
   findOne(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T|null>;
-  findAll(pagination: Pagination, filters?: QueryFilters, queryOptions?: QueryOptions): Promise<T[]>;
+  findAll(filters?: QueryFilters, queryOptions?: QueryOptions, pagination?: Pagination): Promise<T[]>;
   create(data: any, queryOptions?: QueryOptions): Promise<T>;
   update(data: any, filters: QueryFilters, queryOptions?: QueryOptions): Promise<T>;
   delete(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T>;

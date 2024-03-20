@@ -11,7 +11,7 @@ export class PrismaBaseRepository<T> implements BaseRepository<T> {
     return await this.model.findUnique(findArgs);
   }
 
-  async findAll(pagination: Pagination, filters: QueryFilters, queryOptions: QueryOptions): Promise<T[]> {
+  async findAll(filters: QueryFilters, queryOptions: QueryOptions, pagination: Pagination): Promise<T[]> {
     const findArgs = this.mergeIntoPrismaOptions(pagination, filters, queryOptions);
     return await this.model.findMany(findArgs);
   }

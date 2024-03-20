@@ -8,8 +8,8 @@ export class BaseService<T> {
     return await this.repo.findOne(filters, queryOptions);
   }
 
-  async findAll(pagination: Pagination, queryFilters?: QueryFilters, queryOptions?: QueryOptions): Promise<T[]> {
-    return await this.repo.findAll(pagination, queryFilters, queryOptions);
+  async findAll(queryFilters?: QueryFilters, queryOptions?: QueryOptions, pagination?: Pagination): Promise<T[]> {
+    return await this.repo.findAll(queryFilters, queryOptions, pagination);
   }
 
   async create(data: any, queryOptions?: QueryOptions): Promise<T> {

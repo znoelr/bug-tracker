@@ -23,10 +23,10 @@ export class BaseController<T> {
   }
 
   async findAll(reqOptions: RequesOptions, req: Request, res: Response, next: NextFunction) {
-    const pagination = req.pagination;
     const filters = req.queryFilters;
     const options = req.queryOptions;
-    const recordList = await this.service.findAll(pagination, filters, options);
+    const pagination = req.pagination;
+    const recordList = await this.service.findAll(filters, options, pagination);
     if (reqOptions.endRequest) {
       res.json(serialize(this.DtoClass, recordList));
       return;
