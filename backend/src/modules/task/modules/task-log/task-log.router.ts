@@ -1,12 +1,12 @@
 import express from "express";
 import controller from './task-log.controller';
 import { routeFactory } from "../../../common/route-handlers";
-import { validateDtoAndInjectId } from "../../../common/validators";
-import { CreateTaskLogDto } from "./dtos/create-task-log.dto";
 import { injectQueryFiltersfromRequest, parseUrlQueryForQueryOptionsSelect, parseUrlQueryForQueryOptionsSortBy } from "../../../middleware";
 import { trimObjectForKeys } from "../../../transformers";
 import { TaskLogDto } from "./dtos/task-log.dto";
 import { TaskLogSortDto } from "./dtos/task-log-sort.dto";
+import { restrictTo } from "../../../auth/middlewares/restrict-to.middleware";
+import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../../permission/permission.constants";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -18,28 +18,22 @@ router.use(
 );
 
 router.route('/')
-  .all(
+  .get(
+    restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.TASK_LOG),
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['taskId'])
-    )
-  )
-  .get(
+    ),
     parseUrlQueryForQueryOptionsSortBy(TaskLogSortDto),
     createRoute(controller.findAll)
-  )
-  .post(
-    validateDtoAndInjectId(CreateTaskLogDto),
-    createRoute(controller.create)
   );
 
 router.route('/:id')
-  .all(
+  .get(
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.TASK_LOG),
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['taskId', 'id'])
-    )
-  )
-  .get(createRoute(controller.findById))
-  .patch(createRoute(controller.update))
-  .delete(createRoute(controller.delete));
+    ),
+    createRoute(controller.findById)
+  );
 
 export default router;

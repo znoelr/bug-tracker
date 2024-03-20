@@ -28,6 +28,8 @@ import { TaskFilesDto } from "./dtos/task-files.dto";
 import { taskFilesService } from "./task-files.service";
 import { FileSortDto } from "../../../file/dtos/file-sort.dto";
 import { FileDto } from "../../../file/dtos/file.dto";
+import { restrictTo } from "../../../auth/middlewares/restrict-to.middleware";
+import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../../permission/permission.constants";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -42,6 +44,8 @@ router.use(
 
 router.route('/')
   .get(
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.TASK),
+    restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.FILE),
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['taskId'])
     ),
@@ -51,6 +55,8 @@ router.route('/')
     createRoute(controller.findAll)
   )
   .post(
+    restrictTo(PERMISSION_ACTION.CREATE_LINK, PERMISSION_RESOURCE.TASK),
+    restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.FILE),
     injectQueryOptions(new QueryOptions()),
     validateDtoAndInjectId(CreateFileDto),
     createFileRoute(fileController.create, { endRequest: false }),
@@ -73,10 +79,14 @@ router.route('/:fileId')
     )
   )
   .get(
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.TASK),
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.FILE),
     jsonInterceptor(toEntityForKey('file')),
     createRoute(controller.findById),
   )
   .delete(
+    restrictTo(PERMISSION_ACTION.DELETE_LINK, PERMISSION_RESOURCE.TASK),
+    restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.FILE),
     findResourceByRequestQueryFilters<TaskFilesDto>(taskFilesService),
     injectQueryOptions(new QueryOptions()),
     createRoute(controller.delete, { endRequest: false }),

@@ -23,6 +23,8 @@ import { UpdateUserDto } from "./dtos/update-user.dto";
 import { confirmPasswordValidator } from "./user.validators";
 import { UserSortDto } from "./dtos/user-sort.dto";
 import { hashUserPassword, setUsernameToLowerCase } from "./transformers";
+import { restrictTo } from "../auth/middlewares/restrict-to.middleware";
+import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../permission/permission.constants";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -33,10 +35,12 @@ router.use(
 
 router.route('/')
   .get(
+    restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.USER),
     parseUrlQueryForQueryOptionsSortBy(UserSortDto),
     createRoute(controller.findAll)
   )
   .post(
+    restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.USER),
     validateDtoAndInjectId(CreateUserDto),
     transformRequestBody(
       setUsernameToLowerCase,
@@ -48,8 +52,12 @@ router.route('/')
 
 router.route('/:id')
   .all(parseParamsForQueryFilter())
-  .get(createRoute(controller.findById))
+  .get(
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.USER),
+    createRoute(controller.findById)
+  )
   .patch(
+    restrictTo(PERMISSION_ACTION.UPDATE, PERMISSION_RESOURCE.USER),
     validateDto(UpdateUserDto),
     transformRequestBody(
       setUsernameToLowerCase,
@@ -63,7 +71,10 @@ router.route('/:id')
     }),
     createRoute(controller.update)
   )
-  .delete(createRoute(controller.delete));
+  .delete(
+    restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.USER),
+    createRoute(controller.delete)
+  );
 
 /** Middleware to ensure resource exists before accessing nested routes */
 router.use(

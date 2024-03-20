@@ -25,6 +25,8 @@ import { rolePermissionsService } from "./role-permissions.service";
 import { PermissionDto } from "../../../permission/dtos/permission.dto";
 import { permissionService } from "../../../permission/permission.service";
 import { PermissionSortDto } from "../../../permission/dtos/permission-sort.dto";
+import { restrictTo } from "../../../auth/middlewares/restrict-to.middleware";
+import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../../permission/permission.constants";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -38,6 +40,8 @@ router.use(
 
 router.route('/')
   .get(
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.ROLE),
+    restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.PERMISSION),
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['roleId'])
     ),
@@ -55,8 +59,14 @@ router.route('/:permissionId')
     ),
     jsonInterceptor(toEntityForKey('permission'))
   )
-  .get(createRoute(controller.findById))
+  .get(
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.ROLE),
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.PERMISSION),
+    createRoute(controller.findById)
+  )
   .put(
+    restrictTo(PERMISSION_ACTION.CREATE_LINK, PERMISSION_RESOURCE.ROLE),
+    restrictTo(PERMISSION_ACTION.CREATE_LINK, PERMISSION_RESOURCE.PERMISSION),
     throwBadRequestIfResourceExistByQueryFilters<RolePermissionsDto>(rolePermissionsService),
     /** roleId already exists, so check for permissionId */
     injectQueryFiltersfromRequest('params')(
@@ -68,6 +78,8 @@ router.route('/:permissionId')
     createRoute(controller.create)
   )
   .delete(
+    restrictTo(PERMISSION_ACTION.DELETE_LINK, PERMISSION_RESOURCE.ROLE),
+    restrictTo(PERMISSION_ACTION.DELETE_LINK, PERMISSION_RESOURCE.PERMISSION),
     findResourceByRequestQueryFilters<RolePermissionsDto>(rolePermissionsService),
     createRoute(controller.delete)
   )

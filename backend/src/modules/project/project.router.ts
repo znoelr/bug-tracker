@@ -18,6 +18,8 @@ import { projectService } from "./project.service";
 import { trimObjectForKeys } from "../transformers";
 import { UpdateProjectDto } from "./dtos/update-project.dto";
 import { ProjectSortDto } from "./dtos/project-sort.dto";
+import { restrictTo } from "../auth/middlewares/restrict-to.middleware";
+import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../permission/permission.constants";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -28,10 +30,12 @@ router.use(
 
 router.route('/')
   .get(
+    restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.PROJECT),
     parseUrlQueryForQueryOptionsSortBy(ProjectSortDto),
     createRoute(controller.findAll)
   )
   .post(
+    restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.PROJECT),
     validateDtoAndInjectId(CreateProjectDto),
     validateUniqueKeysFromRequest('body')(projectService, ['title']),
     createRoute(controller.create)
@@ -39,13 +43,20 @@ router.route('/')
 
 router.route('/:id')
   .all(parseParamsForQueryFilter())
-  .get(createRoute(controller.findById))
+  .get(
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.PROJECT),
+    createRoute(controller.findById)
+  )
   .patch(
+    restrictTo(PERMISSION_ACTION.UPDATE, PERMISSION_RESOURCE.PROJECT),
     validateDto(UpdateProjectDto),
     validateUniqueKeysFromRequest('body')(projectService, ['title']),
     createRoute(controller.update)
   )
-  .delete(createRoute(controller.delete));
+  .delete(
+    restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.PROJECT),
+    createRoute(controller.delete)
+  );
 
 
 /** Middleware to ensure resource exists before accessing nested routes */
