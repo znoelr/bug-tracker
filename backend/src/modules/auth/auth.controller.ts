@@ -1,31 +1,47 @@
 import { NextFunction, Request, Response } from "express";
 import { AuthService, authService } from "./auth.service";
 import { ConfigService } from "../../config/config.service";
-import { JWT_COOKIE_NAME } from "../common/constants";
+import { JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from "../common/constants";
 import { client } from "../redis";
 
 class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  async login(req: Request, res: Response, next: NextFunction) {
-    const { username, password } = req.body;
-    const jwt = await this.authService.login(username, password);
+  private getCookieExpDate(expInSeconds: number): Date {
     const expDate = new Date();
-    const expInSeconds = Number(ConfigService.get<number>('JWT_EXPIRES_IN_SECONDS'));
     const expInMillis = expInSeconds * 1000;
     expDate.setTime(expDate.getTime() + expInMillis);
-    res.cookie(JWT_COOKIE_NAME, jwt, {
-      expires: expDate,
+    return expDate;
+  }
+
+  async login(req: Request, res: Response, next: NextFunction) {
+    const { username, password } = req.body;
+    const { access_token, refresh_token } = await this.authService.login(username, password);
+    // Access jwt cookie
+    const expInSeconds = Number(ConfigService.get<number>('JWT_EXPIRES_IN_SECONDS'));
+    res.cookie(JWT_COOKIE_NAME, access_token, {
+      expires: this.getCookieExpDate(expInSeconds),
       secure: !['test', 'development'].includes(ConfigService.get('NODE_ENV')),
     });
-    res.json({ auth_token: jwt });
+    // Refresh jwt cookie
+    const expInSecondsRefresh = Number(ConfigService.get<number>('JWT_EXPIRES_IN_DAYS')) * 60 * 60 * 24;
+    res.cookie(JWT_REFRESH_COOKIE_NAME, refresh_token, {
+      expires: this.getCookieExpDate(expInSecondsRefresh),
+      secure: !['test', 'development'].includes(ConfigService.get('NODE_ENV')),
+    });
+    res.json({ auth_token: access_token, refresh_token });
   }
 
   async logout(req: Request, res: Response, next: NextFunction) {
     // Revoke JWT, remove user id from redis cache, and clear cookies
     const user = req.user || { id: '' };
     await client.del(user.id);
+    // Clear access token
     res.clearCookie(JWT_COOKIE_NAME, {
+      secure: !['test', 'development'].includes(ConfigService.get('NODE_ENV')),
+    });
+    // Clear refresh token
+    res.clearCookie(JWT_REFRESH_COOKIE_NAME,{
       secure: !['test', 'development'].includes(ConfigService.get('NODE_ENV')),
     });
     res.status(204).end();
