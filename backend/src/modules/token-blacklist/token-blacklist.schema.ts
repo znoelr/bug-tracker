@@ -1,11 +1,13 @@
 import mongoose from 'mongoose';
+import { ConfigService } from '../../config/config.service';
 
-const Schema = mongoose.Schema;
+const oneDayInSeconds = 60 * 60 * 24;
+const expiresInSeconds = Number(ConfigService.get<number>('JWT_EXPIRES_IN_DAYS')) * oneDayInSeconds;
 
-const tokenBlackListSchema = new Schema({
-  expireAt: {
+const tokenBlackListSchema = new mongoose.Schema({
+  createdAt: {
     type: Date,
-    expires: 20,
+    expires: expiresInSeconds,
     default: Date.now,
   },
   token: {
