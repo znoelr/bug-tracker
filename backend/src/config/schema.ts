@@ -10,4 +10,5 @@ export const envSchema  = Joi.object({
   JWT_EXPIRES_IN_DAYS: Joi.number().required(),
   HASH_KEY: Joi.string().required(),
   REDIS_URL: Joi.string().required(),
+  MONGO_URL: Joi.string().required(),
 });

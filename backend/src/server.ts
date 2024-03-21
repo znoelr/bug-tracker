@@ -2,6 +2,7 @@ import http from 'http';
 import { bootstrapApp } from './app';
 import { disconnect } from './repository/prisma';
 import { disconnectRedis } from './modules/redis';
+import { disconnectMongo } from './mongodb';
 
 (async () => {
   const app = await bootstrapApp();
@@ -20,6 +21,8 @@ import { disconnectRedis } from './modules/redis';
         console.log('DB disconnected');
         await disconnectRedis();
         console.log('Redis disconnected');
+        await disconnectMongo();
+        console.log('Mongo disconnected');
         console.log('Server closed');
         process.exit(0);
       });

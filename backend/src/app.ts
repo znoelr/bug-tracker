@@ -8,10 +8,12 @@ import { httpLogger as appLogger } from './logger';
 import { parseSearchForPagination } from './modules/middleware';
 import { connectRedis } from './modules/redis';
 import { cachePermissionsAccess } from './modules/common/helpers/cache.helpers';
+import { connectMongo } from './mongodb';
 
 export const bootstrapApp = async (): Promise<Express> => {
   config.init();
 
+  await connectMongo();
   await connectRedis();
   await cachePermissionsAccess();
 
