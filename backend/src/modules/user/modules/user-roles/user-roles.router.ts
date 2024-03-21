@@ -28,6 +28,7 @@ import { roleService } from "../../../role/role.service";
 import { RoleSortDto } from "../../../role/dtos/role-sort.dto";
 import { restrictTo } from "../../../auth/middlewares/restrict-to.middleware";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../../permission/permission.constants";
+import { resetCachedPermissions } from "../../../role/modules/role-permissions/middlewares/reset-cached-permissions.middleware";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -76,12 +77,14 @@ router.route('/:roleId')
     findResourceByRequestQueryFilters<RoleDto>(roleService),
     createRequestBodyFromParams(['userId', 'roleId']),
     validateDto(CreateUserRolesDto),
+    resetCachedPermissions,
     createRoute(controller.create)
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE_LINK, PERMISSION_RESOURCE.USER),
     restrictTo(PERMISSION_ACTION.DELETE_LINK, PERMISSION_RESOURCE.ROLE),
     findResourceByRequestQueryFilters<UserRolesDto>(userRolesService),
+    resetCachedPermissions,
     createRoute(controller.delete)
   )
 ;
