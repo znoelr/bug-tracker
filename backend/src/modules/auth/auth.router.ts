@@ -21,6 +21,11 @@ router.get(
   createRoute(controller.logout)
 );
 
+router.get(
+  '/refresh',
+  createRoute(controller.refreshToken)
+);
+
 export const authRouteConfig: RouteConfig = {
   path: '/auth',
   router,
