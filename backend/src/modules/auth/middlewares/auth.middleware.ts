@@ -6,10 +6,12 @@ import { UnauthorizedExeption } from "../../common/exceptions";
 import { ConfigService } from "../../../config/config.service";
 import { userService } from "../../user/user.service";
 import { QueryFilters } from "../../common/types";
+import { authService } from "../auth.service";
 
 export const authMiddleware = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const token: string = req.cookies[JWT_COOKIE_NAME];
   if (!token) throw new UnauthorizedExeption();
+  await authService.throwUnauthorizedOnBlacklistedToken(token);
   try {
     const payload = jwt.verify(token, ConfigService.get<string>('JWT_SECRET'));
     const userId = payload.sub;

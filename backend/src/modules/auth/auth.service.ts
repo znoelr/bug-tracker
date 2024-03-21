@@ -50,9 +50,15 @@ export class AuthService {
     await this.setUserRefreshToken(userId, null);
   }
 
+  async throwUnauthorizedOnBlacklistedToken(token: string) {
+    const foundToken = await TokenBlacklistModel.findOne({ token });
+    if (foundToken) throw new UnauthorizedExeption();
+  }
+
   async refreshToken(prevAccessToken: string, refreshToken: string) {
     try {
       await this.blacklistToken(prevAccessToken);
+      await this.throwUnauthorizedOnBlacklistedToken(refreshToken);
       const payload = jwt.verify(refreshToken, ConfigService.get<string>('JWT_REFRESH_SECRET'));
       const userId = payload.sub;
       const filters = new QueryFilters().setWhere({ id: userId, refreshToken });
