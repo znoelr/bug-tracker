@@ -37,7 +37,9 @@ class AuthController {
     // Revoke JWT, remove user id from redis cache, and clear cookies
     const user = req.user;
     await client.del(user.id);
-    await this.authService.logout(user.id);
+    const accessToken: string = req.cookies[JWT_COOKIE_NAME];
+    const refreshToken: string = req.cookies[JWT_REFRESH_COOKIE_NAME];
+    await this.authService.logout(user.id, accessToken, refreshToken);
     // Clear access token
     res.clearCookie(JWT_COOKIE_NAME, {
       secure: !['test', 'development'].includes(ConfigService.get('NODE_ENV')),
@@ -50,15 +52,16 @@ class AuthController {
   }
 
   async refreshToken(req: Request, res: Response, next: NextFunction) {
-    const token: string = req.cookies[JWT_REFRESH_COOKIE_NAME];
-    if (!token) throw new UnauthorizedExeption();
-    const accessToken = await this.authService.refreshToken(token);
+    const accessToken: string = req.cookies[JWT_COOKIE_NAME];
+    const refreshToken: string = req.cookies[JWT_REFRESH_COOKIE_NAME];
+    if (!refreshToken) throw new UnauthorizedExeption();
+    const newAccessToken = await this.authService.refreshToken(accessToken, refreshToken);
     const expInSeconds = Number(ConfigService.get<number>('JWT_EXPIRES_IN_SECONDS'));
-    res.cookie(JWT_COOKIE_NAME, accessToken, {
+    res.cookie(JWT_COOKIE_NAME, newAccessToken, {
       expires: this.getCookieExpDate(expInSeconds),
       secure: !['test', 'development'].includes(ConfigService.get('NODE_ENV')),
     });
-    res.json({ accessToken });
+    res.json({ newAccessToken });
   }
 }
 

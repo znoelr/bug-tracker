@@ -4,11 +4,13 @@ import { QueryFilters } from "../common/types";
 import { UserService, userService } from "../user/user.service";
 import { ConfigService } from '../../config/config.service';
 import { compareHash } from '../common/helpers';
+import { JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from '../common/constants';
+import { TokenBlacklistModel } from '../token-blacklist/token-blacklist.schema';
 
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  private async updateUserRefreshToken(userId: string, refreshToken: string | null) {
+  private async setUserRefreshToken(userId: string, refreshToken: string | null) {
     const filters = new QueryFilters().setWhere({ id: userId });
     await this.userService.update({ refreshToken }, filters);
   }
@@ -32,20 +34,28 @@ export class AuthService {
       expiresIn: refreshExpiresInSeconds,
     });
 
-    await this.updateUserRefreshToken(foundUser.id, refreshToken);
+    await this.setUserRefreshToken(foundUser.id, refreshToken);
 
     return { accessToken, refreshToken };
   }
 
-  async logout(userId: string) {
-    await this.updateUserRefreshToken(userId, null);
+  private async blacklistToken(token?: string) {
+    if (!token) return;
+    await new TokenBlacklistModel({ token }).save();
   }
 
-  async refreshToken(token: string) {
+  async logout(userId: string, accessToken: string, refreshToken: string) {
+    await this.blacklistToken(accessToken);
+    await this.blacklistToken(refreshToken);
+    await this.setUserRefreshToken(userId, null);
+  }
+
+  async refreshToken(prevAccessToken: string, refreshToken: string) {
     try {
-      const payload = jwt.verify(token, ConfigService.get<string>('JWT_REFRESH_SECRET'));
+      await this.blacklistToken(prevAccessToken);
+      const payload = jwt.verify(refreshToken, ConfigService.get<string>('JWT_REFRESH_SECRET'));
       const userId = payload.sub;
-      const filters = new QueryFilters().setWhere({ id: userId, refreshToken: token });
+      const filters = new QueryFilters().setWhere({ id: userId, refreshToken });
       const foundUser = await userService.findOne(filters);
       if (!foundUser) throw new UnauthorizedExeption();
       // Create new Access token
