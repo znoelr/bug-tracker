@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { prismaClient } from '../../repository/prisma/prisma.client';
+import { prismaClient } from '../../infrastructure/prisma/prisma.client';
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from '../../modules/permission/permission.constants';
 import { capitalize } from './helpers';
 

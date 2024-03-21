@@ -1,4 +1,4 @@
-import { prismaClient } from "../../repository/prisma/prisma.client";
+import { prismaClient } from "../../infrastructure/prisma/prisma.client";
 import { run as runPermissions } from './permission.seed';
 import { run as runRoles } from './role.seed';
 import { run as runRolePermissions } from './role-permissions.seed';

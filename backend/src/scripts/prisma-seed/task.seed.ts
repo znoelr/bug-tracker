@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { prismaClient } from '../../repository/prisma/prisma.client';
+import { prismaClient } from '../../infrastructure/prisma/prisma.client';
 import { faker } from '@faker-js/faker';
 import { TASK_PRIORITY, TASK_SEVERITY, TASK_STATUS, TASK_TYPES } from '../../modules/task/task.constants';
 import { ROLES } from '../../modules/role/role.constants';

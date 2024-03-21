@@ -6,9 +6,9 @@ import appRouter from './router/router';
 import * as config from './config';
 import { httpLogger as appLogger } from './logger';
 import { parseSearchForPagination } from './modules/middleware';
-import { connectRedis } from './modules/redis';
+import { connectRedis } from './infrastructure/redis';
 import { cachePermissionsAccess } from './modules/common/helpers/cache.helpers';
-import { connectMongo } from './mongodb';
+import { connectMongo } from './infrastructure/mongodb';
 
 export const bootstrapApp = async (): Promise<Express> => {
   config.init();

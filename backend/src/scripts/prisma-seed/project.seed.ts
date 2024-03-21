@@ -1,7 +1,7 @@
 
 import { v4 as uuid } from 'uuid';
 import { faker } from '@faker-js/faker';
-import { prismaClient } from '../../repository/prisma/prisma.client';
+import { prismaClient } from '../../infrastructure/prisma/prisma.client';
 import { PROJECT_STATUS } from '../../modules/project/project.constants';
 import { ROLES } from '../../modules/role/role.constants';
 

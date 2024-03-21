@@ -1,4 +1,4 @@
-import { client } from "../../redis";
+import { client } from "../../../infrastructure/redis";
 import { rolePermissionsService } from "../../role/modules/role-permissions/role-permissions.service";
 import { QueryFilters, QueryOptions } from "../types";
 

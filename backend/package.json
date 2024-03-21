@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "prisma": {
-    "schema": "src/repository/prisma/schema.prisma",
+    "schema": "src/infrastructure/prisma/schema.prisma",
     "seed": "ts-node ./src/scripts/prisma-seed/seed.ts"
   },
   "scripts": {

@@ -1,4 +1,4 @@
-import { prismaClient } from '../../repository/prisma/prisma.client';
+import { prismaClient } from '../../infrastructure/prisma/prisma.client';
 import { ROLES } from '../../modules/role/role.constants';
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from '../../modules/permission/permission.constants';
 

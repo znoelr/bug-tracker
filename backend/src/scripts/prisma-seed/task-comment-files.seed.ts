@@ -1,4 +1,4 @@
-import { prismaClient } from '../../repository/prisma/prisma.client';
+import { prismaClient } from '../../infrastructure/prisma/prisma.client';
 import { getRandomValue } from './helpers';
 
 export async function run(taskComments: any[], files: any[]) {

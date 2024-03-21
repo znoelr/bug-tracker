@@ -1,8 +1,8 @@
 import http from 'http';
 import { bootstrapApp } from './app';
-import { disconnect } from './repository/prisma';
-import { disconnectRedis } from './modules/redis';
-import { disconnectMongo } from './mongodb';
+import { disconnect } from './infrastructure/prisma';
+import { disconnectRedis } from './infrastructure/redis';
+import { disconnectMongo } from './infrastructure/mongodb';
 
 (async () => {
   const app = await bootstrapApp();

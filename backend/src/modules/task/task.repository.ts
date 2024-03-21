@@ -1,6 +1,6 @@
 import { TaskDto } from "./dtos/task.dto";
-import { PrismaBaseRepository } from "../../repository/prisma/prisma.base.repository";
-import { prismaClient } from "../../repository/prisma/prisma.client";
+import { PrismaBaseRepository } from "../../infrastructure/prisma/prisma.base.repository";
+import { prismaClient } from "../../infrastructure/prisma/prisma.client";
 
 export class TaskRepository extends PrismaBaseRepository<TaskDto> {
   constructor() {

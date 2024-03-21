@@ -1,5 +1,5 @@
 import { v4 as uuid } from 'uuid';
-import { prismaClient } from '../../repository/prisma/prisma.client';
+import { prismaClient } from '../../infrastructure/prisma/prisma.client';
 import { ROLES } from '../../modules/role/role.constants';
 import { getRandomValue } from './helpers';
 import { PERMISSION_ACTION } from '../../modules/permission/permission.constants';

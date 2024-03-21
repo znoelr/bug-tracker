@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { AuthService, authService } from "./auth.service";
 import { ConfigService } from "../../config/config.service";
 import { JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from "../common/constants";
-import { client } from "../redis";
+import { client } from "../../infrastructure/redis";
 import { UnauthorizedExeption } from "../common/exceptions";
 
 class AuthController {
