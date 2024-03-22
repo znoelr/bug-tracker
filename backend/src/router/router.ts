@@ -2,11 +2,10 @@ import express, { NextFunction, Request, Response } from "express";
 import routerList from './router-list';
 import { RouteConfig } from "../modules/common/types";
 import { BaseHttpException } from "../modules/common/exceptions";
-import { fileLogger } from '../logger';
+import { getFileLogger } from '../logger';
 import { authRouteConfig } from '../modules/auth/auth.router';
 import { authMiddleware } from "../modules/auth/middlewares/auth.middleware";
 
-const logger = fileLogger();
 const router = express.Router();
 
 // Auth Route
@@ -36,7 +35,10 @@ router.use((err: unknown, req: Request, res: Response, next: NextFunction): void
   }
   try {
     // Append to error log file
-    logger.error(`${err}`);
+    if(process.env.NODE_ENV !== 'test') {
+      const logger = getFileLogger();
+      logger.error(`${err}`);
+    }
   }
   finally {
     res.status(500).end('Something went wrong');

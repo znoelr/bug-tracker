@@ -1,20 +1,24 @@
 import path from 'path';
 import pinoLogger from 'pino';
 
-const targets = process.env.NODE_ENV !== 'test'
-  ? [
-      {
-        target: path.resolve(__dirname, './sonic-boom'),
-        level: 'error',
-        options: {
-          singleLine: true,
-        },
-      },
-    ]
-  : [];
-
-export const fileLogger = () => pinoLogger({
-  transport: {
-    targets,
+const fileTransport = pinoLogger.transport({
+  target: path.resolve(__dirname, './sonic-boom'),
+  options: {
+    singleLine: true,
   },
 });
+
+export const getFileLogger = () => pinoLogger({
+  level: 'error',
+  formatters: {
+    level: (label) => {
+      return { level: label.toUpperCase() };
+    },
+  },
+  timestamp: () => {
+    const [, now] = new Date().toISOString().split('T');
+    console.log({now});
+    return `,"time":"${now}"`;
+  },
+},
+fileTransport);

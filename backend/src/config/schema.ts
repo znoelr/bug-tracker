@@ -11,4 +11,5 @@ export const envSchema  = Joi.object({
   HASH_KEY: Joi.string().required(),
   REDIS_URL: Joi.string().required(),
   MONGO_URL: Joi.string().required(),
+  LOG_FOLDER: Joi.string().required(),
 });
