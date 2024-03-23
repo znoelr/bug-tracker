@@ -1,4 +1,3 @@
-import { prismaClient } from "../../infrastructure/prisma/prisma.client";
 import { run as runPermissions } from './permission.seed';
 import { run as runRoles } from './role.seed';
 import { run as runRolePermissions } from './role-permissions.seed';
@@ -13,7 +12,7 @@ import { run as runTaskFiles } from './task-files.seed';
 import { run as runTaskCommentFiles } from './task-comment-files.seed';
 import { run as runProjectFiles } from './project-files.seed';
 
-async function main() {
+export async function main() {
   const permissions = await runPermissions();
   const roles = await runRoles();
   await runRolePermissions(roles, permissions);
@@ -28,10 +27,3 @@ async function main() {
   await runTaskCommentFiles(taskComments, files.slice(13, 45));
   await runProjectFiles(projects, files.slice(45));
 }
-
-main()
-  .then(async () => await prismaClient.$disconnect())
-  .catch(async (error) => {
-    console.error(error);
-    await prismaClient.$disconnect();
-  });
