@@ -9,7 +9,10 @@
   },
   "scripts": {
     "build": "tsc -b",
-    "test": "dotenv -e .env.test -- jest",
+    "test": "docker compose -f test.docker-compose.yaml up",
+    "dev": "docker compose up",
+    "clear:test": "docker compose -f test.docker-compose.yaml down",
+    "start:test": "npx prisma generate && dotenv -e .env.test -- jest --watchAll",
     "start:dev": "dotenv -e .env.development -- npx tsx --watch --trace-warnings src/server.ts",
     "db:migrate": "dotenv -e .env.development -- npx prisma migrate dev"
   },

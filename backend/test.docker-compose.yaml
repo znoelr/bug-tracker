@@ -1,0 +1,27 @@
+version: "3.1"
+
+services:
+  test-bug-tracker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: build  # name of the Dockerfile build step
+    command: npm run start:test
+    env_file: .env.test
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/usr/app/bug-tracker
+    depends_on:
+      - redis
+      - mongodb
+
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+
+  mongodb:
+    image: mongo:jammy
+    ports:
+      - 27017:27017
