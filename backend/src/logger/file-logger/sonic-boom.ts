@@ -4,7 +4,7 @@ import { ConfigService } from '../../config/config.service';
 
 let folderCreated = false;
 
-const createFodler = () => {
+const createLogFolder = () => {
   if (folderCreated) return;
   const folderPath = ConfigService.get<string>('LOG_FOLDER');
   if (!fs.existsSync(folderPath)) {
@@ -14,7 +14,7 @@ const createFodler = () => {
 }
 
 export default () => {
-  createFodler();
+  createLogFolder();
   const [today] = new Date().toISOString().split('T');
   return new SonicBoom({ dest: `${ConfigService.get<string>('LOG_FOLDER')}/${today}.error.log` });
 }
