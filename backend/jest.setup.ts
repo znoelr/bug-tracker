@@ -1,5 +1,7 @@
-beforeAll(() => {
-  console.log('TODO: Setup mock data');
+import { main as seedDB } from './src/scripts/prisma-seed/seed';
+
+beforeAll(async () => {
+  await seedDB();
 });
 
 afterAll(() => {

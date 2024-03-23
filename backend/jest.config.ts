@@ -6,5 +6,6 @@ const config: Config.InitialOptions = {
     '^.+\\.tsx?$': 'ts-jest',
   },
   setupFilesAfterEnv: ['./jest.setup.ts'],
+  testTimeout: 1000 * 60, // 60s
 };
 export default config;
