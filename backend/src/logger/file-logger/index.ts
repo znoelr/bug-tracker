@@ -1,7 +1,7 @@
 import path from 'path';
 import pinoLogger from 'pino';
 
-const fileTransport = pinoLogger.transport({
+const getFileTransport = () => pinoLogger.transport({
   target: path.resolve(__dirname, './sonic-boom'),
   options: {
     singleLine: true,
@@ -21,4 +21,4 @@ export const getFileLogger = () => pinoLogger({
     return `,"time":"${now}"`;
   },
 },
-fileTransport);
+getFileTransport());
