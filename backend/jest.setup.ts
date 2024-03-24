@@ -1,7 +1,8 @@
-import { main as seedDB } from './src/scripts/prisma-seed/seed';
+import { clear as clearDB, seed as seedDB } from './src/scripts/prisma-seed/seed';
 
 beforeAll(async () => {
-  await seedDB();
+  await clearDB();
+  global.records = await seedDB();
 });
 
 afterAll(() => {

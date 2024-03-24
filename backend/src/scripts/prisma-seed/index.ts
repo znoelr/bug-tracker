@@ -1,7 +1,7 @@
 import { prismaClient } from "../../infrastructure/prisma/prisma.client";
-import { main } from "./seed";
+import { seed } from "./seed";
 
-main()
+seed()
   .then(async () => await prismaClient.$disconnect())
   .catch(async (error) => {
     console.error(error);
