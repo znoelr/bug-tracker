@@ -2,38 +2,48 @@ import { Express } from 'express';
 import request from 'supertest';
 import { ROLES } from '../../role/role.constants';
 import { bootstrapApp } from '../../../app';
-import { createTask } from './helpers/create-task';
+import { UserDto } from '../../user/dtos/user.dto';
+import { TASK_PRIORITY, TASK_STATUS, TASK_TYPES } from '../task.constants';
 
 let app: Express;
+let adminUser: UserDto;
+let cookies: string[];
 
-describe('[Task Resource]', () => {
+describe('[TASK]', () => {
   let task: any = null;
 
   beforeAll(async () => {
     app = await bootstrapApp();
-    const { users, projects } = global.records;
-    const adminUser: any = users.find(({username}) => username === ROLES.ADMIN.toLowerCase());
-    const project: any = await projects[0];
-    task = await createTask(app)(adminUser.id, project.id);
+    adminUser = global.records.users.find(({username}) => username === ROLES.ADMIN.toLowerCase())!;
+    cookies = await global.signin(adminUser.id);
+
+    const res = await request(app)
+      .post('/tasks')
+      .set('Cookie', cookies)
+      .send({
+        "title": `First title ${Date.now()}`,
+        "description": "Some data for description",
+        "type": TASK_TYPES.FEATURE,
+        "status": TASK_STATUS.IN_PROGRESS,
+        "priority": TASK_PRIORITY.NORMAL,
+        "assigneeId": adminUser.id,
+        "projectId": global.records.projects[0].id,
+      })
+      .expect(201);
+    task = res.body;
   });
 
-  afterAll(async () => {
-    await request(app).delete(`/tasks/${task.id}`);
+  it('should get all tasks', async () => {
+    const res = await request(app)
+      .get('/tasks')
+      .set('Cookie', cookies)
+      .expect('Content-Type', /json/)
+      .expect(200);
+    expect(res.body).toBeDefined();
+    expect(Array.isArray(res.body)).toBe(true);
   });
 
   // describe('[Authenticated User]', () => {
-  //   it('should get all tasks', (done) => {
-  //     request(app)
-  //       .get('/tasks')
-  //       .auth('username', 'password')
-  //       .set('Accept', 'application/json')
-  //       .expect('Content-Type', /json/)
-  //       .expect((res) => {
-  //         expect(res.body).toBeDefined();
-  //         expect(Array.isArray(res.body)).toBe(true);
-  //       })
-  //       .expect(200, done);
-  //   });
 
   //   it('should get a task by its ID', (done) => {
   //     request(app)
