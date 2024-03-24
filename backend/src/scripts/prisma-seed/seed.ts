@@ -11,27 +11,22 @@ import { run as runFiles } from './file.seed';
 import { run as runTaskFiles } from './task-files.seed';
 import { run as runTaskCommentFiles } from './task-comment-files.seed';
 import { run as runProjectFiles } from './project-files.seed';
-import { DBRecords } from '../../modules/common/types/db-records';
 import { prismaClient } from '../../infrastructure/prisma/prisma.client';
 
-export async function seed(): Promise<DBRecords> {
-  const records: any = {};
-
-  records.permissions = await runPermissions();
-  records.roles = await runRoles();
-  await runRolePermissions(records.roles, records.permissions);
-  records.users = await runUsers();
-  await runUserRoles(records.users, records.roles);
-  records.projects = await runProjects(records.users);
-  records.tasks = await runTasks(records.users, records.projects);
-  await runTaskLogs(records.users, records.tasks);
-  records.taskComments = await runTaskComments(records.users, records.tasks);
-  records.files = await runFiles();
-  await runTaskFiles(records.tasks, records.files.slice(0, 13));
-  await runTaskCommentFiles(records.taskComments, records.files.slice(13, 45));
-  await runProjectFiles(records.projects, records.files.slice(45));
-
-  return records as DBRecords;
+export async function seed(): Promise<void> {
+  const permissions = await runPermissions();
+  const roles = await runRoles();
+  await runRolePermissions(roles, permissions);
+  const users = await runUsers();
+  await runUserRoles(users, roles);
+  const projects = await runProjects(users);
+  const tasks = await runTasks(users, projects);
+  await runTaskLogs(users, tasks);
+  const taskComments = await runTaskComments(users, tasks);
+  const files = await runFiles();
+  await runTaskFiles(tasks, files.slice(0, 13));
+  await runTaskCommentFiles(taskComments, files.slice(13, 45));
+  await runProjectFiles(projects, files.slice(45));
 }
 
 export async function clear(): Promise<void> {

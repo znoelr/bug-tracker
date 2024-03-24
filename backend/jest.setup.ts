@@ -1,16 +1,12 @@
 import jwt from 'jsonwebtoken';
-import { clear as clearDB, seed as seedDB } from './src/scripts/prisma-seed/seed';
+import { fetchRecords } from './src/scripts/prisma-seed/fetch-records';
 import { ConfigService } from './src/config/config.service';
 import { JWT_COOKIE_NAME } from './src/modules/common/constants';
 
 
 beforeAll(async () => {
-  console.log('Clearing DB...');
-  await clearDB();
-  console.log('Seeding DB...');
-  global.records = await seedDB();
+  global.records = await fetchRecords();
 });
-
 
 global.signin = (userId: string): string[] => {
   const jwtPayload = { sub: userId };

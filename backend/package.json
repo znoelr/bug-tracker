@@ -5,14 +5,14 @@
   "main": "index.js",
   "prisma": {
     "schema": "src/infrastructure/prisma/schema.prisma",
-    "seed": "ts-node ./src/scripts/prisma-seed/seed/index.ts"
+    "seed": "ts-node ./src/scripts/prisma-seed/index.ts"
   },
   "scripts": {
     "build": "tsc -b",
     "test": "docker compose -f test.docker-compose.yaml up --build",
     "dev": "docker compose up",
     "clear:test": "docker compose -f test.docker-compose.yaml down",
-    "start:test": "npx prisma generate && dotenv -e .env.test -- npx prisma db push --force-reset --accept-data-loss && dotenv -e .env.test -- jest --watchAll",
+    "start:test": "npx prisma generate && dotenv -e .env.test -- npx prisma db push --force-reset --accept-data-loss && dotenv -e .env.test -- npx prisma db seed && dotenv -e .env.test -- jest --watchAll",
     "start:dev": "dotenv -e .env.development -- npx tsx --watch --trace-warnings src/server.ts",
     "db:migrate": "dotenv -e .env.development -- npx prisma migrate dev"
   },
