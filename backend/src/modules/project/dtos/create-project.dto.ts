@@ -19,8 +19,4 @@ export class CreateProjectDto {
   @IsNotEmpty()
   @IsIn(Object.values(PROJECT_STATUS))
   status: string;
-
-  @IsString()
-  @IsNotEmpty()
-  createdById: string;
 }

@@ -10,6 +10,7 @@ import {
   parseParamsForQueryFilter,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
+  transformRequestBody,
   validateUniqueKeysFromRequest,
 } from "../middleware";
 import projectFilesRouter from './modules/project-files/project-files.router';
@@ -20,6 +21,7 @@ import { UpdateProjectDto } from "./dtos/update-project.dto";
 import { ProjectSortDto } from "./dtos/project-sort.dto";
 import { restrictTo } from "../auth/middlewares/restrict-to.middleware";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../permission/permission.constants";
+import { injectCreatedBy } from "./middlewares/inject-created-by.middleware";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -38,6 +40,7 @@ router.route('/')
     restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.PROJECT),
     validateDtoAndInjectId(CreateProjectDto),
     validateUniqueKeysFromRequest('body')(projectService, ['title']),
+    injectCreatedBy,
     createRoute(controller.create)
   );
 
