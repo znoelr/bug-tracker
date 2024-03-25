@@ -49,12 +49,14 @@ router.route('/:id')
   )
   .patch(
     restrictTo(PERMISSION_ACTION.UPDATE, PERMISSION_RESOURCE.ROLE),
+    findResourceByRequestQueryFilters<RoleDto>(roleService),
     validateDto(UpdateRoleDto),
     validateUniqueKeysFromRequest<RoleDto>('body')(roleService, ['name']),
     createRoute(controller.update)
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.ROLE),
+    findResourceByRequestQueryFilters<RoleDto>(roleService),
     createRoute(controller.delete)
   );
 
