@@ -12,7 +12,7 @@
     "test": "docker compose -f test.docker-compose.yaml up --build",
     "dev": "docker compose up",
     "clear:test": "docker compose -f test.docker-compose.yaml down",
-    "start:test": "npx prisma generate && dotenv -e .env.test -- npx prisma db push --force-reset --accept-data-loss && dotenv -e .env.test -- npx prisma db seed && dotenv -e .env.test -- jest --watchAll",
+    "start:test": "npx prisma generate && dotenv -e .env.test -- npx prisma db push --force-reset --accept-data-loss && dotenv -e .env.test -- npx prisma db seed && dotenv -e .env.test -- jest --watchAll --detectOpenHandles",
     "start:dev": "dotenv -e .env.development -- npx tsx --watch --trace-warnings src/server.ts",
     "db:migrate": "dotenv -e .env.development -- npx prisma migrate dev"
   },
