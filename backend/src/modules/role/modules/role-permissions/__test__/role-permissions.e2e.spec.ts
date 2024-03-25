@@ -5,6 +5,7 @@ import { bootstrapApp } from '../../../../../app';
 import { UserDto } from "../../../../user/dtos/user.dto";
 import { ROLES } from "../../../role.constants";
 import { PermissionDto } from "../../../../permission/dtos/permission.dto";
+import { fetchRole, fetchUser } from "../../../../../scripts/prisma-seed/fetch-records";
 
 let app: Express;
 let cookies: string[];
@@ -16,8 +17,8 @@ let adminPermissions: PermissionDto[];
 describe('[ROLE_PERMISSIONS]', () => {
   beforeAll(async () => {
     app = await bootstrapApp();
-    adminUser = global.records.users.find(({username}) => username === ROLES.ADMIN.toLowerCase())!;
-    adminRole = global.records.roles.find(({name}) => name === ROLES.ADMIN)!;
+    adminUser = await fetchUser({username: ROLES.ADMIN.toLowerCase()});
+    adminRole = await fetchRole({name: ROLES.ADMIN});
     cookies = global.signin(adminUser.id);
 
     const { body: pBody } = await request(app)

@@ -2,8 +2,9 @@ import { Express } from 'express';
 import request from 'supertest';
 import { ROLES } from '../../role/role.constants';
 import { bootstrapApp } from '../../../app';
-import { UserDto } from '../../user/dtos/user.dto';
 import { TASK_PRIORITY, TASK_STATUS, TASK_TYPES } from '../task.constants';
+import { fetchProjects, fetchUser } from '../../../scripts/prisma-seed/fetch-records';
+import { UserDto } from '../../user/dtos/user.dto';
 
 let app: Express;
 let adminUser: UserDto;
@@ -14,7 +15,8 @@ describe('[TASK]', () => {
 
   beforeAll(async () => {
     app = await bootstrapApp();
-    adminUser = global.records.users.find(({username}) => username === ROLES.ADMIN.toLowerCase())!;
+    const projects: any[] = await fetchProjects();
+    adminUser = await fetchUser({username: ROLES.ADMIN.toLowerCase()});
     cookies = await global.signin(adminUser.id);
 
     const res = await request(app)
@@ -27,7 +29,7 @@ describe('[TASK]', () => {
         "status": TASK_STATUS.IN_PROGRESS,
         "priority": TASK_PRIORITY.NORMAL,
         "assigneeId": adminUser.id,
-        "projectId": global.records.projects[0].id,
+        "projectId": projects[0].id,
       })
       .expect(201);
     task = res.body;
