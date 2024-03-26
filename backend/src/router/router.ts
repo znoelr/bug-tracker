@@ -5,6 +5,7 @@ import { BaseHttpException } from "../common/exceptions";
 import { getFileLogger } from '../logger';
 import { authRouteConfig } from '../modules/auth/auth.router';
 import { authMiddleware } from "../modules/auth/middlewares/auth.middleware";
+import { toJsonError } from "../transformers";
 
 const router = express.Router();
 
@@ -30,7 +31,9 @@ router.use('*', (req: Request, res: Response, next: NextFunction): void => {
 // Error 500
 router.use((err: unknown, req: Request, res: Response, next: NextFunction): void => {
   if (err instanceof BaseHttpException) {
-    res.status(err.http_code).end(err.message || 'Not found');
+    res.status(err.http_code).json(
+      toJsonError(err.message || 'Not found')
+    );
     return;
   }
   try {
@@ -41,7 +44,9 @@ router.use((err: unknown, req: Request, res: Response, next: NextFunction): void
     }
   }
   finally {
-    res.status(500).end('Something went wrong');
+    res.status(500).json(
+      toJsonError('Something went wrong')
+    );
   }
 });
 

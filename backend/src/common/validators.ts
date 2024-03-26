@@ -5,6 +5,7 @@ import { HTTP_BAD_REQUEST } from "./http-status-codes";
 import { v4 as uuid } from 'uuid';
 import { ClassConstructor } from "./types";
 import { catchAsync } from "./exception-handlers";
+import { toJsonError } from "../transformers";
 
 const parseValidationErrorMesages = (errors: any[]): any => {
   return errors.reduce((acc: {[key: string]: any}, error: {[key: string]: any}) => {
@@ -15,10 +16,6 @@ const parseValidationErrorMesages = (errors: any[]): any => {
 
 const validateDtoFor = (classDto: ClassConstructor, {appendId = true} = {}) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    if (Object.keys(req.body).length === 0) {
-      res.status(HTTP_BAD_REQUEST).end('Must provide some data');
-      return;
-    }
     const data: {[key: string]: any} = req.body;
     const instance = plainToInstance(classDto, data);
     try {
@@ -26,6 +23,12 @@ const validateDtoFor = (classDto: ClassConstructor, {appendId = true} = {}) =>
         whitelist: true,
         validationError: { target: false },
       });
+      if (Object.keys(instance).length === 0) {
+        res.status(HTTP_BAD_REQUEST).json(
+          toJsonError('Must provide data')
+        );
+        return;
+      }
       if (appendId) {
         instance.id = uuid();
       }
@@ -34,7 +37,9 @@ const validateDtoFor = (classDto: ClassConstructor, {appendId = true} = {}) =>
     }
     catch (errors: any) {
       res.status(HTTP_BAD_REQUEST)
-        .json(parseValidationErrorMesages(errors));
+        .json(
+          toJsonError(parseValidationErrorMesages(errors))
+        );
     }
   })
 ;
