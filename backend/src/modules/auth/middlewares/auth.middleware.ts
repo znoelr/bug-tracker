@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from 'jsonwebtoken';
-import { catchAsync } from "../../common/exception-handlers";
-import { JWT_COOKIE_NAME } from "../../common/constants";
-import { UnauthorizedExeption } from "../../common/exceptions";
+import { catchAsync } from "../../../common/exception-handlers";
+import { JWT_COOKIE_NAME } from "../../../common/constants";
+import { UnauthorizedExeption } from "../../../common/exceptions";
 import { ConfigService } from "../../../config/config.service";
 import { userService } from "../../user/user.service";
-import { QueryFilters } from "../../common/types";
+import { QueryFilters } from "../../../common/types";
 import { authService } from "../auth.service";
 
 export const authMiddleware = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

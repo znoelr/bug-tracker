@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from "express";
 import routerList from './router-list';
-import { RouteConfig } from "../modules/common/types";
-import { BaseHttpException } from "../modules/common/exceptions";
+import { RouteConfig } from "../common/types";
+import { BaseHttpException } from "../common/exceptions";
 import { getFileLogger } from '../logger';
 import { authRouteConfig } from '../modules/auth/auth.router';
 import { authMiddleware } from "../modules/auth/middlewares/auth.middleware";

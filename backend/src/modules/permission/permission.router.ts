@@ -1,12 +1,12 @@
 import express from "express";
 import controller from './permission.controller';
-import { routeFactory } from "../common/route-handlers";
-import { RouteConfig } from "../common/types";
+import { routeFactory } from "../../common/route-handlers";
+import { RouteConfig } from "../../common/types";
 import {
   parseParamsForQueryFilter,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
-} from "../middleware";
+} from "../../middleware";
 import { PermissionSortDto } from "./dtos/permission-sort.dto";
 import { PermissionDto } from "./dtos/permission.dto";
 import { restrictTo } from "../auth/middlewares/restrict-to.middleware";

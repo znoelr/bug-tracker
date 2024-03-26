@@ -1,5 +1,5 @@
-import { client } from "../../../infrastructure/redis";
-import { rolePermissionsService } from "../../role/modules/role-permissions/role-permissions.service";
+import { client } from "../../infrastructure/redis";
+import { rolePermissionsService } from "../../modules/role/modules/role-permissions/role-permissions.service";
 import { QueryFilters, QueryOptions } from "../types";
 
 export const getPermissionKey = (action: string, resource: string) => `${action}-${resource}`.toLowerCase();

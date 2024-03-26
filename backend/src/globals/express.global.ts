@@ -1,4 +1,4 @@
-import { Pagination, QueryFilters, QueryOptions } from "../modules/common/types";
+import { Pagination, QueryFilters, QueryOptions } from "../common/types";
 import { UserDto } from "../modules/user/dtos/user.dto";
 
 declare global {

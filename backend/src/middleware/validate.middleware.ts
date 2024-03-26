@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BaseService } from "../base/base.service";
+import { BaseService } from "../modules/base/base.service";
 import { QueryFilters } from "../common/types";
 import { BadRequestException } from "../common/exceptions";
 import { GenericFunction } from "../common/types";

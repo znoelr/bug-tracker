@@ -1,7 +1,7 @@
 import { plainToInstance } from "class-transformer";
 import { validateOrReject } from "class-validator";
 import { NextFunction, Request, Response } from "express";
-import { HTTP_BAD_REQUEST } from "../common/http-status-codes";
+import { HTTP_BAD_REQUEST } from "./http-status-codes";
 import { v4 as uuid } from 'uuid';
 import { ClassConstructor } from "./types";
 import { catchAsync } from "./exception-handlers";

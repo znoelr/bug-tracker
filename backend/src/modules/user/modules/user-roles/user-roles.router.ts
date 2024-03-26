@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './user-roles.controller';
-import { routeFactory } from "../../../common/route-handlers";
-import { validateDto } from "../../../common/validators";
+import { routeFactory } from "../../../../common/route-handlers";
+import { validateDto } from "../../../../common/validators";
 import {
   injectQueryFiltersfromRequest,
   findResourceByRequestQueryFilters,
@@ -10,8 +10,8 @@ import {
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
   parseUrlQueryForQueryOptionsSelect,
-} from "../../../middleware";
-import { jsonInterceptor } from "../../../interceptors";
+} from "../../../../middleware";
+import { jsonInterceptor } from "../../../../interceptors";
 import { CreateUserRolesDto } from "./dtos/create-user-roles.dto";
 import { createComposedKeyFromObjectKeys,
   injectSelectOrIncludeQueryOptionsForKey,
@@ -19,7 +19,7 @@ import { createComposedKeyFromObjectKeys,
   toEntityListForKey,
   trimObjectForKeys,
   trimOnlyFirstEntryOfSortByForField,
-} from "../../../transformers";
+} from "../../../../transformers";
 import rolePermissionsRouter from '../../../role/modules/role-permissions/role-permissions.router';
 import { userRolesService } from "./user-roles.service";
 import { UserRolesDto } from "./dtos/user-roles.dto";

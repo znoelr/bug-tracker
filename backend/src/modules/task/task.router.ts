@@ -1,8 +1,8 @@
 import express from "express";
-import { RouteConfig } from "../common/types";
-import { routeFactory } from "../common/route-handlers";
+import { RouteConfig } from "../../common/types";
+import { routeFactory } from "../../common/route-handlers";
 import { CreateTaskDto } from "./dtos/create-task.dto";
-import { validateDto, validateDtoAndInjectId } from "../common/validators";
+import { validateDto, validateDtoAndInjectId } from "../../common/validators";
 import {
   findResourceByRequestQueryFilters,
   injectQueryFiltersfromRequest,
@@ -10,12 +10,12 @@ import {
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
   validateUniqueKeysFromRequest,
-} from "../middleware";
+} from "../../middleware";
 import controller from './task.controller';
 import taskCommentsRouter from './modules/task-comment/task-comment.router';
 import taskLogsRouter from './modules/task-log/task-log.router';
 import taskFilesRouter from './modules/task-files/task-files.router';
-import { trimObjectForKeys } from "../transformers";
+import { trimObjectForKeys } from "../../transformers";
 import { taskService } from "./task.service";
 import { TaskDto } from "./dtos/task.dto";
 import { UpdateTaskDto } from "./dtos/update-task.dto";

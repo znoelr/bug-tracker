@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../common/exception-handlers";
+import { catchAsync } from "../../../common/exception-handlers";
 import { userRolesService } from "../../user/modules/user-roles/user-roles.service";
-import { QueryFilters } from "../../common/types";
+import { QueryFilters } from "../../../common/types";
 import { client } from "../../../infrastructure/redis";
-import { cachePermissionsAccess, getPermissionKey } from "../../common/helpers/cache.helpers";
-import { ForbiddenExeption } from "../../common/exceptions";
+import { cachePermissionsAccess, getPermissionKey } from "../../../common/helpers/cache.helpers";
+import { ForbiddenExeption } from "../../../common/exceptions";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../permission/permission.constants";
 
 const getUserRolesIds = async (userId: string): Promise<string[]> => {

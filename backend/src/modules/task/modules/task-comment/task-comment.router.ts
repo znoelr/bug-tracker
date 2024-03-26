@@ -1,16 +1,16 @@
 import express from "express";
 import controller from './task-comment.controller';
-import { routeFactory } from "../../../common/route-handlers";
-import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
+import { routeFactory } from "../../../../common/route-handlers";
+import { validateDto, validateDtoAndInjectId } from "../../../../common/validators";
 import { CreateTaskCommentDto } from "./dtos/create-task-comment.dto";
 import {
   findResourceByRequestQueryFilters,
   injectQueryFiltersfromRequest,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
-} from "../../../middleware";
+} from "../../../../middleware";
 import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
-import { trimObjectForKeys } from "../../../transformers";
+import { trimObjectForKeys } from "../../../../transformers";
 import { taskCommentService } from "./task-comment.service";
 import { TaskCommentDto } from "./dtos/task-comment.dto";
 import { TaskCommentSortDto } from "./dtos/task-comment-sort.dto";

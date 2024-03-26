@@ -1,8 +1,8 @@
 import express from "express";
 import controller from './role.controller';
-import { RouteConfig } from "../common/types";
-import { routeFactory } from "../common/route-handlers";
-import { validateDto, validateDtoAndInjectId } from "../common/validators";
+import { RouteConfig } from "../../common/types";
+import { routeFactory } from "../../common/route-handlers";
+import { validateDto, validateDtoAndInjectId } from "../../common/validators";
 import { CreateRoleDto } from "./dtos/create-role.dto";
 import {
   findResourceByRequestQueryFilters,
@@ -10,13 +10,13 @@ import {
   parseParamsForQueryFilter,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
-} from "../middleware";
+} from "../../middleware";
 import rolePermissionsRouter from './modules/role-permissions/role-permissions.router';
-import { trimObjectForKeys } from "../transformers";
+import { trimObjectForKeys } from "../../transformers";
 import { roleService } from "./role.service";
 import { RoleDto } from "./dtos/role.dto";
 import { UpdateRoleDto } from "./dtos/update-role.dto";
-import { validateUniqueKeysFromRequest } from "../middleware";
+import { validateUniqueKeysFromRequest } from "../../middleware";
 import { RoleSortDto } from "./dtos/role-sort.dto";
 import { restrictTo } from "../auth/middlewares/restrict-to.middleware";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../permission/permission.constants";

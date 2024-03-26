@@ -1,6 +1,6 @@
 
 import { BaseRepository } from "../../modules/base/base.repository";
-import { Pagination, QueryFilters, QueryOptions, SortDirection, SortObject } from "../../modules/common/types";
+import { Pagination, QueryFilters, QueryOptions, SortDirection, SortObject } from "../../common/types";
 
 export class PrismaBaseRepository<T> implements BaseRepository<T> {
   constructor(protected readonly model: any) {}

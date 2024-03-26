@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './task-comment-files.controller';
-import { routeFactory } from "../../../../../common/route-handlers";
-import { QueryOptions } from "../../../../../common/types";
+import { routeFactory } from "../../../../../../common/route-handlers";
+import { QueryOptions } from "../../../../../../common/types";
 import {
   createRequestBodyForKeys,
   findResourceByRequestQueryFilters,
@@ -10,12 +10,12 @@ import {
   injectTransformedQueryOptions,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
-} from "../../../../../middleware";
-import { jsonInterceptor } from "../../../../../interceptors";
+} from "../../../../../../middleware";
+import { jsonInterceptor } from "../../../../../../interceptors";
 import {
   validateDto,
   validateDtoAndInjectId,
-} from "../../../../../common/validators";
+} from "../../../../../../common/validators";
 import {
   createComposedKeyFromObjectKeys,
   injectSelectOrIncludeQueryOptionsForKey,
@@ -23,7 +23,7 @@ import {
   toEntityListForKey,
   trimObjectForKeys,
   trimOnlyFirstEntryOfSortByForField,
-} from "../../../../../transformers";
+} from "../../../../../../transformers";
 import { TaskCommentFilesDto } from "./dtos/task-comment-files.dto";
 import { taskCommentFilesService } from "./task-comment-files.service";
 import fileController from '../../../../../file/file.controller';

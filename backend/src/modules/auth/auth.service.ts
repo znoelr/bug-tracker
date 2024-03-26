@@ -1,10 +1,10 @@
 import jwt from 'jsonwebtoken';
-import { BadRequestException, UnauthorizedExeption } from "../common/exceptions";
-import { QueryFilters } from "../common/types";
+import { BadRequestException, UnauthorizedExeption } from "../../common/exceptions";
+import { QueryFilters } from "../../common/types";
 import { UserService, userService } from "../user/user.service";
 import { ConfigService } from '../../config/config.service';
-import { compareHash } from '../common/helpers';
-import { JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from '../common/constants';
+import { compareHash } from '../../common/helpers';
+import { JWT_COOKIE_NAME, JWT_REFRESH_COOKIE_NAME } from '../../common/constants';
 import { TokenBlacklistModel } from '../token-blacklist/token-blacklist.schema';
 
 export class AuthService {

@@ -1,14 +1,14 @@
 import express from "express";
 import controller from './file.controller';
-import { RouteConfig } from "../common/types";
-import { routeFactory } from "../common/route-handlers";
-import { validateDtoAndInjectId } from "../common/validators";
+import { RouteConfig } from "../../common/types";
+import { routeFactory } from "../../common/route-handlers";
+import { validateDtoAndInjectId } from "../../common/validators";
 import { CreateFileDto } from "./dtos/create-file.dto";
 import {
   parseParamsForQueryFilter,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
-} from "../middleware";
+} from "../../middleware";
 import { FileSortDto } from "./dtos/file-sort.dto";
 import { FileDto } from "./dtos/file.dto";
 import { restrictTo } from "../auth/middlewares/restrict-to.middleware";

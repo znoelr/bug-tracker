@@ -1,8 +1,8 @@
 import express from "express";
 import controller from './task-files.controller';
 import fileController from '../../../file/file.controller';
-import { routeFactory } from "../../../common/route-handlers";
-import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
+import { routeFactory } from "../../../../common/route-handlers";
+import { validateDto, validateDtoAndInjectId } from "../../../../common/validators";
 import {
   injectQueryOptions,
   injectQueryFiltersfromRequest,
@@ -11,9 +11,9 @@ import {
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
   parseUrlQueryForQueryOptionsSelect,
-} from "../../../middleware";
-import { QueryOptions } from "../../../common/types";
-import { jsonInterceptor } from "../../../interceptors";
+} from "../../../../middleware";
+import { QueryOptions } from "../../../../common/types";
+import { jsonInterceptor } from "../../../../interceptors";
 import { CreateTaskFilesDto } from "./dtos/create-task-files.dto";
 import {
   createComposedKeyFromObjectKeys,
@@ -22,7 +22,7 @@ import {
   toEntityListForKey,
   trimObjectForKeys,
   trimOnlyFirstEntryOfSortByForField,
-} from "../../../transformers";
+} from "../../../../transformers";
 import { CreateFileDto } from "../../../file/dtos/create-file.dto";
 import { TaskFilesDto } from "./dtos/task-files.dto";
 import { taskFilesService } from "./task-files.service";

@@ -1,4 +1,4 @@
-import { BaseController } from "../base/base.controller";
+import { BaseController } from "../modules/base/base.controller";
 import { catchAsync } from "./exception-handlers";
 import { GenericFunction, RequesOptions } from "./types";
 

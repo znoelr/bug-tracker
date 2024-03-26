@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { ConfigService } from './src/config/config.service';
-import { JWT_COOKIE_NAME } from './src/modules/common/constants';
+import { JWT_COOKIE_NAME } from './src/common/constants';
 
 
 global.signin = (userId: string): string[] => {

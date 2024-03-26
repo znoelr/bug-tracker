@@ -1,5 +1,5 @@
 import { BaseRepository } from "./base.repository";
-import { Pagination, QueryFilters, QueryOptions } from "../common/types";
+import { Pagination, QueryFilters, QueryOptions } from "../../common/types";
 
 export class BaseService<T> {
   constructor(protected readonly repo: BaseRepository<T>) {}

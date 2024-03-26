@@ -1,4 +1,4 @@
-import { hashStr } from '../../common/helpers';
+import { hashStr } from '../../../common/helpers';
 
 export const hashUserPassword = async (userData: any) => {
   if (!userData.password) return userData;

@@ -1,7 +1,7 @@
 import express from "express";
 import controller from './role-permissions.controller';
-import { routeFactory } from "../../../common/route-handlers";
-import { validateDto } from "../../../common/validators";
+import { routeFactory } from "../../../../common/route-handlers";
+import { validateDto } from "../../../../common/validators";
 import {
   injectQueryFiltersfromRequest,
   throwBadRequestIfResourceExistByQueryFilters,
@@ -10,16 +10,16 @@ import {
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
   parseUrlQueryForQueryOptionsSelect,
-} from "../../../middleware";
+} from "../../../../middleware";
 import { CreateRolePermissionDto } from "./dtos/create-role-permissions.dto";
-import { jsonInterceptor } from "../../../interceptors";
+import { jsonInterceptor } from "../../../../interceptors";
 import { createComposedKeyFromObjectKeys,
   injectSelectOrIncludeQueryOptionsForKey,
   toEntityForKey,
   toEntityListForKey,
   trimObjectForKeys,
   trimOnlyFirstEntryOfSortByForField,
-} from "../../../transformers";
+} from "../../../../transformers";
 import { RolePermissionsDto } from "./dtos/role-permissions.dto";
 import { rolePermissionsService } from "./role-permissions.service";
 import { PermissionDto } from "../../../permission/dtos/permission.dto";

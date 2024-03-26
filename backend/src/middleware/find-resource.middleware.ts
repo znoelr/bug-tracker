@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { BaseService } from "../base/base.service";
+import { BaseService } from "../modules/base/base.service";
 import { BadRequestException, NotFoundException } from "../common/exceptions";
 import { FindResourceError } from "../common/types";
 import { catchAsync } from "../common/exception-handlers";

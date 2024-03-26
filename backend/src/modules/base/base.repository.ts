@@ -1,4 +1,4 @@
-import { Pagination, QueryFilters, QueryOptions } from "../common/types";
+import { Pagination, QueryFilters, QueryOptions } from "../../common/types";
 
 export interface BaseRepository<T> {
   findOne(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T|null>;

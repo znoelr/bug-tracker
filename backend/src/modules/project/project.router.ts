@@ -1,8 +1,8 @@
 import express from "express";
 import controller from './project.controller';
-import { RouteConfig } from "../common/types";
-import { routeFactory } from "../common/route-handlers";
-import { validateDto, validateDtoAndInjectId } from "../common/validators";
+import { RouteConfig } from "../../common/types";
+import { routeFactory } from "../../common/route-handlers";
+import { validateDto, validateDtoAndInjectId } from "../../common/validators";
 import { CreateProjectDto } from "./dtos/create-project.dto";
 import {
   findResourceByRequestQueryFilters,
@@ -12,11 +12,11 @@ import {
   parseUrlQueryForQueryOptionsSortBy,
   transformRequestBody,
   validateUniqueKeysFromRequest,
-} from "../middleware";
+} from "../../middleware";
 import projectFilesRouter from './modules/project-files/project-files.router';
 import { ProjectDto } from "./dtos/project.dto";
 import { projectService } from "./project.service";
-import { trimObjectForKeys } from "../transformers";
+import { trimObjectForKeys } from "../../transformers";
 import { UpdateProjectDto } from "./dtos/update-project.dto";
 import { ProjectSortDto } from "./dtos/project-sort.dto";
 import { restrictTo } from "../auth/middlewares/restrict-to.middleware";

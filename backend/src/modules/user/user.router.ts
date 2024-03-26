@@ -1,8 +1,8 @@
 import express from "express";
 import controller from './user.controller';
-import { RouteConfig } from "../common/types";
-import { routeFactory } from "../common/route-handlers";
-import { validateDto, validateDtoAndInjectId } from "../common/validators";
+import { RouteConfig } from "../../common/types";
+import { routeFactory } from "../../common/route-handlers";
+import { validateDto, validateDtoAndInjectId } from "../../common/validators";
 import { CreateUserDto } from "./dtos/create-user.dto";
 import {
   createRequestBodyForKeys,
@@ -14,9 +14,9 @@ import {
   transformRequestBody,
   validateRequest,
   validateUniqueKeysFromRequest,
-} from "../middleware";
+} from "../../middleware";
 import userRolesRouter from './modules/user-roles/user-roles.router';
-import { trimObjectForKeys } from "../transformers";
+import { trimObjectForKeys } from "../../transformers";
 import { userService } from "./user.service";
 import { UserDto } from "./dtos/user.dto";
 import { UpdateUserDto } from "./dtos/update-user.dto";

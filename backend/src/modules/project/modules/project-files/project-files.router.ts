@@ -1,8 +1,8 @@
 import express from "express";
 import controller from './project-files.controller';
 import fileController from '../../../file/file.controller';
-import { routeFactory } from "../../../common/route-handlers";
-import { validateDto, validateDtoAndInjectId } from "../../../common/validators";
+import { routeFactory } from "../../../../common/route-handlers";
+import { validateDto, validateDtoAndInjectId } from "../../../../common/validators";
 import {
   injectQueryOptions,
   injectQueryFiltersfromRequest,
@@ -11,9 +11,9 @@ import {
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
   parseUrlQueryForQueryOptionsSelect,
-} from "../../../middleware";
-import { QueryOptions } from "../../../common/types";
-import { jsonInterceptor } from "../../../interceptors";
+} from "../../../../middleware";
+import { QueryOptions } from "../../../../common/types";
+import { jsonInterceptor } from "../../../../interceptors";
 import { CreateProjectFilesDto } from "./dtos/create-project-files.dto";
 import {
   createComposedKeyFromObjectKeys,
@@ -22,7 +22,7 @@ import {
   toEntityListForKey,
   trimObjectForKeys,
   trimOnlyFirstEntryOfSortByForField,
-} from "../../../transformers";
+} from "../../../../transformers";
 import { CreateFileDto } from "../../../file/dtos/create-file.dto";
 import { ProjectFilesDto } from "./dtos/project-files.dto";
 import { projectFilesService } from "./project-files.service";

@@ -1,8 +1,8 @@
 import express from "express";
 import controller from './task-log.controller';
-import { routeFactory } from "../../../common/route-handlers";
-import { injectQueryFiltersfromRequest, parseUrlQueryForQueryOptionsSelect, parseUrlQueryForQueryOptionsSortBy } from "../../../middleware";
-import { trimObjectForKeys } from "../../../transformers";
+import { routeFactory } from "../../../../common/route-handlers";
+import { injectQueryFiltersfromRequest, parseUrlQueryForQueryOptionsSelect, parseUrlQueryForQueryOptionsSortBy } from "../../../../middleware";
+import { trimObjectForKeys } from "../../../../transformers";
 import { TaskLogDto } from "./dtos/task-log.dto";
 import { TaskLogSortDto } from "./dtos/task-log-sort.dto";
 import { restrictTo } from "../../../auth/middlewares/restrict-to.middleware";

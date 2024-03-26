@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { ConfigService } from '../../../config/config.service';
+import { ConfigService } from '../../config/config.service';
 
 export const hashStr = (data: string): string => {
   const hashKey = ConfigService.get<string>('HASH_KEY');
