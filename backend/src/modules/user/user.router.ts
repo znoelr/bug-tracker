@@ -58,21 +58,19 @@ router.route('/:id')
   )
   .patch(
     restrictTo(PERMISSION_ACTION.UPDATE, PERMISSION_RESOURCE.USER),
+    findResourceByRequestQueryFilters<UserDto>(userService),
     validateDto(UpdateUserDto),
-    transformRequestBody(
-      setUsernameToLowerCase,
-      hashUserPassword
-    ),
-    validateUniqueKeysFromRequest<UserDto>('body')(userService, ['username']),
     validateRequest('body')(confirmPasswordValidator),
+    transformRequestBody(hashUserPassword),
     createRequestBodyForKeys({
       paramKeys: [],
-      bodyKeys: ['username', 'password'],
+      bodyKeys: ['password'],
     }),
     createRoute(controller.update)
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.USER),
+    findResourceByRequestQueryFilters<UserDto>(userService),
     createRoute(controller.delete)
   );
 
