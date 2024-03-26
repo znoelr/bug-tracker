@@ -130,6 +130,42 @@ describe('[USER]', () => {
     });
   });
 
+  describe(`PUT ${urlPrefix}`, () => {
+    it('should return Not Found for unimplemented method', async () => {
+      const res = await request(app)
+        .put(urlPrefix)
+        .set('Cookie', cookies)
+        .expect(404);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+  });
+
+  describe(`PATCH ${urlPrefix}`, () => {
+    it('should return Not Found for unimplemented method', async () => {
+      const res = await request(app)
+        .patch(urlPrefix)
+        .set('Cookie', cookies)
+        .expect(404);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+  });
+
+  describe(`DELETE ${urlPrefix}`, () => {
+    it('should return Not Found for unimplemented method', async () => {
+      const res = await request(app)
+        .delete(urlPrefix)
+        .set('Cookie', cookies)
+        .expect(404);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+  });
+
   describe(`GET ${urlPrefix}/:id`, () => {
     it('should return one record by ID', async () => {
       const res = await request(app)
@@ -154,6 +190,18 @@ describe('[USER]', () => {
       const res = await request(app)
         .get(`${urlPrefix}/${uuid()}`)
         .expect(401);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+  });
+
+  describe(`PUT ${urlPrefix}/:id`, () => {
+    it('should return Not Found for unimplemented method', async () => {
+      const res = await request(app)
+        .put(`${urlPrefix}/${uuid()}`)
+        .set('Cookie', cookies)
+        .expect(404);
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
