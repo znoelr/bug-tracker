@@ -1,7 +1,11 @@
 import jwt from 'jsonwebtoken';
 import { ConfigService } from './src/config/config.service';
 import { JWT_COOKIE_NAME } from './src/common/constants';
+import { initInfrastructure } from './src/infrastructure';
 
+beforeAll(async () => {
+  await initInfrastructure();
+})
 
 global.signin = (userId: string): string[] => {
   const jwtPayload = { sub: userId };

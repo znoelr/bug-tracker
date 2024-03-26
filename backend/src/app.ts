@@ -6,16 +6,9 @@ import appRouter from './router/router';
 import * as config from './config';
 import { httpLogger as appLogger } from './logger';
 import { parseSearchForPagination } from './middleware';
-import { connectRedis } from './infrastructure/redis';
-import { cachePermissionsAccess } from './common/helpers/cache.helpers';
-import { connectMongo } from './infrastructure/mongodb';
 
 export const bootstrapApp = async (): Promise<Express> => {
   config.init();
-
-  await connectMongo();
-  await connectRedis();
-  await cachePermissionsAccess();
 
   const app: Express = express();
   app.use(express.json());

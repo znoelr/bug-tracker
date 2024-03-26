@@ -3,8 +3,10 @@ import { bootstrapApp } from './app';
 import { disconnect } from './infrastructure/prisma';
 import { disconnectRedis } from './infrastructure/redis';
 import { disconnectMongo } from './infrastructure/mongodb';
+import { initInfrastructure } from './infrastructure';
 
 (async () => {
+  await initInfrastructure();
   const app = await bootstrapApp();
   const httpServer = http.createServer(app);
 
