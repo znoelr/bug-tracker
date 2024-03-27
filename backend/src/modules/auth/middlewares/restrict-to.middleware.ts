@@ -7,6 +7,9 @@ import { cachePermissionsAccess, getPermissionKey } from "../../../common/helper
 import { ForbiddenExeption } from "../../../common/exceptions";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../permission/permission.constants";
 
+const createForbiddenMessage = (action: string, resource: string) =>
+  `You are lacking "${action}" access on "${resource}", please contact your manager to provide you the needed access`;
+
 const getUserRolesIds = async (userId: string): Promise<string[]> => {
   const filters = new QueryFilters().setWhere({ userId });
   return (await userRolesService.findAll(filters)).map(userRole => userRole.roleId);
@@ -14,13 +17,15 @@ const getUserRolesIds = async (userId: string): Promise<string[]> => {
 
 export const restrictTo = (action: keyof typeof PERMISSION_ACTION, resource: keyof typeof PERMISSION_RESOURCE) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const forbiddenMessage = createForbiddenMessage(action, resource);
+
     const permissionKey = getPermissionKey(action, resource);
     let allowedRoleIdsStr = await client.get(permissionKey);
     if (!allowedRoleIdsStr) {
       await cachePermissionsAccess();
       allowedRoleIdsStr = await client.get(permissionKey);
       if (!allowedRoleIdsStr) {
-        next(new ForbiddenExeption());
+        next(new ForbiddenExeption(forbiddenMessage));
         return;
       }
     }
@@ -31,7 +36,7 @@ export const restrictTo = (action: keyof typeof PERMISSION_ACTION, resource: key
     if (cachedUserRoleIdsStr) {
       const isUserAllowed = (JSON.parse(cachedUserRoleIdsStr)).some((roleId: string) => !!allowedRoleIdsMap[roleId]);
       if (!isUserAllowed) {
-        next(new ForbiddenExeption());
+        next(new ForbiddenExeption(forbiddenMessage));
       }
       next();
       return;
@@ -43,7 +48,7 @@ export const restrictTo = (action: keyof typeof PERMISSION_ACTION, resource: key
 
     const isUserAllowed = userRoleIds.some((roleId: string) => !!allowedRoleIdsMap[roleId]);
     if (!isUserAllowed) {
-      next(new ForbiddenExeption());
+      next(new ForbiddenExeption(forbiddenMessage));
       return;
     }
 
