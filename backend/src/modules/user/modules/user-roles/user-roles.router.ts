@@ -42,8 +42,7 @@ router.use(
 
 router.route('/')
   .get(
-    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.USER),
-    restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.ROLE),
+    restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.USER_ROLE),
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['userId'])
     ),
@@ -62,13 +61,11 @@ router.route('/:roleId')
     jsonInterceptor(toEntityForKey('role'))
   )
   .get(
-    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.USER),
-    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.ROLE),
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.USER_ROLE),
     createRoute(controller.findById)
   )
   .put(
-    restrictTo(PERMISSION_ACTION.CREATE_LINK, PERMISSION_RESOURCE.USER),
-    restrictTo(PERMISSION_ACTION.CREATE_LINK, PERMISSION_RESOURCE.ROLE),
+    restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.USER_ROLE),
     throwBadRequestIfResourceExistByQueryFilters<UserRolesDto>(userRolesService),
     /** userId already exists, so check for roleId */
     injectQueryFiltersfromRequest('params')(
@@ -81,8 +78,7 @@ router.route('/:roleId')
     createRoute(controller.create)
   )
   .delete(
-    restrictTo(PERMISSION_ACTION.DELETE_LINK, PERMISSION_RESOURCE.USER),
-    restrictTo(PERMISSION_ACTION.DELETE_LINK, PERMISSION_RESOURCE.ROLE),
+    restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.USER_ROLE),
     findResourceByRequestQueryFilters<UserRolesDto>(userRolesService),
     resetCachedPermissions,
     createRoute(controller.delete)

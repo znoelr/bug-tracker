@@ -47,8 +47,7 @@ router.use(
 
 router.route('/')
   .get(
-    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.TASK_COMMENT),
-    restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.FILE),
+    restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.TASK_COMMENT_FILE),
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['taskCommentId'])
     ),
@@ -58,8 +57,7 @@ router.route('/')
     createRoute(controller.findAll)
   )
   .post(
-    restrictTo(PERMISSION_ACTION.CREATE_LINK, PERMISSION_RESOURCE.TASK_COMMENT),
-    restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.FILE),
+    restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.TASK_COMMENT_FILE),
     injectQueryOptions(new QueryOptions()),
     validateDtoAndInjectId(CreateFileDto),
     createFileRoute(fileController.create, { endRequest: false }),
@@ -82,14 +80,12 @@ router.route('/:fileId')
     )
   )
   .get(
-    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.TASK_COMMENT),
-    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.FILE),
+    restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.TASK_COMMENT_FILE),
     jsonInterceptor(toEntityForKey('file')),
     createRoute(controller.findById)
   )
   .delete(
-    restrictTo(PERMISSION_ACTION.DELETE_LINK, PERMISSION_RESOURCE.TASK_COMMENT),
-    restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.FILE),
+    restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.TASK_COMMENT_FILE),
     findResourceByRequestQueryFilters<TaskCommentFilesDto>(taskCommentFilesService),
     injectQueryOptions(new QueryOptions()),
     createRoute(controller.delete, { endRequest: false }),
