@@ -36,7 +36,7 @@ describe('[PERMISSION]', () => {
       expect(Array.isArray(res.body)).toBe(true);
     });
 
-    it('should return Unauthenticated for missing credentials', async () => {
+    it('should return Unauthorized for missing credentials', async () => {
       const res = await request(app)
         .get(urlPrefix)
         .expect(401);
@@ -127,7 +127,7 @@ describe('[PERMISSION]', () => {
       expect(res.body.errors.message).toBeDefined();
     });
 
-    it('should return Unauthenticated for missing credentials', async () => {
+    it('should return Unauthorized for missing credentials', async () => {
       const res = await request(app)
         .get(`${urlPrefix}/${uuid()}`)
         .expect(401);

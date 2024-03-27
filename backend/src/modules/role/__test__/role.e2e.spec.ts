@@ -44,7 +44,7 @@ describe('[ROLE]', () => {
       expect(Array.isArray(res.body)).toBe(true);
     });
 
-    it('should return Unauthenticated for missing credentials', async () => {
+    it('should return Unauthorized for missing credentials', async () => {
       const res = await request(app)
         .get(urlPrefix)
         .expect(401);
@@ -118,7 +118,7 @@ describe('[ROLE]', () => {
       expect(res.body.errors.message).toContain('name');
     });
 
-    it('should return Unauthenticated for missing credentials', async () => {
+    it('should return Unauthorized for missing credentials', async () => {
       const res = await request(app)
         .post(urlPrefix)
         .expect(401);
@@ -185,7 +185,7 @@ describe('[ROLE]', () => {
       expect(res.body.errors.message).toBeDefined();
     });
 
-    it('should return Unauthenticated for missing credentials', async () => {
+    it('should return Unauthorized for missing credentials', async () => {
       const res = await request(app)
         .get(`${urlPrefix}/${uuid()}`)
         .expect(401);
@@ -271,7 +271,7 @@ describe('[ROLE]', () => {
       expect(res.body.errors.message).toBeDefined();
     });
 
-    it('should return Unauthenticated for missing credentials', async () => {
+    it('should return Unauthorized for missing credentials', async () => {
       const res = await request(app)
         .patch(`${urlPrefix}/${uuid()}`)
         .expect(401);
@@ -300,7 +300,7 @@ describe('[ROLE]', () => {
       expect(res.body.errors.message).toBeDefined();
     });
 
-    it('should return Unauthenticated for missing credentials', async () => {
+    it('should return Unauthorized for missing credentials', async () => {
       const res = await request(app)
         .delete(`${urlPrefix}/${uuid()}`)
         .expect(401);
