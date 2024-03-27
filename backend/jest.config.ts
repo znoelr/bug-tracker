@@ -1,7 +1,7 @@
 import type {Config} from '@jest/types';
 
 const config: Config.InitialOptions = {
-  verbose: true,
+  verbose: false,
   preset: 'ts-jest',
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
