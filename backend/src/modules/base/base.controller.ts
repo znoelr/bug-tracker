@@ -19,6 +19,7 @@ export class BaseController<T> {
       res.json(serialize(this.DtoClass, record));
       return;
     }
+    req.body = serialize(this.DtoClass, record);
     next();
   }
 
@@ -31,6 +32,7 @@ export class BaseController<T> {
       res.json(serialize(this.DtoClass, recordList));
       return;
     }
+    req.body = serialize(this.DtoClass, recordList);
     next();
   }
 
