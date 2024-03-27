@@ -29,7 +29,7 @@ describe('[PERMISSION]', () => {
   describe(`GET ${urlPrefix}`, () => {
     it('should return a list', async () => {
       const res = await request(app)
-        .get('/permissions')
+        .get(urlPrefix)
         .set('Cookie', cookies)
         .expect(200);
       expect(res.body).toBeDefined();
@@ -40,6 +40,17 @@ describe('[PERMISSION]', () => {
       const res = await request(app)
         .get(urlPrefix)
         .expect(401);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .get(urlPrefix)
+        .set('Cookie', newUserCookies)
+        .expect(403);
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
@@ -98,7 +109,7 @@ describe('[PERMISSION]', () => {
     it('should return one record by ID', async () => {
       const permission = permissions[0];
       const res = await request(app)
-        .get(`/permissions/${permission.id}`)
+        .get(`${urlPrefix}/${permission.id}`)
         .set('Cookie', cookies)
         .expect(200);
       expect(res.body).toBeDefined();
@@ -108,7 +119,7 @@ describe('[PERMISSION]', () => {
 
     it('should return Not Found for invalid ID', async () => {
       const res = await request(app)
-        .get(`/permissions/${Date.now()}`)
+        .get(`${urlPrefix}/${Date.now()}`)
         .set('Cookie', cookies)
         .expect(404);
       expect(res.body).toBeDefined();
@@ -120,6 +131,17 @@ describe('[PERMISSION]', () => {
       const res = await request(app)
         .get(`${urlPrefix}/${uuid()}`)
         .expect(401);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .get(`${urlPrefix}/${uuid()}`)
+        .set('Cookie', newUserCookies)
+        .expect(403);
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
