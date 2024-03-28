@@ -52,6 +52,17 @@ describe('[ROLE]', () => {
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
     });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .get(urlPrefix)
+        .set('Cookie', newUserCookies)
+        .expect(403);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
   });
 
   describe(`POST ${urlPrefix}`, () => {
@@ -60,28 +71,46 @@ describe('[ROLE]', () => {
         name: `New Role - ${uuid()}`,
         description: 'Some descrition',
       };
-      const res = await request(app)
+      const {body: newRole} = await request(app)
         .post(urlPrefix)
         .set('Cookie', cookies)
         .send(data)
         .expect(201);
+      expect(newRole).toBeDefined();
+      expect(newRole.id).toBeDefined();
+      expect(newRole.name).toBe(data.name);
+      expect(newRole.description).toBe(data.description);
+
+      const res = await request(app)
+        .get(`${urlPrefix}/${newRole.id}`)
+        .set('Cookie', cookies)
+        .expect(200);
       expect(res.body).toBeDefined();
-      expect(res.body.id).toBeDefined();
-      expect(res.body.name).toBe(data.name);
-      expect(res.body.description).toBe(data.description);
+      expect(res.body.id).toBe(newRole.id);
+      expect(res.body.name).toBe(newRole.name);
+      expect(res.body.description).toBe(newRole.description);
     });
 
     it('should create a new record without "description"', async () => {
       const data = { name: `New Role - ${uuid()}` };
-      const res = await request(app)
+      const {body: newRole} = await request(app)
         .post(urlPrefix)
         .set('Cookie', cookies)
         .send(data)
         .expect(201);
+      expect(newRole).toBeDefined();
+      expect(newRole.id).toBeDefined();
+      expect(newRole.name).toBe(data.name);
+      expect(newRole.description).toBeFalsy();
+
+      const res = await request(app)
+        .get(`${urlPrefix}/${newRole.id}`)
+        .set('Cookie', cookies)
+        .expect(200);
       expect(res.body).toBeDefined();
-      expect(res.body.id).toBeDefined();
-      expect(res.body.name).toBe(data.name);
-      expect(res.body.description).toBeFalsy();
+      expect(res.body.id).toBe(newRole.id);
+      expect(res.body.name).toBe(newRole.name);
+      expect(res.body.description).toBe(newRole.description);
     });
 
     it('should return Bad Request for empty data', async () => {
@@ -95,7 +124,7 @@ describe('[ROLE]', () => {
       expect(res.body.errors.name).toBeDefined();
     });
 
-    it('should return Bad Request for mising "name" data', async () => {
+    it('should return Bad Request for mising "name"', async () => {
       const res = await request(app)
         .post(urlPrefix)
         .set('Cookie', cookies)
@@ -122,6 +151,17 @@ describe('[ROLE]', () => {
       const res = await request(app)
         .post(urlPrefix)
         .expect(401);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .post(urlPrefix)
+        .set('Cookie', newUserCookies)
+        .expect(403);
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
@@ -193,6 +233,29 @@ describe('[ROLE]', () => {
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
     });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .get(`${urlPrefix}/${uuid()}`)
+        .set('Cookie', newUserCookies)
+        .expect(403);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+  });
+
+  describe(`POST ${urlPrefix}/:id`, () => {
+    it('should return Not Found for unimplemented method', async () => {
+      const res = await request(app)
+        .post(`${urlPrefix}/${uuid()}`)
+        .set('Cookie', cookies)
+        .expect(404);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
   });
 
   describe(`PUT ${urlPrefix}/:id`, () => {
@@ -211,29 +274,47 @@ describe('[ROLE]', () => {
     it('should update "name"', async () => {
       const testRole = await createTestRole();
       const newName = `Updated role name - ${uuid()}`;
-      const res = await request(app)
+      const {body: updatedRole} = await request(app)
         .patch(`${urlPrefix}/${testRole.id}`)
         .set('Cookie', cookies)
         .send({ name: newName })
         .expect(200);
-      expect(res.body).toBeDefined();
-      expect(res.body.id).toBe(testRole.id);
-      expect(res.body.name).toBe(newName);
-      expect(res.body.description).toBe(testRole.description);
+      expect(updatedRole).toBeDefined();
+      expect(updatedRole.id).toBe(testRole.id);
+      expect(updatedRole.name).toBe(newName);
+      expect(updatedRole.name).not.toBe(testRole.name);
+      expect(updatedRole.description).toBe(testRole.description);
+
+      const res = await request(app)
+        .get(`${urlPrefix}/${testRole.id}`)
+        .set('Cookie', cookies)
+        .expect(200);
+      expect(res.body.id).toBe(updatedRole.id);
+      expect(res.body.name).toBe(updatedRole.name);
+      expect(res.body.description).toBe(updatedRole.description);
     });
 
     it('should update "description"', async () => {
       const testRole = await createTestRole();
       const newDescription = `Updated role description - ${uuid()}`;
-      const res = await request(app)
+      const {body: updatedRole} = await request(app)
         .patch(`${urlPrefix}/${testRole.id}`)
         .set('Cookie', cookies)
         .send({ description: newDescription })
         .expect(200);
-      expect(res.body).toBeDefined();
-      expect(res.body.id).toBe(testRole.id);
-      expect(res.body.name).toBe(testRole.name);
-      expect(res.body.description).toBe(newDescription);
+      expect(updatedRole).toBeDefined();
+      expect(updatedRole.id).toBe(testRole.id);
+      expect(updatedRole.name).toBe(testRole.name);
+      expect(updatedRole.description).toBe(newDescription);
+      expect(updatedRole.description).not.toBe(testRole.description);
+
+      const res = await request(app)
+        .get(`${urlPrefix}/${testRole.id}`)
+        .set('Cookie', cookies)
+        .expect(200);
+      expect(res.body.id).toBe(updatedRole.id);
+      expect(res.body.name).toBe(updatedRole.name);
+      expect(res.body.description).toBe(updatedRole.description);
     });
 
     it('should return Bad Request for existing "name"', async () => {
