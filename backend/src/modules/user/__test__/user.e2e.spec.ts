@@ -50,6 +50,17 @@ describe('[USER]', () => {
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
     });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .get(urlPrefix)
+        .set('Cookie', newUserCookies)
+        .expect(403);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
   });
 
   describe(`POST ${urlPrefix}`, () => {
@@ -58,15 +69,22 @@ describe('[USER]', () => {
         username: `${uuid()}@gmail.com`,
         password: 'abcde$12345',
       };
-      const res = await request(app)
+      const {body: newUser} = await request(app)
         .post(urlPrefix)
         .set('Cookie', cookies)
         .send(data)
         .expect(201);
-      expect(res.body).toBeDefined();
-      expect(res.body.id).toBeDefined();
-      expect(res.body.username).toBe(data.username);
-      expect(res.body.password).toBeUndefined();
+      expect(newUser).toBeDefined();
+      expect(newUser.id).toBeDefined();
+      expect(newUser.username).toBe(data.username);
+      expect(newUser.password).toBeUndefined();
+
+      const res = await request(app)
+        .get(`${urlPrefix}/${newUser.id}`)
+        .set('Cookie', cookies)
+        .expect(200);
+      expect(res.body.id).toBe(newUser.id);
+      expect(res.body.username).toBe(newUser.username);
     });
   
     it(`should return Bad Request for empty data`, async () => {
@@ -124,6 +142,17 @@ describe('[USER]', () => {
       const res = await request(app)
         .post(urlPrefix)
         .expect(401);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .post(urlPrefix)
+        .set('Cookie', newUserCookies)
+        .expect(403);
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
@@ -194,6 +223,17 @@ describe('[USER]', () => {
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
     });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .get(`${urlPrefix}/${uuid()}`)
+        .set('Cookie', newUserCookies)
+        .expect(403);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
   });
 
   describe(`PUT ${urlPrefix}/:id`, () => {
@@ -215,14 +255,22 @@ describe('[USER]', () => {
         confirmPassword: '12345$abcde',
       };
       const newUser = await createUser();
-      const res = await request(app)
+      const {body: updatedUser} = await request(app)
         .patch(`${urlPrefix}/${newUser.id}`)
         .set('Cookie', cookies)
         .send(data)
         .expect(200);
-      expect(res.body).toBeDefined();
-      expect(res.body.id).toBe(newUser.id);
-      expect(res.body.username).toBe(newUser.username);
+      expect(updatedUser).toBeDefined();
+      expect(updatedUser.id).toBe(newUser.id);
+      expect(updatedUser.username).toBe(newUser.username);
+      expect(updatedUser.password).toBeUndefined();
+
+      const res = await request(app)
+        .get(`${urlPrefix}/${newUser.id}`)
+        .set('Cookie', cookies)
+        .expect(200);
+      expect(res.body.id).toBe(updatedUser.id);
+      expect(res.body.username).toBe(updatedUser.username);
       expect(res.body.password).toBeUndefined();
     });
 
@@ -233,15 +281,23 @@ describe('[USER]', () => {
         confirmPassword: '12345$abcde',
       };
       const newUser = await createUser();
-      const res = await request(app)
+      const {body: updatedUser} = await request(app)
         .patch(`${urlPrefix}/${newUser.id}`)
         .set('Cookie', cookies)
         .send(data)
         .expect(200);
-      expect(res.body).toBeDefined();
-      expect(res.body.id).toBe(newUser.id);
+      expect(updatedUser).toBeDefined();
+      expect(updatedUser.id).toBe(newUser.id);
+      expect(updatedUser.username).toBe(newUser.username);
+      expect(updatedUser.username).not.toBe(data.username);
+      expect(updatedUser.password).toBeUndefined();
+
+      const res = await request(app)
+        .get(`${urlPrefix}/${newUser.id}`)
+        .set('Cookie', cookies)
+        .expect(200);
+      expect(res.body.id).toBe(updatedUser.id);
       expect(res.body.username).toBe(newUser.username);
-      expect(res.body.username).not.toBe(data.username);
       expect(res.body.password).toBeUndefined();
     });
 
@@ -299,6 +355,17 @@ describe('[USER]', () => {
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
     });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .patch(`${urlPrefix}/${uuid()}`)
+        .set('Cookie', newUserCookies)
+        .expect(403);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
   });
 
   describe(`DELETE ${urlPrefix}/:id`, () => {
@@ -308,6 +375,10 @@ describe('[USER]', () => {
         .delete(`${urlPrefix}/${newUser.id}`)
         .set('Cookie', cookies)
         .expect(204);
+      await request(app)
+        .get(`${urlPrefix}/${newUser.id}`)
+        .set('Cookie', cookies)
+        .expect(404);
     });
 
     it('should return Not Found for invalid ID', async () => {
@@ -324,6 +395,17 @@ describe('[USER]', () => {
       const res = await request(app)
         .delete(`${urlPrefix}/${uuid()}`)
         .expect(401);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .delete(`${urlPrefix}/${uuid()}`)
+        .set('Cookie', newUserCookies)
+        .expect(403);
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
