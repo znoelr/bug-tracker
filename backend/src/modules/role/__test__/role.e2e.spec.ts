@@ -369,6 +369,10 @@ describe('[ROLE]', () => {
         .delete(`${urlPrefix}/${testRole.id}`)
         .set('Cookie', cookies)
         .expect(204);
+      await request(app)
+        .get(`${urlPrefix}/${testRole.id}`)
+        .set('Cookie', cookies)
+        .expect(404);
     });
 
     it('should return Not Found for invalid ID', async () => {
