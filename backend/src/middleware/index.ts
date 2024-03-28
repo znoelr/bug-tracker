@@ -5,3 +5,4 @@ export * from './find-resource.middleware';
 export * from './modify-request.middleware';
 export * from './validate.middleware';
 export * from './transform.middleware';
+export * from './end-request.middleware';
