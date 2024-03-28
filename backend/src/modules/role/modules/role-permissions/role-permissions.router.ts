@@ -10,6 +10,7 @@ import {
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
   parseUrlQueryForQueryOptionsSelect,
+  endBySendJsonFromRequestBody,
 } from "../../../../middleware";
 import { CreateRolePermissionDto } from "./dtos/create-role-permissions.dto";
 import { jsonInterceptor } from "../../../../interceptors";
@@ -52,16 +53,18 @@ router.route('/')
   )
 ;
 
+router.use('/:permissionId',
+  injectQueryFiltersfromRequest('params')(
+    createComposedKeyFromObjectKeys(['roleId', 'permissionId'])
+  ),
+);
+
 router.route('/:permissionId')
-  .all(
-    injectQueryFiltersfromRequest('params')(
-      createComposedKeyFromObjectKeys(['roleId', 'permissionId'])
-    ),
-    jsonInterceptor(toEntityForKey('permission'))
-  )
   .get(
     restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.ROLE_PERMISSION),
-    createRoute(controller.findById)
+    createRoute(controller.findById, { endRequest: false }),
+    jsonInterceptor(toEntityForKey('permission')),
+    endBySendJsonFromRequestBody
   )
   .put(
     restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.ROLE_PERMISSION),
@@ -74,12 +77,14 @@ router.route('/:permissionId')
     createRequestBodyFromParams(['roleId', 'permissionId']),
     validateDto(CreateRolePermissionDto),
     resetCachedPermissions,
+    jsonInterceptor(toEntityForKey('permission')),
     createRoute(controller.create)
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.ROLE_PERMISSION),
     findResourceByRequestQueryFilters<RolePermissionsDto>(rolePermissionsService),
     resetCachedPermissions,
+    jsonInterceptor(toEntityForKey('permission')),
     createRoute(controller.delete)
   )
 ;
