@@ -360,6 +360,17 @@ describe('[ROLE]', () => {
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
     });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .patch(`${urlPrefix}/${uuid()}`)
+        .set('Cookie', newUserCookies)
+        .expect(403);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
   });
 
   describe(`DELETE ${urlPrefix}/:id`, () => {
@@ -389,6 +400,17 @@ describe('[ROLE]', () => {
       const res = await request(app)
         .delete(`${urlPrefix}/${uuid()}`)
         .expect(401);
+      expect(res.body).toBeDefined();
+      expect(res.body.errors).toBeDefined();
+      expect(res.body.errors.message).toBeDefined();
+    });
+
+    it('should return Forbidden for lack of access', async () => {
+      const newUserCookies = await global.signinNewUser(cookies, app);
+      const res = await request(app)
+        .delete(`${urlPrefix}/${uuid()}`)
+        .set('Cookie', newUserCookies)
+        .expect(403);
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
