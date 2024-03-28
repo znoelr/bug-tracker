@@ -84,7 +84,6 @@ router.route('/:permissionId')
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.ROLE_PERMISSION),
     findResourceByRequestQueryFilters<RolePermissionsDto>(rolePermissionsService),
     resetCachedPermissions,
-    jsonInterceptor(toEntityForKey('permission')),
     createRoute(controller.delete)
   )
 ;
