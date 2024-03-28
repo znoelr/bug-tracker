@@ -40,8 +40,9 @@ export class BaseController<T> {
     const data = req.body;
     const options = req.queryOptions;
     const record = await this.service.create(data, options);
+    res.status(201);
     if (reqOptions.endRequest) {
-      res.status(201).json(serialize(this.DtoClass, record));
+      res.json(serialize(this.DtoClass, record));
       return;
     }
     req.body = serialize(this.DtoClass, record);
@@ -69,6 +70,7 @@ export class BaseController<T> {
       res.sendStatus(204);
       return;
     }
+    res.status(204);
     next();
   }
 }
