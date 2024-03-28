@@ -10,6 +10,8 @@ import {
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
   parseUrlQueryForQueryOptionsSelect,
+  endBySendJsonFromRequestBody,
+  endBySendStatus,
 } from "../../../../middleware";
 import { jsonInterceptor } from "../../../../interceptors";
 import { CreateUserRolesDto } from "./dtos/create-user-roles.dto";
@@ -53,16 +55,18 @@ router.route('/')
   )
 ;
 
-router.route('/:roleId')
-  .all(
-    injectQueryFiltersfromRequest('params')(
-      createComposedKeyFromObjectKeys(['userId', 'roleId'])
-    ),
-    jsonInterceptor(toEntityForKey('role'))
+router.use('/:roleId',
+  injectQueryFiltersfromRequest('params')(
+    createComposedKeyFromObjectKeys(['userId', 'roleId'])
   )
+);
+
+router.route('/:roleId')
   .get(
     restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.USER_ROLE),
-    createRoute(controller.findById)
+    createRoute(controller.findById, { endRequest: false }),
+    jsonInterceptor(toEntityForKey('role')),
+    endBySendJsonFromRequestBody
   )
   .put(
     restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.USER_ROLE),
@@ -74,14 +78,17 @@ router.route('/:roleId')
     findResourceByRequestQueryFilters<RoleDto>(roleService),
     createRequestBodyFromParams(['userId', 'roleId']),
     validateDto(CreateUserRolesDto),
-    resetCachedPermissions,
-    createRoute(controller.create)
+    createRoute(controller.create, { endRequest: false }),
+    // resetCachedPermissions, TODO: Should update cached user's permissions
+    jsonInterceptor(toEntityForKey('role')),
+    endBySendJsonFromRequestBody
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.USER_ROLE),
     findResourceByRequestQueryFilters<UserRolesDto>(userRolesService),
-    resetCachedPermissions,
-    createRoute(controller.delete)
+    createRoute(controller.delete, { endRequest: false }),
+    // resetCachedPermissions, TODO: Should update cached user's permissions
+    endBySendStatus(204)
   )
 ;
 
