@@ -8,6 +8,7 @@ declare global {
       queryFilters: QueryFilters;
       queryOptions: QueryOptions;
       user: UserDto;
+      foundRecord?: any;
     }
   }
 }

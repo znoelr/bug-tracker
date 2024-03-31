@@ -16,6 +16,7 @@ export const returnResponseError = <T>(service: BaseService<T>, {throwWhenFound,
         next(error);
         return;
       }
+      req.foundRecord = record;
       next();
     }
     catch (error) {
