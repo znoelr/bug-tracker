@@ -4,6 +4,7 @@ export const TASK_TYPES = ({
 }) as const;
 
 export const TASK_STATUS = ({
+  UNDER_CONSTRUCTION: 'UNDER_CONSTRUCTION',
   IN_REVIEW: 'IN_REVIEW',
   IN_PROGRESS: 'IN_PROGRESS',
   FINISHED: 'FINISHED',
@@ -14,12 +15,13 @@ export const TASK_SEVERITY = ({
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
   HIGH: 'HIGH',
+  CRITICAL: 'CRITICAL',
   EXTREMELY_HIGH: 'EXTREMELY_HIGH',
 }) as const;
 
 export const TASK_PRIORITY = ({
-  CRITICAL: 'CRITICAL',
-  HIGH: 'HIGH',
-  NORMAL: 'NORMAL',
   LOW: 'LOW',
+  NORMAL: 'NORMAL',
+  HIGH: 'HIGH',
+  EXTREMELY_HIGH: 'EXTREMELY_HIGH',
 }) as const;
