@@ -14,7 +14,7 @@ let roles: RoleDto[];
 
 const urlPrefix = '/roles';
 
-const createTestRole = async (): Promise<RoleDto> => {
+const createRole = async (): Promise<RoleDto> => {
   const res = await request(app)
     .post(urlPrefix)
     .set('Cookie', cookies)
@@ -272,7 +272,7 @@ describe('[ROLE]', () => {
 
   describe(`PATCH ${urlPrefix}/:id`, () => {
     it('should update "name"', async () => {
-      const testRole = await createTestRole();
+      const testRole = await createRole();
       const newName = `Updated role name - ${uuid()}`;
       const {body: updatedRole} = await request(app)
         .patch(`${urlPrefix}/${testRole.id}`)
@@ -295,7 +295,7 @@ describe('[ROLE]', () => {
     });
 
     it('should update "description"', async () => {
-      const testRole = await createTestRole();
+      const testRole = await createRole();
       const newDescription = `Updated role description - ${uuid()}`;
       const {body: updatedRole} = await request(app)
         .patch(`${urlPrefix}/${testRole.id}`)
@@ -318,7 +318,7 @@ describe('[ROLE]', () => {
     });
 
     it('should return Bad Request for existing "name"', async () => {
-      const testRole = await createTestRole();
+      const testRole = await createRole();
       const res = await request(app)
         .patch(`${urlPrefix}/${testRole.id}`)
         .set('Cookie', cookies)
@@ -330,7 +330,7 @@ describe('[ROLE]', () => {
     });
 
     it('should return Bad Request for empty data', async () => {
-      const testRole = await createTestRole();
+      const testRole = await createRole();
       const res = await request(app)
         .patch(`${urlPrefix}/${testRole.id}`)
         .set('Cookie', cookies)
@@ -375,7 +375,7 @@ describe('[ROLE]', () => {
 
   describe(`DELETE ${urlPrefix}/:id`, () => {
     it('should delete one record by ID', async () => {
-      const testRole = await createTestRole();
+      const testRole = await createRole();
       await request(app)
         .delete(`${urlPrefix}/${testRole.id}`)
         .set('Cookie', cookies)
