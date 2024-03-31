@@ -9,6 +9,7 @@ import {
   parseParamsForQueryFilter,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
+  transformRequestBody,
   validateUniqueKeysFromRequest,
 } from "../../middleware";
 import controller from './task.controller';
@@ -22,6 +23,8 @@ import { UpdateTaskDto } from "./dtos/update-task.dto";
 import { TaskSortDto } from "./dtos/task-sort.dto";
 import { restrictTo } from "../auth/middlewares/restrict-to.middleware";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../permission/permission.constants";
+import { injectTaskStatus } from "./transformers/inject-status.transformer";
+import { validateSeverityByType } from "./middlewares/validate-severity.middleware";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
@@ -39,7 +42,9 @@ router.route('/')
   .post(
     restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.TASK),
     validateDtoAndInjectId(CreateTaskDto),
+    validateSeverityByType,
     validateUniqueKeysFromRequest<TaskDto>('body')(taskService, ['title']),
+    transformRequestBody(injectTaskStatus()),
     createRoute(controller.create)
   );
 
@@ -52,11 +57,14 @@ router.route('/:id')
   .patch(
     restrictTo(PERMISSION_ACTION.UPDATE, PERMISSION_RESOURCE.TASK),
     validateDto(UpdateTaskDto),
+    findResourceByRequestQueryFilters<TaskDto>(taskService),
+    validateSeverityByType,
     validateUniqueKeysFromRequest<TaskDto>('body')(taskService, ['title']),
     createRoute(controller.update)
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.TASK),
+    findResourceByRequestQueryFilters<TaskDto>(taskService),
     createRoute(controller.delete)
   );
 
