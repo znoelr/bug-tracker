@@ -16,11 +16,6 @@ export class CreateTaskDto {
   @IsIn(Object.values(TASK_TYPES))
   type: string;
   
-  @IsString()
-  @IsNotEmpty()
-  @IsIn(Object.values(TASK_STATUS))
-  status: string;
-  
   @IsOptional()
   @IsString()
   @IsNotEmpty()
