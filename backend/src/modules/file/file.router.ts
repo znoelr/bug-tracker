@@ -2,8 +2,6 @@ import express from "express";
 import controller from './file.controller';
 import { RouteConfig } from "../../common/types";
 import { routeFactory } from "../../common/route-handlers";
-import { validateDtoAndInjectId } from "../../common/validators";
-import { CreateFileDto } from "./dtos/create-file.dto";
 import {
   parseParamsForQueryFilter,
   parseUrlQueryForQueryOptionsSelect,
@@ -27,11 +25,7 @@ router.route('/')
     parseUrlQueryForQueryOptionsSortBy(FileSortDto),
     createRoute(controller.findAll)
   )
-  .post(
-    restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.FILE),
-    validateDtoAndInjectId(CreateFileDto),
-    createRoute(controller.create)
-  );
+;
 
 router.route('/:id')
   .all(parseParamsForQueryFilter())
@@ -39,10 +33,7 @@ router.route('/:id')
     restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.FILE),
     createRoute(controller.findById)
   )
-  .delete(
-    restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.FILE),
-    createRoute(controller.delete)
-  );
+;
 
 export const fileRouteConfig: RouteConfig = {
   path: '/files',
