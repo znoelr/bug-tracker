@@ -3,12 +3,17 @@ import { BaseService } from "./base.service";
 import { NotFoundException } from "../../common/exceptions";
 import { serialize } from "../../common/serializers";
 import { RequesOptions } from "../../common/types";
+import { logService } from "../log/log.service";
 
-export class BaseController<T> {
+export abstract class BaseController<T> {
+  public readonly __name__: string;
+
   constructor(
     protected readonly DtoClass: {new(): T},
     protected readonly service: BaseService<T>
-  ) {}
+  ) {
+    this.__name__ = service.__name__;
+  }
 
   async findById(reqOptions: RequesOptions, req: Request, res: Response, next: NextFunction) {
     const filters = req.queryFilters;
@@ -40,6 +45,7 @@ export class BaseController<T> {
     const data = req.body;
     const options = req.queryOptions;
     const record = await this.service.create(data, options);
+    logService.logNew(this.__name__, record, req.user.id);
     res.status(201);
     if (reqOptions.endRequest) {
       res.json(serialize(this.DtoClass, record));
@@ -54,6 +60,7 @@ export class BaseController<T> {
     const filters = req.queryFilters;
     const options = req.queryOptions;
     const record = await this.service.update(data, filters, options);
+    logService.logUpdate(this.__name__, record, req.user.id);
     if (reqOptions.endRequest) {
       res.json(serialize(this.DtoClass, record));
       return;
@@ -65,7 +72,8 @@ export class BaseController<T> {
   async delete(reqOptions: RequesOptions, req: Request, res: Response, next: NextFunction) {
     const filters = req.queryFilters;
     const options = req.queryOptions;
-    await this.service.delete(filters, options);
+    const record = await this.service.delete(filters, options);
+    logService.logDelete(this.__name__, record, req.user.id);
     if (reqOptions.endRequest) {
       res.sendStatus(204);
       return;

@@ -1,8 +1,12 @@
 import { BaseRepository } from "./base.repository";
 import { Pagination, QueryFilters, QueryOptions } from "../../common/types";
 
-export class BaseService<T> {
-  constructor(protected readonly repo: BaseRepository<T>) {}
+export abstract class BaseService<T> {
+  public readonly __name__: string;
+
+  constructor(protected readonly repo: BaseRepository<T>) {
+    this.__name__ = repo.__name__;
+  }
 
   async findOne(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T|null> {
     return await this.repo.findOne(filters, queryOptions);

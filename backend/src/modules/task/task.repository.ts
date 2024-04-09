@@ -3,6 +3,8 @@ import { PrismaBaseRepository } from "../../infrastructure/prisma/prisma.base.re
 import { prismaClient } from "../../infrastructure/prisma/prisma.client";
 
 export class TaskRepository extends PrismaBaseRepository<TaskDto> {
+  public __name__: string = 'Task';
+
   constructor() {
     super(prismaClient.task);
   }

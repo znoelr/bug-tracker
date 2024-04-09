@@ -4,4 +4,4 @@ import { logService } from "./log.service";
 
 class LogController extends BaseController<LogDto> {}
 
-export default new LogController(LogDto,logService);
+export default new LogController(LogDto, logService);

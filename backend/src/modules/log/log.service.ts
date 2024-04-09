@@ -1,7 +1,9 @@
 import { v4 as uuid } from 'uuid';
 import { logRepository } from "./log.repository";
+import { BaseService } from '../base/base.service';
+import { LogDto } from './dtos/log.dto';
 
-export class LogService {
+export class LogService extends BaseService<LogDto> {
   private async createLogPayload(logType: string, entityName: string, record: any, userId: string) {
     await logRepository.create({
       id: uuid(),
@@ -15,4 +17,4 @@ export class LogService {
   public logDelete = this.createLogPayload.bind(this, '[Deleted]');
 }
 
-export const logService = new LogService();
+export const logService = new LogService(logRepository);

@@ -1,7 +1,11 @@
 import express from "express";
 import controller from './log.controller';
 import { routeFactory } from "../../common/route-handlers";
-import { injectQueryFiltersfromRequest, parseUrlQueryForQueryOptionsSelect, parseUrlQueryForQueryOptionsSortBy } from "../../middleware";
+import {
+  injectQueryFiltersfromRequest,
+  parseUrlQueryForQueryOptionsSelect,
+  parseUrlQueryForQueryOptionsSortBy,
+} from "../../middleware";
 import { trimObjectForKeys } from "../../transformers";
 import { LogDto } from "./dtos/log.dto";
 import { LogSortDto } from "./dtos/log-sort.dto";
@@ -10,8 +14,6 @@ import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../permission/permission
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
-
-/** ROUTES DEFINED FOR '/:taskId' PREFIX */
 
 router.use(
   parseUrlQueryForQueryOptionsSelect(LogDto)

@@ -1,13 +1,15 @@
 import { Pagination, QueryFilters, QueryOptions } from "../../common/types";
 
-export interface BaseRepository<T> {
-  findOne(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T|null>;
-  findAll(filters?: QueryFilters, queryOptions?: QueryOptions, pagination?: Pagination): Promise<T[]>;
-  create(data: any, queryOptions?: QueryOptions): Promise<T>;
-  update(data: any, filters: QueryFilters, queryOptions?: QueryOptions): Promise<T>;
-  delete(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T>;
+export abstract class BaseRepository<T> {
+  public abstract readonly __name__: string;
 
-  parsePagination(pagination: Pagination | null): any;
-  parseQueryFilters(filters?: QueryFilters | null): any;
-  parseQueryOptions(queryOptions?: QueryOptions | null): any;
+  abstract findOne(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T|null>;
+  abstract findAll(filters?: QueryFilters, queryOptions?: QueryOptions, pagination?: Pagination): Promise<T[]>;
+  abstract create(data: any, queryOptions?: QueryOptions): Promise<T>;
+  abstract update(data: any, filters: QueryFilters, queryOptions?: QueryOptions): Promise<T>;
+  abstract delete(filters: QueryFilters, queryOptions?: QueryOptions): Promise<T>;
+
+  abstract parsePagination(pagination: Pagination | null): any;
+  abstract parseQueryFilters(filters?: QueryFilters | null): any;
+  abstract parseQueryOptions(queryOptions?: QueryOptions | null): any;
 }
