@@ -22,8 +22,8 @@ export type FindResourceError = {
 export type ClassConstructor = { new(): any };
 
 export type CreateMergedKeys = {
-  paramKeys: string[];
-  bodyKeys: string[];
+  paramKeys?: string[];
+  bodyKeys?: string[];
 };
 
 export type GenericObject<T> = { [key: string]: T };
