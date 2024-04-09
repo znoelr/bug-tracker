@@ -22,9 +22,4 @@ export class UpdateProjectDto {
   @IsNotEmpty()
   @IsIn(Object.values(PROJECT_STATUS))
   status: string;
-
-  @IsOptional()
-  @IsString()
-  @IsNotEmpty()
-  createdById: string;
 }

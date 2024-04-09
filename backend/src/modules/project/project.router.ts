@@ -53,11 +53,13 @@ router.route('/:id')
   .patch(
     restrictTo(PERMISSION_ACTION.UPDATE, PERMISSION_RESOURCE.PROJECT),
     validateDto(UpdateProjectDto),
+    findResourceByRequestQueryFilters<ProjectDto>(projectService),
     validateUniqueKeysFromRequest('body')(projectService, ['title']),
     createRoute(controller.update)
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.PROJECT),
+    findResourceByRequestQueryFilters<ProjectDto>(projectService),
     createRoute(controller.delete)
   );
 
