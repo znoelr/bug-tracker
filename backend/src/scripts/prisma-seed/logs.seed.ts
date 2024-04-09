@@ -19,13 +19,12 @@ export async function run(users: any[], tasks: any[]) {
       .map(() => ({
           id: uuid(),
           content: `Action "${getRandomValue<string>(Object.values(PERMISSION_ACTION))}" performed on ${task.type}`,
-          taskId: task.id,
           triggeredById: getUserByTask(task).id,
         })
       )
     )
     .flat()
-    .map(async (data) => await prismaClient.taskLog.create({ data }));
+    .map(async (data) => await prismaClient.log.create({ data }));
 
   return await Promise.all(promises);
 }

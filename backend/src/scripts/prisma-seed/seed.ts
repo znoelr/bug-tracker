@@ -5,7 +5,7 @@ import { run as runUsers } from './user.seed';
 import { run as runUserRoles } from './user-roles.seed';
 import { run as runProjects } from './project.seed';
 import { run as runTasks } from './task.seed';
-import { run as runTaskLogs } from './task-logs.seed';
+import { run as runLogs } from './logs.seed';
 import { run as runTaskComments } from './task-comments.seed';
 import { run as runFiles } from './file.seed';
 import { run as runTaskFiles } from './task-files.seed';
@@ -21,7 +21,7 @@ export async function seed(): Promise<void> {
   await runUserRoles(users, roles);
   const projects = await runProjects(users);
   const tasks = await runTasks(users, projects);
-  await runTaskLogs(users, tasks);
+  await runLogs(users, tasks);
   const taskComments = await runTaskComments(users, tasks);
   const files = await runFiles();
   await runTaskFiles(tasks, files.slice(0, 13));
@@ -37,5 +37,5 @@ export async function clear(): Promise<void> {
   await prismaClient.project.deleteMany();
   await prismaClient.file.deleteMany();
   await prismaClient.taskComment.deleteMany();
-  await prismaClient.taskLog.deleteMany();
+  await prismaClient.log.deleteMany();
 }

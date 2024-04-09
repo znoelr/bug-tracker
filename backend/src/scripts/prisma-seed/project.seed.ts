@@ -7,7 +7,7 @@ import { ROLES } from '../../modules/role/role.constants';
 
 export async function run(users: any[]) {
   const manager = users.find(u => u.username.toUpperCase() === ROLES.MANAGER);
-  const promises = new Array(3)
+  const promises: Promise<any>[] = new Array(3)
     .fill(null)
     .map(async () => await prismaClient.project.create({
       data: {

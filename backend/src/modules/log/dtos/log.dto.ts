@@ -1,6 +1,6 @@
 import { Expose } from "class-transformer";
 
-export class TaskLogSortDto {
+export class LogDto {
   @Expose()
   id: string;
 
@@ -12,4 +12,10 @@ export class TaskLogSortDto {
 
   @Expose()
   updatedAt: string;
+
+  @Expose()
+  taskId: string;
+
+  @Expose()
+  triggeredById: string;
 }

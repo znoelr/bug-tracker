@@ -14,7 +14,6 @@ import {
 } from "../../middleware";
 import controller from './task.controller';
 import taskCommentsRouter from './modules/task-comment/task-comment.router';
-import taskLogsRouter from './modules/task-log/task-log.router';
 import taskFilesRouter from './modules/task-files/task-files.router';
 import { trimObjectForKeys } from "../../transformers";
 import { taskService } from "./task.service";
@@ -79,9 +78,6 @@ router.use(
 
 /** Nested task comments */
 router.use(`/:taskId/comments`, taskCommentsRouter);
-
-/** Nested task logs */
-router.use(`/:taskId/logs`, taskLogsRouter);
 
 /** Nested task files */
 router.use(`/:taskId/files`, taskFilesRouter);

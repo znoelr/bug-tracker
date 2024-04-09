@@ -19,8 +19,8 @@ export const fetchTask: (where: any) => Promise<any> = async (where: any) => awa
 export const fetchTaskComments: (where?: any) => Promise<any[]> = async (where: any = {}) => await prismaClient.taskComment.findMany({ where });
 export const fetchTaskComment: (where: any) => Promise<any> = async (where: any) => await prismaClient.taskComment.findUnique({ where });
 
-export const fetchTaskLogs: (where?: any) => Promise<any[]> = async (where: any = {}) => await prismaClient.taskLog.findMany({ where });
-export const fetchTaskLog: (where: any) => Promise<any> = async (where: any) => await prismaClient.taskLog.findUnique({ where });
+export const fetchLogs: (where?: any) => Promise<any[]> = async (where: any = {}) => await prismaClient.log.findMany({ where });
+export const fetchLog: (where: any) => Promise<any> = async (where: any) => await prismaClient.log.findUnique({ where });
 
 export const fetchFiles: (where?: any) => Promise<any[]> = async (where: any = {}) => await prismaClient.file.findMany({ where });
 export const fetchFile: (where: any) => Promise<any> = async (where: any) => await prismaClient.file.findUnique({ where });

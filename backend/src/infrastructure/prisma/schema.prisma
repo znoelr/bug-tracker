@@ -21,7 +21,7 @@ model User {
   createdProjects Project[]     @relation("user-createdprojects")
   tasks           Task[]        @relation("user-tasks")
   userRoles       UserRoles[]   @relation("user-userroles")
-  taskLogs        TaskLog[]     @relation("user-tasklogs")
+  logs            Log[]         @relation("user-logs")
   taskComments    TaskComment[] @relation("user-taskcomments")
 }
 
@@ -91,22 +91,18 @@ model Task {
   projectId String
   project   Project @relation("project-tasks", fields: [projectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
-  logs      TaskLog[]     @relation("task-tasklogs")
   comments  TaskComment[] @relation("task-taskcomments")
   taskFiles TaskFiles[]   @relation("task-taskfiles")
 }
 
-model TaskLog {
+model Log {
   id        String   @id
   content   String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  taskId String
-  task   Task   @relation("task-tasklogs", fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-
   triggeredById String
-  triggeredBy   User   @relation("user-tasklogs", fields: [triggeredById], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  triggeredBy   User   @relation("user-logs", fields: [triggeredById], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model TaskComment {
