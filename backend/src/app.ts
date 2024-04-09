@@ -14,9 +14,7 @@ export const bootstrapApp = async (): Promise<Express> => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
-  if(process.env.NODE_ENV !== 'test') {
-    app.use(appLogger);
-  }
+  app.use(appLogger);
   // Append pagination
   app.use(parseSearchForPagination());
   app.use(appRouter);

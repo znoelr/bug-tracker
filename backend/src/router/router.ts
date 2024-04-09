@@ -40,10 +40,8 @@ router.use((err: unknown, req: Request, res: Response, next: NextFunction): void
   }
   try {
     // Append to error log file
-    if(process.env.NODE_ENV !== 'test') {
-      const logger = getFileLogger();
-      logger.error(`${err}`);
-    }
+    const logger = getFileLogger();
+    logger.error(`${err}`);
   }
   finally {
     res.status(500).json(
