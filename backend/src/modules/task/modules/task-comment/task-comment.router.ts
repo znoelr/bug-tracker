@@ -4,10 +4,12 @@ import { routeFactory } from "../../../../common/route-handlers";
 import { validateDto, validateDtoAndInjectId } from "../../../../common/validators";
 import { CreateTaskCommentDto } from "./dtos/create-task-comment.dto";
 import {
+  extendRequestBodyForKeys,
   findResourceByRequestQueryFilters,
   injectQueryFiltersfromRequest,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
+  transformRequestBody,
 } from "../../../../middleware";
 import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
 import { trimObjectForKeys } from "../../../../transformers";
@@ -27,12 +29,13 @@ router.use(
   parseUrlQueryForQueryOptionsSelect(TaskCommentDto)
 );
 
-router.route('/')
-  .all(
-    injectQueryFiltersfromRequest('params')(
-      trimObjectForKeys(['taskId'])
-    )
+router.use('/',
+  injectQueryFiltersfromRequest('params')(
+    trimObjectForKeys(['taskId'])
   )
+);
+
+router.route('/')
   .get(
     restrictTo(PERMISSION_ACTION.LIST, PERMISSION_RESOURCE.TASK_COMMENT),
     parseUrlQueryForQueryOptionsSortBy(TaskCommentSortDto),
@@ -41,15 +44,19 @@ router.route('/')
   .post(
     restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.TASK_COMMENT),
     validateDtoAndInjectId(CreateTaskCommentDto),
+    extendRequestBodyForKeys({
+      paramKeys: ['taskId'],
+    }),
     createRoute(controller.create)
   );
 
-router.route('/:id')
-  .all(
-    injectQueryFiltersfromRequest('params')(
-      trimObjectForKeys(['taskId', 'id'])
-    )
+router.use('/:id',
+  injectQueryFiltersfromRequest('params')(
+    trimObjectForKeys(['taskId', 'id'])
   )
+);
+
+router.route('/:id')
   .get(
     restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.TASK_COMMENT),
     createRoute(controller.findById)
@@ -57,10 +64,12 @@ router.route('/:id')
   .patch(
     restrictTo(PERMISSION_ACTION.UPDATE, PERMISSION_RESOURCE.TASK_COMMENT),
     validateDto(UpdateTaskCommentDto),
+    findResourceByRequestQueryFilters<TaskCommentDto>(taskCommentService),
     createRoute(controller.update)
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.TASK_COMMENT),
+    findResourceByRequestQueryFilters<TaskCommentDto>(taskCommentService),
     createRoute(controller.delete)
   );
 

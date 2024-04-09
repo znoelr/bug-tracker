@@ -7,9 +7,5 @@ export class CreateTaskCommentDto {
 
   @IsString()
   @IsNotEmpty()
-  taskId: string;
-
-  @IsString()
-  @IsNotEmpty()
   createdById: string;
 }
