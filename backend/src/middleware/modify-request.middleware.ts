@@ -10,9 +10,20 @@ export const createRequestBodyFromParams = (keys: string[]) =>
   })
 ;
 
-export const createRequestBodyForKeys = ({ paramKeys, bodyKeys }: CreateMergedKeys) =>
+export const createRequestBodyForKeys = ({ paramKeys = [], bodyKeys = [] }: CreateMergedKeys) =>
   catchAsync((req: Request, res: Response, next: NextFunction) => {
     req.body = {
+      ...paramKeys.reduce(objectReducerForKeys(req.params), {}),
+      ...bodyKeys.reduce(objectReducerForKeys(req.body), {}),
+    };
+    next();
+  })
+;
+
+export const extendRequestBodyForKeys = ({ paramKeys = [], bodyKeys = [] }: CreateMergedKeys) =>
+  catchAsync((req: Request, res: Response, next: NextFunction) => {
+    req.body = {
+      ...req.body,
       ...paramKeys.reduce(objectReducerForKeys(req.params), {}),
       ...bodyKeys.reduce(objectReducerForKeys(req.body), {}),
     };
