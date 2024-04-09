@@ -11,6 +11,7 @@ import { LogDto } from "./dtos/log.dto";
 import { LogSortDto } from "./dtos/log-sort.dto";
 import { restrictTo } from "../auth/middlewares/restrict-to.middleware";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../permission/permission.constants";
+import { RouteConfig } from "../../common/types";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -38,4 +39,7 @@ router.route('/:id')
     createRoute(controller.findById)
   );
 
-export default router;
+export const logRouteConfig: RouteConfig = {
+  path: '/logs',
+  router,
+};

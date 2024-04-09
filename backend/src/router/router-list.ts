@@ -4,6 +4,7 @@ import { userRouteConfig } from "../modules/user/user.router";
 import { taskRouteConfig } from "../modules/task/task.router";
 import { projectRouteConfig } from "../modules/project/project.router";
 import { fileRouteConfig } from "../modules/file/file.router";
+import { logRouteConfig } from "../modules/log/log.router";
 
 export default [
   permissionRouteConfig,
@@ -12,4 +13,5 @@ export default [
   taskRouteConfig,
   projectRouteConfig,
   fileRouteConfig,
+  logRouteConfig,
 ];
