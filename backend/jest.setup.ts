@@ -6,9 +6,22 @@ import { ConfigService } from './src/config/config.service';
 import { JWT_COOKIE_NAME } from './src/common/constants';
 import { initInfrastructure } from './src/infrastructure';
 
+jest.mock('./src/logger', () => {
+  const originalModule = jest.requireActual('./src/logger');
+  return {
+    ...originalModule,
+    getFileLogger: () => ({
+      error: jest.fn(),
+    }),
+    httpLogger: jest.fn().mockImplementation((req, res, next) => {
+      next();
+    }),
+  };
+});
+
 beforeAll(async () => {
   await initInfrastructure();
-})
+});
 
 global.signin = (userId: string): string[] => {
   const jwtPayload = { sub: userId };
