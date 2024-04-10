@@ -55,7 +55,7 @@ router.route('/')
   )
   .post(
     restrictTo(PERMISSION_ACTION.CREATE, PERMISSION_RESOURCE.TASK_FILE),
-    injectQueryOptions(new QueryOptions()),
+    injectQueryOptions(() => new QueryOptions()),
     validateDtoAndInjectId(CreateFileDto),
     createFileRoute(fileController.create, { endRequest: false }),
     createRequestBodyForKeys({
@@ -84,7 +84,7 @@ router.route('/:fileId')
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.TASK_FILE),
     findResourceByRequestQueryFilters<TaskFilesDto>(taskFilesService),
-    injectQueryOptions(new QueryOptions()),
+    injectQueryOptions(() => new QueryOptions()),
     createRoute(controller.delete, { endRequest: false }),
     injectQueryFiltersfromRequest('params')(
       trimObjectForKeys(['fileId:id'])

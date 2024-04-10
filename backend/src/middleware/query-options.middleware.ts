@@ -5,9 +5,9 @@ import { catchAsync } from "../common/exception-handlers";
 import { ClassConstructor, GenericObject, SortObject } from "../common/types";
 import { createSelectObject, createSortByObject, getValidSortKeys } from "../common/helpers";
 
-export const injectQueryOptions = (queryOptions: QueryOptions) =>
+export const injectQueryOptions = (fn: () => QueryOptions) =>
   catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    req.queryOptions = queryOptions;
+    req.queryOptions = await fn();
     next();
   })
 ;
