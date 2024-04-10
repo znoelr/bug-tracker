@@ -17,7 +17,6 @@ export const getFileLogger = () => pinoLogger({
   },
   timestamp: () => {
     const [, now] = new Date().toISOString().split('T');
-    console.log({now});
     return `,"time":"${now}"`;
   },
 },
