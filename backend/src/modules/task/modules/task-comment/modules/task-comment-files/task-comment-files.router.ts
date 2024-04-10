@@ -4,6 +4,7 @@ import { routeFactory } from "../../../../../../common/route-handlers";
 import { QueryOptions } from "../../../../../../common/types";
 import {
   createRequestBodyForKeys,
+  endBySendJsonFromRequestBody,
   findResourceByRequestQueryFilters,
   injectQueryFiltersfromRequest,
   injectQueryOptions,
@@ -81,8 +82,9 @@ router.route('/:fileId')
   )
   .get(
     restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.TASK_COMMENT_FILE),
+    createRoute(controller.findById, { endRequest: false }),
     jsonInterceptor(toEntityForKey('file')),
-    createRoute(controller.findById)
+    endBySendJsonFromRequestBody
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.TASK_COMMENT_FILE),
