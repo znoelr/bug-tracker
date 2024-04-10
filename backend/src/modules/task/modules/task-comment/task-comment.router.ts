@@ -9,7 +9,6 @@ import {
   injectQueryFiltersfromRequest,
   parseUrlQueryForQueryOptionsSelect,
   parseUrlQueryForQueryOptionsSortBy,
-  transformRequestBody,
 } from "../../../../middleware";
 import taskCommentFilesRouter from './modules/task-comment-files/task-comment-files.router';
 import { trimObjectForKeys } from "../../../../transformers";
@@ -19,6 +18,7 @@ import { TaskCommentSortDto } from "./dtos/task-comment-sort.dto";
 import { restrictTo } from "../../../auth/middlewares/restrict-to.middleware";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../../permission/permission.constants";
 import { UpdateTaskCommentDto } from "./dtos/update-task-comment.dto";
+import { injectCreatedBy } from "../../../../middleware/inject-created-by.middleware";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -47,6 +47,7 @@ router.route('/')
     extendRequestBodyForKeys({
       paramKeys: ['taskId'],
     }),
+    injectCreatedBy,
     createRoute(controller.create)
   );
 

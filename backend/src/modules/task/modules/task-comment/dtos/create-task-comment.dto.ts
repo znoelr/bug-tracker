@@ -4,8 +4,4 @@ export class CreateTaskCommentDto {
   @IsString()
   @IsNotEmpty()
   content: string;
-
-  @IsString()
-  @IsNotEmpty()
-  createdById: string;
 }
