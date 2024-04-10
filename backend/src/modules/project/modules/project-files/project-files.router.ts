@@ -11,6 +11,7 @@ import {
   parseUrlQueryForQueryOptionsSortBy,
   injectTransformedQueryOptions,
   parseUrlQueryForQueryOptionsSelect,
+  endBySendJsonFromRequestBody,
 } from "../../../../middleware";
 import { QueryOptions } from "../../../../common/types";
 import { jsonInterceptor } from "../../../../interceptors";
@@ -77,8 +78,9 @@ router.route('/:fileId')
   )
   .get(
     restrictTo(PERMISSION_ACTION.GET, PERMISSION_RESOURCE.PROJECT_FILE),
+    createRoute(controller.findById, { endRequest: false }),
     jsonInterceptor(toEntityForKey('file')),
-    createRoute(controller.findById)
+    endBySendJsonFromRequestBody
   )
   .delete(
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.PROJECT_FILE),
