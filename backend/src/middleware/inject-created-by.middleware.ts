@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { catchAsync } from "../../../common/exception-handlers";
+import { catchAsync } from "../common/exception-handlers";
 
 export const injectCreatedBy = catchAsync((req: Request, res: Response, next: NextFunction) => {
   req.body = {

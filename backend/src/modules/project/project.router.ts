@@ -21,7 +21,7 @@ import { UpdateProjectDto } from "./dtos/update-project.dto";
 import { ProjectSortDto } from "./dtos/project-sort.dto";
 import { restrictTo } from "../auth/middlewares/restrict-to.middleware";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../permission/permission.constants";
-import { injectCreatedBy } from "./middlewares/inject-created-by.middleware";
+import { injectCreatedBy } from "../../middleware/inject-created-by.middleware";
 
 const router = express.Router();
 const createRoute = routeFactory(controller);
