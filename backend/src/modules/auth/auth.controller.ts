@@ -61,7 +61,7 @@ class AuthController {
       expires: this.getCookieExpDate(expInSeconds),
       secure: !['test', 'development'].includes(ConfigService.get('NODE_ENV')),
     });
-    res.json({ newAccessToken });
+    res.json({ accessToken: newAccessToken });
   }
 }
 
