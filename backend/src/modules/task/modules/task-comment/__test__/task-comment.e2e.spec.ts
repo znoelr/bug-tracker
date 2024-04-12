@@ -109,7 +109,6 @@ describe('[TASK_COMMENTS]', () => {
       const task = taskTest;
       const data = {
         content: `Random comment ${uuid()}`,
-        createdById: devUser.id,
       };
       const {body: newTaskComment} = await request(app)
         .post(urlPrefix.replace(':id', task.id))
@@ -120,7 +119,6 @@ describe('[TASK_COMMENTS]', () => {
       expect(newTaskComment.id).toBeDefined();
       expect(newTaskComment.content).toBe(data.content);
       expect(newTaskComment.taskId).toBe(task.id);
-      expect(newTaskComment.createdById).toBe(data.createdById);
 
       const res = await request(app)
         .get(`${urlPrefix.replace(':id', task.id)}/${newTaskComment.id}`)
@@ -136,7 +134,6 @@ describe('[TASK_COMMENTS]', () => {
       const task = taskTest;
       const data = {
         content: `Random comment ${uuid()}`,
-        createdById: devUser.id,
       };
       const {body: newTaskComment} = await request(app)
         .post(urlPrefix.replace(':id', task.id))
@@ -147,7 +144,6 @@ describe('[TASK_COMMENTS]', () => {
       expect(newTaskComment.id).toBeDefined();
       expect(newTaskComment.content).toBe(data.content);
       expect(newTaskComment.taskId).toBe(task.id);
-      expect(newTaskComment.createdById).toBe(data.createdById);
 
       const res = await request(app)
         .get(`${urlPrefix.replace(':id', task.id)}/${newTaskComment.id}`)
@@ -164,7 +160,6 @@ describe('[TASK_COMMENTS]', () => {
       const data = {
         content: `Random comment ${uuid()}`,
         taskId: taskTest.id,
-        createdById: devUser.id,
       };
       const {body: newTaskComment} = await request(app)
         .post(urlPrefix.replace(':id', task.id))
@@ -176,7 +171,6 @@ describe('[TASK_COMMENTS]', () => {
       expect(newTaskComment.content).toBe(data.content);
       expect(newTaskComment.taskId).toBe(task.id);
       expect(newTaskComment.taskId).not.toBe(data.taskId);
-      expect(newTaskComment.createdById).toBe(data.createdById);
 
       const res = await request(app)
         .get(`${urlPrefix.replace(':id', task.id)}/${newTaskComment.id}`)
@@ -197,7 +191,6 @@ describe('[TASK_COMMENTS]', () => {
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.content).toBeDefined();
-      expect(res.body.errors.createdById).toBeDefined();
     });
 
     it('should return Bad Request for mising "content"', async () => {
@@ -212,22 +205,6 @@ describe('[TASK_COMMENTS]', () => {
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.content).toBeDefined();
-      expect(res.body.errors.createdById).toBeUndefined();
-    });
-
-    it('should return Bad Request for mising "createdById"', async () => {
-      const data = {
-        content: `Random content ${uuid()}`,
-      };
-      const res = await request(app)
-        .post(urlPrefix.replace(':id', taskTest.id))
-        .set('Cookie', cookies)
-        .send(data)
-        .expect(400);
-      expect(res.body).toBeDefined();
-      expect(res.body.errors).toBeDefined();
-      expect(res.body.errors.content).toBeUndefined();
-      expect(res.body.errors.createdById).toBeDefined();
     });
 
     it('should return Unauthorized for missing credentials', async () => {
