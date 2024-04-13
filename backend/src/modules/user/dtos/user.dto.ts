@@ -10,6 +10,9 @@ export class UserDto {
   @Exclude()
   password: string;
 
+  @Exclude()
+  refreshToken: string;
+
   @Expose()
   createdAt: string;
 
