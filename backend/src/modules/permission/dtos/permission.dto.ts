@@ -1,4 +1,5 @@
 import { Expose } from "class-transformer";
+import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../permission.constants";
 
 export class PermissionDto {
   @Expose()
@@ -11,10 +12,10 @@ export class PermissionDto {
   description: string;
 
   @Expose()
-  action: string;
+  action: keyof typeof PERMISSION_ACTION;
 
   @Expose()
-  resource: string;
+  resource: keyof typeof PERMISSION_RESOURCE;
 
   @Expose()
   createdAt: string;

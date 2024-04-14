@@ -1,8 +1,9 @@
 import { client } from "../../infrastructure/redis";
+import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../modules/permission/permission.constants";
 import { rolePermissionsService } from "../../modules/role/modules/role-permissions/role-permissions.service";
 import { QueryFilters, QueryOptions } from "../types";
 
-export const getPermissionKey = (action: string, resource: string) => `${action}-${resource}`.toLowerCase();
+export const getPermissionKey = (action: keyof typeof PERMISSION_ACTION, resource: keyof typeof PERMISSION_RESOURCE) => `${action}-${resource}`.toLowerCase();
 
 export const cachePermissionsAccess = async () => {
   const filters = new QueryFilters().setWhere({});
