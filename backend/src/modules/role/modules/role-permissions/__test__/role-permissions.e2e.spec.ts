@@ -7,6 +7,8 @@ import { UserDto } from "../../../../user/dtos/user.dto";
 import { ROLES } from "../../../role.constants";
 import { PermissionDto } from "../../../../permission/dtos/permission.dto";
 import { fetchRole, fetchUser } from "../../../../../scripts/prisma-seed/fetch-records";
+import { client } from '../../../../../infrastructure/redis';
+import { getPermissionKey } from '../../../../../common/helpers/cache.helpers';
 
 let app: Express;
 let cookies: string[];
@@ -249,9 +251,47 @@ describe('[ROLE_PERMISSIONS]', () => {
       expect(res.body.errors.message).toBeDefined();
     });
 
-    it.todo('should update cached permissions');
+    it('should update cached permissions', async () => {
+      const permission = adminPermissions[0];
+      const newRole = await createRole();
 
-    it.todo('should NOT update cached permissions on error response');
+      const permissionKey = getPermissionKey(permission.action, permission.resource);
+      let storedRoleIdsStr = await client.get(permissionKey);
+
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).not.toContain(newRole.id);
+
+      await request(app)
+        .put(`${urlPrefix.replace(':id', newRole.id)}/${permission.id}`)
+        .set('Cookie', cookies)
+        .expect(201);
+
+      storedRoleIdsStr = await client.get(permissionKey);
+
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).toContain(newRole.id);
+    });
+
+    it('should NOT update cached permissions on error response', async () => {
+      const permission = adminPermissions[0];
+      const newRole = await createRole();
+
+      const permissionKey = getPermissionKey(permission.action, permission.resource);
+      let storedRoleIdsStr = await client.get(permissionKey);
+
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).not.toContain(newRole.id);
+
+      await request(app)
+        .put(`${urlPrefix.replace(':id', newRole.id)}/${uuid()}`)
+        .set('Cookie', cookies)
+        .expect(404);
+
+      storedRoleIdsStr = await client.get(permissionKey);
+
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).not.toContain(newRole.id);
+    });
 
     it('should return Unauthorized for missing credentials', async () => {
       const permission = adminPermissions[0];
@@ -340,6 +380,60 @@ describe('[ROLE_PERMISSIONS]', () => {
       expect(res.body).toBeDefined();
       expect(res.body.errors).toBeDefined();
       expect(res.body.errors.message).toBeDefined();
+    });
+
+    it('should update cached permissions', async () => {
+      const permission = adminPermissions[0];
+      const newRole = await createRole();
+
+      const permissionKey = getPermissionKey(permission.action, permission.resource);
+
+      let storedRoleIdsStr = await client.get(permissionKey);
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).not.toContain(newRole.id);
+
+      await request(app)
+        .put(`${urlPrefix.replace(':id', newRole.id)}/${permission.id}`)
+        .set('Cookie', cookies)
+        .expect(201);
+      storedRoleIdsStr = await client.get(permissionKey);
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).toContain(newRole.id);
+
+      await request(app)
+        .delete(`${urlPrefix.replace(':id', newRole.id)}/${permission.id}`)
+        .set('Cookie', cookies)
+        .expect(204);
+      storedRoleIdsStr = await client.get(permissionKey);
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).not.toContain(newRole.id);
+    });
+
+    it('should NOT delete cached permissions on error response', async () => {
+      const permission = adminPermissions[0];
+      const newRole = await createRole();
+
+      const permissionKey = getPermissionKey(permission.action, permission.resource);
+      let storedRoleIdsStr = await client.get(permissionKey);
+
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).not.toContain(newRole.id);
+
+      await request(app)
+        .put(`${urlPrefix.replace(':id', newRole.id)}/${permission.id}`)
+        .set('Cookie', cookies)
+        .expect(201);
+      storedRoleIdsStr = await client.get(permissionKey);
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).toContain(newRole.id);
+
+      await request(app)
+        .delete(`${urlPrefix.replace(':id', newRole.id)}/${uuid()}`)
+        .set('Cookie', cookies)
+        .expect(404);
+      storedRoleIdsStr = await client.get(permissionKey);
+      expect(storedRoleIdsStr).toBeDefined();
+      expect(storedRoleIdsStr).toContain(newRole.id);
     });
 
     it('should return Unauthorized for missing credentials', async () => {
