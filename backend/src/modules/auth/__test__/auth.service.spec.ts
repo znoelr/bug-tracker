@@ -3,7 +3,7 @@ import { authService } from '../auth.service';
 import { BadRequestException, UnauthorizedExeption } from '../../../common/exceptions';
 import { userService } from '../../user/user.service';
 import { QueryFilters } from '../../../common/types';
-import { TokenBlacklistModel } from '../../token-blacklist/token-blacklist.schema';
+import { TokenBlacklistModel } from '../../../mongo-storage/token-blacklist.schema';
 import { hashStr } from '../../../common/helpers';
 
 const createUser = async ({ username, password }: { username: string, password: string }) => {

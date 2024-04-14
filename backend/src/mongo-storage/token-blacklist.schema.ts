@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { ConfigService } from '../../config/config.service';
+import { ConfigService } from '../config/config.service';
 
 const oneDayInSeconds = 60 * 60 * 24;
 const expiresInSeconds = Number(ConfigService.get<number>('JWT_EXPIRES_IN_DAYS')) * oneDayInSeconds;

@@ -4,7 +4,7 @@ import { QueryFilters } from "../../common/types";
 import { UserService, userService } from "../user/user.service";
 import { ConfigService } from '../../config/config.service';
 import { compareHash } from '../../common/helpers';
-import { TokenBlacklistModel } from '../token-blacklist/token-blacklist.schema';
+import { TokenBlacklistModel } from '../../mongo-storage/token-blacklist.schema';
 
 export class AuthService {
   constructor(private readonly userService: UserService) {}
