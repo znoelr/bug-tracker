@@ -12,4 +12,5 @@ export const envSchema  = Joi.object({
   REDIS_URL: Joi.string().required(),
   MONGO_URL: Joi.string().required(),
   LOG_FOLDER: Joi.string().required(),
+  USER_ROLES_EXPIRES_IN_SECONDS: Joi.number().required(),
 });
