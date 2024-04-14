@@ -6,6 +6,7 @@ import { client } from "../../../infrastructure/redis";
 import { cachePermissionsAccess, getPermissionKey } from "../../../common/helpers/cache.helpers";
 import { ForbiddenExeption } from "../../../common/exceptions";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../permission/permission.constants";
+import { UserRolesModel } from "../../../mongo-storage/user-roles.schema";
 
 const createForbiddenMessage = (action: string, resource: string) =>
   `You are lacking "${action}" access on "${resource}", please contact your manager to provide you the needed access`;
@@ -32,9 +33,9 @@ export const restrictTo = (action: keyof typeof PERMISSION_ACTION, resource: key
 
     const user = req.user;
     const allowedRoleIdsMap: {[key: string]: boolean} = JSON.parse(allowedRoleIdsStr);
-    const cachedUserRoleIdsStr = await client.get(user.id);
-    if (cachedUserRoleIdsStr) {
-      const isUserAllowed = (JSON.parse(cachedUserRoleIdsStr)).some((roleId: string) => !!allowedRoleIdsMap[roleId]);
+    const foundUserRoles = await UserRolesModel.findOne({ userId: user.id });
+    if (foundUserRoles) {
+      const isUserAllowed = foundUserRoles.rolesIds.some((roleId: string) => !!allowedRoleIdsMap[roleId]);
       if (!isUserAllowed) {
         next(new ForbiddenExeption(forbiddenMessage));
       }
@@ -43,8 +44,11 @@ export const restrictTo = (action: keyof typeof PERMISSION_ACTION, resource: key
     }
 
     const userRoleIds = await getUserRolesIds(user.id);
-    const thirtyMinInSeconds = 60 * 30;
-    await client.setEx(user.id, thirtyMinInSeconds, JSON.stringify(userRoleIds));
+    await UserRolesModel.updateOne(
+      { userId: user.id },
+      { $set: { rolesIds: userRoleIds } },
+      { upsert: true }
+    );
 
     const isUserAllowed = userRoleIds.some((roleId: string) => !!allowedRoleIdsMap[roleId]);
     if (!isUserAllowed) {
