@@ -11,9 +11,17 @@ import { UserRolesModel } from "../../../mongo-storage/user-roles.schema";
 const createForbiddenMessage = (action: string, resource: string) =>
   `You are lacking "${action}" access on "${resource}", please contact your manager to provide you the needed access`;
 
-const getUserRolesIds = async (userId: string): Promise<string[]> => {
+export const getUserRolesIds = async (userId: string): Promise<string[]> => {
   const filters = new QueryFilters().setWhere({ userId });
   return (await userRolesService.findAll(filters)).map(userRole => userRole.roleId);
+};
+
+export const saveUserRoles = async (userId: string, userRoleIds: string[]) => {
+  await UserRolesModel.updateOne(
+    { userId },
+    { $set: { rolesIds: userRoleIds } },
+    { upsert: true }
+  );
 };
 
 export const restrictTo = (action: keyof typeof PERMISSION_ACTION, resource: keyof typeof PERMISSION_RESOURCE) =>
@@ -44,11 +52,7 @@ export const restrictTo = (action: keyof typeof PERMISSION_ACTION, resource: key
     }
 
     const userRoleIds = await getUserRolesIds(user.id);
-    await UserRolesModel.updateOne(
-      { userId: user.id },
-      { $set: { rolesIds: userRoleIds } },
-      { upsert: true }
-    );
+    await saveUserRoles(user.id, userRoleIds);
 
     const isUserAllowed = userRoleIds.some((roleId: string) => !!allowedRoleIdsMap[roleId]);
     if (!isUserAllowed) {
