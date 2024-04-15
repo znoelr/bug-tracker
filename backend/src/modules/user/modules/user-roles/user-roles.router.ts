@@ -30,7 +30,7 @@ import { roleService } from "../../../role/role.service";
 import { RoleSortDto } from "../../../role/dtos/role-sort.dto";
 import { restrictTo } from "../../../auth/middlewares/restrict-to.middleware";
 import { PERMISSION_ACTION, PERMISSION_RESOURCE } from "../../../permission/permission.constants";
-import { resetCachedPermissions } from "../../../role/modules/role-permissions/middlewares/reset-cached-permissions.middleware";
+import { resetCachedUserRoles } from "../../../role/modules/role-permissions/middlewares/reset-cached-permissions.middleware";
 
 const router = express.Router({ mergeParams: true });
 const createRoute = routeFactory(controller);
@@ -79,7 +79,7 @@ router.route('/:roleId')
     createRequestBodyFromParams(['userId', 'roleId']),
     validateDto(CreateUserRolesDto),
     createRoute(controller.create, { endRequest: false }),
-    // resetCachedPermissions, TODO: Should update cached user's permissions
+    resetCachedUserRoles,
     jsonInterceptor(toEntityForKey('role')),
     endBySendJsonFromRequestBody
   )
@@ -87,7 +87,7 @@ router.route('/:roleId')
     restrictTo(PERMISSION_ACTION.DELETE, PERMISSION_RESOURCE.USER_ROLE),
     findResourceByRequestQueryFilters<UserRolesDto>(userRolesService),
     createRoute(controller.delete, { endRequest: false }),
-    // resetCachedPermissions, TODO: Should update cached user's permissions
+    resetCachedUserRoles,
     endBySendStatus(204)
   )
 ;
