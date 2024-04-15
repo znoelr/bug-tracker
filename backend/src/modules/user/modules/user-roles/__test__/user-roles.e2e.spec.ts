@@ -6,6 +6,7 @@ import { fetchRoles, fetchUser } from "../../../../../scripts/prisma-seed/fetch-
 import { ROLES } from '../../../../role/role.constants';
 import { UserDto } from '../../../dtos/user.dto';
 import { RoleDto } from '../../../../role/dtos/role.dto';
+import { UserRolesModel } from '../../../../../mongo-storage/user-roles.schema';
 
 let app: Express;
 let cookies: string[];
@@ -236,9 +237,35 @@ describe('[ROLE_PERMISSIONS]', () => {
       expect(res.body.errors.message).toBeDefined();
     });
 
-    it.todo('should update cached user permissions');
+    it('should update cached user permissions', async () => {
+      const newUser = await createUser();
+      let userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeFalsy();
 
-    it.todo('should NOT update cached user permissions on error response');
+      const role = adminRoles[0];
+      await request(app)
+        .put(`${urlPrefix.replace(':id', newUser.id)}/${role.id}`)
+        .set('Cookie', cookies)
+        .expect(201);
+
+      userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeDefined();
+      expect(userRoles!.rolesIds.find((roleId: string) => roleId === role.id)).toBe(role.id);
+    });
+
+    it('should NOT update cached user permissions on error response', async () => {
+      const newUser = await createUser();
+      let userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeFalsy();
+
+      await request(app)
+        .put(`${urlPrefix.replace(':id', newUser.id)}/${uuid()}`)
+        .set('Cookie', cookies)
+        .expect(404);
+
+      userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeFalsy();
+    });
 
     it('should return Unauthorized for missing credentials', async () => {
       const role = adminRoles[0];
@@ -333,9 +360,51 @@ describe('[ROLE_PERMISSIONS]', () => {
       expect(res.body.errors.message).toBeDefined();
     });
 
-    it.todo('should update cached user permissions');
+    it('should update cached user permissions', async () => {
+      const newUser = await createUser();
+      let userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeFalsy();
 
-    it.todo('should NOT update cached user permissions on error response');
+      const role = adminRoles[0];
+      await request(app)
+        .put(`${urlPrefix.replace(':id', newUser.id)}/${role.id}`)
+        .set('Cookie', cookies)
+        .expect(201);
+      userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeDefined();
+      expect(userRoles!.rolesIds.find((roleId: string) => roleId === role.id)).toBe(role.id);
+
+      await request(app)
+        .delete(`${urlPrefix.replace(':id', newUser.id)}/${role.id}`)
+        .set('Cookie', cookies)
+        .expect(204);
+      userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeDefined();
+      expect(userRoles!.rolesIds.find((roleId: string) => roleId === role.id)).toBeUndefined();
+    });
+
+    it('should NOT update cached user permissions on error response', async () => {
+      const newUser = await createUser();
+      let userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeFalsy();
+
+      const role = adminRoles[0];
+      await request(app)
+        .put(`${urlPrefix.replace(':id', newUser.id)}/${role.id}`)
+        .set('Cookie', cookies)
+        .expect(201);
+      userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeDefined();
+      expect(userRoles!.rolesIds.find((roleId: string) => roleId === role.id)).toBe(role.id);
+
+      await request(app)
+        .delete(`${urlPrefix.replace(':id', newUser.id)}/${uuid()}`)
+        .set('Cookie', cookies)
+        .expect(404);
+      userRoles = await UserRolesModel.findOne({ userId: newUser.id });
+      expect(userRoles).toBeDefined();
+      expect(userRoles!.rolesIds.find((roleId: string) => roleId === role.id)).toBe(role.id);
+    });
 
     it('should return Unauthorized for missing credentials', async () => {
       const newUser = await createUser();
