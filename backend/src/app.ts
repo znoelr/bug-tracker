@@ -7,8 +7,7 @@ import appRouter from './router/router';
 import * as config from './config';
 import { httpLogger as appLogger } from './logger';
 import { parseSearchForPagination } from './middleware';
-
-const swaggerDocument = require('./swagger.json');
+import specs from './swagger';
 
 export const bootstrapApp = async (): Promise<Express> => {
   config.init();
@@ -20,7 +19,7 @@ export const bootstrapApp = async (): Promise<Express> => {
   app.use(appLogger);
   // Append pagination
   app.use(parseSearchForPagination());
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
   app.use(appRouter);
 
   return app;
